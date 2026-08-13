@@ -7,6 +7,7 @@ Notable changes are documented here using [Keep a Changelog](https://keepachange
 ### Added
 
 - FOSS governance, validation, installation, and GitHub community files.
+- Documented the protected GitFlow branch, contribution, release, and hotfix workflow.
 
 ## [1.0.0] - 2026-08-13
 

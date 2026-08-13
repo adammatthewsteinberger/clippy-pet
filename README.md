@@ -70,7 +70,9 @@ Atlas rows are idle, running-right, running-left, waving, jumping, failed, waiti
 
 ## Contributing and support
 
-Read [CONTRIBUTING.md](CONTRIBUTING.md) before submitting changes. Community behavior is governed by [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md). Use GitHub Issues for bugs and feature requests, and follow [SECURITY.md](SECURITY.md) for private vulnerability reports.
+Clipster uses GitFlow: `main` is release-only, while ordinary feature, fix, documentation, maintenance, and dependency pull requests target `develop`. Release and hotfix branches are merged back into both long-lived branches. Read [CONTRIBUTING.md](CONTRIBUTING.md) for the complete branch and release workflow before submitting changes.
+
+Community behavior is governed by [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md). Use GitHub Issues for bugs and feature requests, and follow [SECURITY.md](SECURITY.md) for private vulnerability reports.
 
 ## License and attribution
 
