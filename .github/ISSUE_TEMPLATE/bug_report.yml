@@ -1,0 +1,40 @@
+name: Bug report
+description: Report a reproducible installation, validation, or animation problem.
+title: "[Bug]: "
+labels: ["bug", "needs-triage"]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem
+      description: What happened, and what did you expect?
+    validations:
+      required: true
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Reproduction steps
+    validations:
+      required: true
+  - type: input
+    id: environment
+    attributes:
+      label: Codex version and operating system
+    validations:
+      required: true
+  - type: textarea
+    id: validation
+    attributes:
+      label: Validator output
+      description: Paste output from `make validate`.
+    validations:
+      required: true
+  - type: checkboxes
+    id: checklist
+    attributes:
+      label: Checklist
+      options:
+        - label: I searched existing issues.
+          required: true
+        - label: I removed credentials and private information.
+          required: true

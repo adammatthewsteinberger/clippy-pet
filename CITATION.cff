@@ -1,0 +1,13 @@
+cff-version: 1.2.0
+message: "If you use Clipster in a project, please cite it using this metadata."
+title: "Clipster"
+type: software
+authors:
+  - family-names: "Steinberger"
+    given-names: "Adam Matthew"
+email: "adam@matthewsteinberger.com"
+license: MIT
+version: 1.0.0
+date-released: 2026-08-13
+repository-code: "https://github.com/adammatthewsteinberger/clipster"
+abstract: "A Codex-compatible v2 animated paperclip pet with source assets and QA evidence."
