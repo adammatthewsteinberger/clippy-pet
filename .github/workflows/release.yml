@@ -10,7 +10,7 @@ jobs:
   guard:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
         with:
           fetch-depth: 0
       - name: Tag must be an ancestor of main
@@ -37,7 +37,7 @@ jobs:
     needs: guard
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - name: Install nfpm
         run: |
           echo 'deb [trusted=yes] https://repo.goreleaser.com/apt/ /' | sudo tee /etc/apt/sources.list.d/goreleaser.list
@@ -57,7 +57,7 @@ jobs:
       - name: Checksums
         working-directory: dist
         run: shasum -a 256 -- * > SHA256SUMS
-      - uses: actions/attest-build-provenance@v2
+      - uses: actions/attest-build-provenance@v4
         with:
           subject-path: dist/*
       - name: Sign checksums (cosign keyless)
@@ -74,7 +74,7 @@ jobs:
     env:
       HAS_MACOS_CERT: ${{ secrets.MACOS_CERT_P12 != '' }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - name: Import signing certificate
         if: ${{ env.HAS_MACOS_CERT == 'true' }}
         env:
@@ -117,7 +117,7 @@ jobs:
         with:
           name: release-assets-macos
           path: dist
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
         with:
           path: src
       - name: Compose release notes from CHANGELOG.md
