@@ -16,8 +16,7 @@ jobs:
       - run: python scripts/validate.py
       - name: Reject local paths and generation cache IDs
         run: |
-          private_pattern='/''Users/[A-Za-z0-9._-]|Documents/''Codex|generated_''images|019f''fcc'
-          if grep -RIE "$private_pattern" --exclude='*.png' --exclude='*.webp' --exclude='*.gif' .; then
+          private_pattern='/''Users/[^/]+/|Documents/''Codex|generated_''images|019f''fcc'
             exit 1
           fi
       - name: Reject the retired project name
