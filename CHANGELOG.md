@@ -18,6 +18,7 @@ Notable changes are documented here using [Keep a Changelog](https://keepachange
 - Engagement pass on `README.md`, `CONTRIBUTING.md` (docs preview, writing style guide, variant submission), `SUPPORT.md` (Discussions), a pet-variant issue template, a `FUNDING.yml` template, and dependabot coverage for docs and GitHub Actions.
 - FOSS governance, validation, installation, and GitHub community files.
 - Documented the protected GitFlow branch, contribution, release, and hotfix workflow.
+- `AGENTS.md` as the canonical instructions for AI coding agents working in this repo (repo map, commands, spritesheet contract, branching model, PR checklist, release process), with `CLAUDE.md` and `GEMINI.md` pointing to it, Cursor rules at `.cursor/rules/clippy-pet.mdc`, and Claude Code skills for `validate` and `release` under `.claude/skills/`.
 
 ## [1.0.0] - 2026-08-13
 

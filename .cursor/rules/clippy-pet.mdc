@@ -1,0 +1,15 @@
+---
+description: Clippy Pet project rules — spritesheet contract, GitFlow branching, PR/release process
+globs:
+alwaysApply: true
+---
+
+Full instructions live in `AGENTS.md` at the repo root — read it before making non-trivial changes. Summary of what matters most while editing:
+
+- This repo ships a strict contract: `pet.json` + `spritesheet.webp` (1536×2288 px, 8×11 grid of 192×208 cells, alpha channel required, `spriteVersionNumber: 2`). Run `python3 scripts/validate.py` (or `make validate`) after touching either file or anything under `source/`.
+- Shell scripts under `scripts/` and `packaging/` must pass `make lint` (shellcheck).
+- Docs under `docs/`/`mkdocs.yml` must pass `make docs` (`mkdocs build --strict`) before merge.
+- Branching is GitFlow: `develop` is the default/integration branch; `main` is release-only and protected. Ordinary PRs target `develop`, never `main`. Branch names: `feature/<desc>`, `fix/<desc>`, `docs/<desc>`, `release/<version>`, `hotfix/<desc>`.
+- Add an entry to `## [Unreleased]` in `CHANGELOG.md` for any user-visible change.
+- Never imply Microsoft/OpenAI affiliation — see `NOTICE.md`. Keep doc "status" words (live/on each release/planned) accurate.
+- Releases are cut by pushing a `v*` tag on `main`; `.github/workflows/release.yml`'s guard job requires `VERSION`, the top `CHANGELOG.md` entry, and `CITATION.cff`'s `version:` to all match the tag exactly. This is a public, hard-to-reverse action — confirm with the user before pushing a release tag.
