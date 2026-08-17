@@ -10,6 +10,8 @@ description: On building a deliberately old-fashioned character to a modern spec
 
 There's a version of this project that's a joke, and a version that's a craft exercise, and the honest answer is that it's both, in that order.
 
+<!-- more -->
+
 ## The joke
 
 In 1996 Microsoft shipped an animated paperclip that watched what you typed and offered help. It was retired in 2001 for being annoying and removed entirely in 2007. Then, over the last five years, it came back as an emoji, a sticker, an Easter egg, and a profile picture people put up to make a point about assistants that don't know when to stop.
