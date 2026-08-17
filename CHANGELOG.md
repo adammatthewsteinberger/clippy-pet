@@ -10,6 +10,10 @@ Notable changes are documented here using [Keep a Changelog](https://keepachange
 
 ### Added
 
+- One-line installer (`install.sh`), the shared POSIX `clippy-pet` CLI (install / uninstall / status / sync / path / autostart), reproducible runtime tarballs, `.deb` / `.rpm` / `.apk` / Arch packages, and macOS `.app` / `.pkg` / `.dmg` installers, all built and smoke-tested in CI and attached to each release with `SHA256SUMS`, a cosign signature, and GitHub artifact attestations.
+- Documentation site at <https://adammatthewsteinberger.github.io/clippy-pet/> (MkDocs Material): per-OS install guide, honest installer/package-manager status matrix, animation and look-direction galleries, pet-contract reference, QA evidence, make-your-own guide, blog, and about-the-author page. Deployed by `docs.yml` without touching package-repository paths on `gh-pages`.
+- `spritesheet-v1.webp` (nine-row, 1536×1872) release asset built by `scripts/build-v1-spritesheet.py` for ChatGPT web pet upload.
+- Engagement pass on `README.md`, `CONTRIBUTING.md` (docs preview, writing style guide, variant submission), `SUPPORT.md` (Discussions), a pet-variant issue template, a `FUNDING.yml` template, and dependabot coverage for docs and GitHub Actions.
 - FOSS governance, validation, installation, and GitHub community files.
 - Documented the protected GitFlow branch, contribution, release, and hotfix workflow.
 

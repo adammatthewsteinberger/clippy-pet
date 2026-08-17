@@ -16,13 +16,13 @@ jobs:
       - run: python scripts/validate.py
       - name: Reject local paths and generation cache IDs
         run: |
-          private_pattern='/''Users/|Documents/''Codex|generated_''images|019f''fcc'
+          private_pattern='/''Users/[A-Za-z0-9._-]|Documents/''Codex|generated_''images|019f''fcc'
           if grep -RIE "$private_pattern" --exclude='*.png' --exclude='*.webp' --exclude='*.gif' .; then
             exit 1
           fi
       - name: Reject the retired project name
         run: |
-          allowed='^(\./)?(CHANGELOG\.md|docs/INSTALL\.md|docs/PACKAGING\.md|packaging/bin/clippy-pet|packaging/share/man/man1/clippy-pet\.1|\.github/workflows/validate\.yml)$'
+          allowed='^(\./)?(CHANGELOG\.md|docs/get-started/uninstall\.md|docs/packages/curl\.md|docs/project/packaging\.md|docs/blog/posts/[^/]+\.md|packaging/bin/clippy-pet|packaging/share/man/man1/clippy-pet\.1|\.github/workflows/validate\.yml)$'
           hits=$(grep -RIil 'clipster' --exclude-dir=.git . | grep -Ev "$allowed" || true)
           if [ -n "$hits" ]; then
             echo "error: found the retired name 'clipster' outside the documented migration path:" >&2

@@ -16,3 +16,9 @@ __pycache__/
 *.flatpak
 *.snap
 *.app/
+
+# documentation build output
+/site/
+
+# mkdocs plugin caches
+/.cache/

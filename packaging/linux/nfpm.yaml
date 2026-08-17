@@ -8,8 +8,8 @@ maintainer: Adam Matthew Steinberger <adam@matthewsteinberger.com>
 description: |
   Unofficial animated paperclip Codex pet
   Clippy Pet installs a Codex-compatible v2 pet manifest and spritesheet
-  into the current user's Codex configuration directory, where the Codex
-  desktop app and Codex CLI TUI can offer it as a selectable pet. This
+  into the current user's Codex configuration directory, where the ChatGPT
+  desktop app (Codex) and Codex CLI TUI can offer it as a selectable pet. This
   project is not affiliated with or endorsed by Microsoft.
 vendor: Adam Matthew Steinberger
 homepage: https://github.com/adammatthewsteinberger/clippy-pet

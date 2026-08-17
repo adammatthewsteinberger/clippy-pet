@@ -1,0 +1,49 @@
+name: Pet variant / animation improvement
+description: Propose a Clippy Pet variant (palette, costume) or an improvement to existing frames. For brand-new pets, use Show and tell in Discussions.
+title: "[Variant]: "
+labels: ["variant", "needs-triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        📎 It looks like you've been drawing. Attach a GIF or contact sheet so reviewers can see it in motion.
+        Read [Submit a variant](https://adammatthewsteinberger.github.io/clippy-pet/make/submit/) first; the geometry rules there are non-negotiable.
+  - type: dropdown
+    id: kind
+    attributes:
+      label: What is this?
+      options:
+        - Improvement to existing frames (same pet id)
+        - Variant (new palette/costume, additional pet id)
+    validations:
+      required: true
+  - type: textarea
+    id: what
+    attributes:
+      label: What changed, and why it's better
+      description: Which states / look directions are affected and what problem it solves (readability at 64 px, loop seam, direction cue…).
+    validations:
+      required: true
+  - type: textarea
+    id: media
+    attributes:
+      label: Before / after media
+      description: Side-by-side at 100 % and ~64 px, plus a GIF if motion changed. Drag files here.
+    validations:
+      required: true
+  - type: checkboxes
+    id: contract
+    attributes:
+      label: Contract
+      options:
+        - label: 1536×2288, 8 columns × 11 rows, 192×208 cells, transparent unused cells, `spriteVersionNumber: 2` are preserved (or I explain why not below).
+          required: true
+        - label: "`make validate` passes (or I've noted the required `expected_used` change)."
+          required: true
+  - type: checkboxes
+    id: rights
+    attributes:
+      label: Rights
+      options:
+        - label: I have the right to license every pixel under MIT; no traced third-party art, no Microsoft assets.
+          required: true

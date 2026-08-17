@@ -1,8 +1,8 @@
 # Package signing keys
 
 Public keys used to sign Clippy Pet releases. Import the one relevant to
-your package manager; see [docs/INSTALL.md](../../docs/INSTALL.md) for how
-each repository uses them.
+your package manager; see [Verify downloads](https://adammatthewsteinberger.github.io/clippy-pet/packages/verify/)
+for how each repository uses them.
 
 | File | Used for | Fingerprint / identity |
 |---|---|---|

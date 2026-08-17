@@ -16,7 +16,7 @@
     </p>
     <p>
       Installing Clippy Pet copies its manifest and spritesheet into your
-      Codex configuration directory so the Codex desktop app and Codex CLI
+      Codex configuration directory so the ChatGPT desktop app (Codex) and Codex CLI
       TUI can offer it as a selectable pet.
     </p>
   </description>

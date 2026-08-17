@@ -47,6 +47,13 @@ jobs:
         run: ./packaging/dist/make-tarballs.sh
       - name: Build Linux packages
         run: ./packaging/linux/build.sh
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Build v1 (web upload) spritesheet
+        run: |
+          pip install -r requirements-dev.txt
+          python scripts/build-v1-spritesheet.py dist/spritesheet-v1.webp
       - name: Checksums
         working-directory: dist
         run: shasum -a 256 -- * > SHA256SUMS
@@ -110,6 +117,36 @@ jobs:
         with:
           name: release-assets-macos
           path: dist
+      - uses: actions/checkout@v4
+        with:
+          path: src
+      - name: Compose release notes from CHANGELOG.md
+        run: |
+          version=${GITHUB_REF_NAME#v}
+          {
+            echo "📎 *It looks like you're installing a paperclip.*"
+            echo
+            echo '```sh'
+            echo 'curl -fsSL https://adammatthewsteinberger.github.io/clippy-pet/install.sh | sh'
+            echo '```'
+            echo
+            echo "macOS: open \`Clippy-Pet-$version.dmg\`. Linux: install the \`.deb\` / \`.rpm\` / \`.apk\` / \`.pkg.tar.zst\` below, then run \`clippy-pet install\`. ChatGPT web: upload \`spritesheet-v1.webp\`. Full guide: https://adammatthewsteinberger.github.io/clippy-pet/get-started/install/"
+            echo
+            echo "## Changes"
+            echo
+            awk -v v="$version" '
+              /^## \[/ { if (found) exit; if ($0 ~ "\\[" v "\\]") { found=1; next } }
+              found { print }
+            ' src/CHANGELOG.md
+            echo
+            echo "## Verify"
+            echo
+            # shellcheck disable=SC2016
+            echo 'Every asset is listed in `SHA256SUMS`, which is signed with cosign (`SHA256SUMS.sigstore.json`) and attested via GitHub artifact attestations. See https://adammatthewsteinberger.github.io/clippy-pet/packages/verify/'
+            echo
+            echo "_Clippy Pet is unofficial and not affiliated with or endorsed by Microsoft or OpenAI. See NOTICE.md._"
+          } > notes.md
+          cat notes.md
       - name: Create GitHub Release
         env:
           GH_TOKEN: ${{ github.token }}
@@ -117,5 +154,5 @@ jobs:
           gh release create "$GITHUB_REF_NAME" \
             --repo "$GITHUB_REPOSITORY" \
             --title "Clippy Pet $GITHUB_REF_NAME" \
-            --notes "See CHANGELOG.md for details." \
+            --notes-file notes.md \
             dist/*
