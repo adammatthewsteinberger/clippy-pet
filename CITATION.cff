@@ -7,7 +7,7 @@ authors:
     given-names: "Adam Matthew"
 email: "adam@matthewsteinberger.com"
 license: MIT
-version: 1.0.0
+version: 1.1.0
 date-released: 2026-08-13
 repository-code: "https://github.com/adammatthewsteinberger/clippy-pet"
 abstract: "A Codex-compatible v2 animated paperclip pet with source assets and QA evidence."
