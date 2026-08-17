@@ -71,6 +71,7 @@ jobs:
           name: site
           path: site/
           retention-days: 7
+          include-hidden-files: true   # site/.nojekyll must survive the artifact round-trip
 
   deploy:
     if: github.event_name != 'pull_request'
@@ -115,9 +116,9 @@ jobs:
           for d in $before; do
             [ -d "gh-pages/$d" ] || { echo "error: reserved path $d was removed by the docs sync" >&2; exit 1; }
           done
-          test -f gh-pages/index.html
-          test -f gh-pages/install.sh
-          test -f gh-pages/.nojekyll
+          for f in index.html install.sh .nojekyll; do
+            [ -f "gh-pages/$f" ] || { echo "error: expected gh-pages/$f after sync" >&2; exit 1; }
+          done
       - name: Commit and push
         working-directory: gh-pages
         run: |
