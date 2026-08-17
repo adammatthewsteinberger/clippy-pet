@@ -25,7 +25,7 @@ curl -fsSL https://adammatthewsteinberger.github.io/clippy-pet/install.sh | sh
 4. Extracts it and runs `bin/clippy-pet install "$@"`, forwarding any flags you passed after `--`.
 5. Cleans up the temporary directory.
 
-It never uses `sudo`, never writes outside the temp dir and `${CODEX_HOME:-$HOME/.codex}/pets/clippy-pet/`, and needs only `curl` (or `wget`), `tar`, and a checksum tool.
+It never uses `sudo`, never writes outside the temp dir and `${CODEX_HOME:-$HOME/.codex}/pets/clippy-pet/`, and needs only `curl`, `tar`, and a checksum tool.
 
 [Read `scripts/install.sh` on GitHub :material-open-in-new:](https://github.com/adammatthewsteinberger/clippy-pet/blob/main/scripts/install.sh){ .md-button }
 
