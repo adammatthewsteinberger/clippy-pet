@@ -57,7 +57,7 @@ jobs:
       - name: Checksums
         working-directory: dist
         run: shasum -a 256 -- * > SHA256SUMS
-      - uses: actions/attest-build-provenance@v2
+      - uses: actions/attest-build-provenance@v4
         with:
           subject-path: dist/*
       - name: Sign checksums (cosign keyless)
