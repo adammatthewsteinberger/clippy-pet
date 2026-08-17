@@ -1,0 +1,7 @@
+[Desktop Entry]
+Type=Application
+Name=Clippy Pet sync
+Comment=Keep the Clippy Pet Codex pet installed for the current user
+Exec=clippy-pet sync --quiet
+X-GNOME-Autostart-enabled=true
+NoDisplay=true

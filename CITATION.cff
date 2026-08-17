@@ -1,13 +1,13 @@
 cff-version: 1.2.0
-message: "If you use Clipster in a project, please cite it using this metadata."
-title: "Clipster"
+message: "If you use Clippy Pet in a project, please cite it using this metadata."
+title: "Clippy Pet"
 type: software
 authors:
   - family-names: "Steinberger"
     given-names: "Adam Matthew"
 email: "adam@matthewsteinberger.com"
 license: MIT
-version: 1.0.0
+version: 1.1.0
 date-released: 2026-08-13
-repository-code: "https://github.com/adammatthewsteinberger/clipster"
+repository-code: "https://github.com/adammatthewsteinberger/clippy-pet"
 abstract: "A Codex-compatible v2 animated paperclip pet with source assets and QA evidence."

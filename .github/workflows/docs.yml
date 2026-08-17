@@ -1,0 +1,133 @@
+name: Docs
+on:
+  push:
+    branches: [main]
+    paths:
+      - "docs/**"
+      - "mkdocs.yml"
+      - "overrides/**"
+      - "scripts/install.sh"
+      - "packaging/keys/**"
+      - "CHANGELOG.md"
+      - "CONTRIBUTING.md"
+      - "SUPPORT.md"
+      - "SECURITY.md"
+      - "CODE_OF_CONDUCT.md"
+      - "GOVERNANCE.md"
+      - "NOTICE.md"
+      - "LICENSE"
+      - "CITATION.cff"
+      - ".github/workflows/docs.yml"
+  pull_request:
+    paths:
+      - "docs/**"
+      - "mkdocs.yml"
+      - "overrides/**"
+      - "CHANGELOG.md"
+      - "CONTRIBUTING.md"
+      - "SUPPORT.md"
+      - "SECURITY.md"
+      - "CODE_OF_CONDUCT.md"
+      - "GOVERNANCE.md"
+      - "NOTICE.md"
+      - "LICENSE"
+      - "CITATION.cff"
+      - ".github/workflows/docs.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+env:
+  DISABLE_MKDOCS_2_WARNING: "true"
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0   # git-revision-date-localized needs history
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: docs/requirements.txt
+      - name: Install imaging deps for social cards
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq libcairo2-dev libfreetype6-dev libffi-dev libjpeg-dev libpng-dev libz-dev pngquant
+      - run: pip install -r docs/requirements.txt
+      - name: Build (strict)
+        run: mkdocs build --strict
+      - name: Add non-site Pages assets
+        run: |
+          install -m 0755 scripts/install.sh site/install.sh
+          mkdir -p site/keys
+          cp packaging/keys/*.asc packaging/keys/*.pub site/keys/
+          touch site/.nojekyll
+      - uses: actions/upload-artifact@v7
+        with:
+          name: site
+          path: site/
+          retention-days: 7
+          include-hidden-files: true   # site/.nojekyll must survive the artifact round-trip
+
+  deploy:
+    if: github.event_name != 'pull_request'
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    concurrency:
+      group: gh-pages
+      cancel-in-progress: false
+    steps:
+      - uses: actions/download-artifact@v8
+        with:
+          name: site
+          path: site
+      # gh-pages may not exist yet (first deploy). actions/checkout fails hard on a
+      # missing ref, so check out the default branch and switch/create manually.
+      - uses: actions/checkout@v7
+        with:
+          path: gh-pages
+      - name: Switch to gh-pages (create orphan branch if missing)
+        working-directory: gh-pages
+        run: |
+          set -eu
+          if git fetch --depth=1 origin gh-pages; then
+            git checkout -B gh-pages FETCH_HEAD
+          else
+            echo "gh-pages does not exist yet; creating an orphan branch."
+            git checkout --orphan gh-pages
+            git rm -rf -q .
+          fi
+      - name: Sync site into gh-pages, preserving package repositories
+        run: |
+          set -eu
+          # Paths on gh-pages owned by the release/package pipeline, never by the docs deploy.
+          reserved="apt rpm alpine conda flatpak"
+          before=""
+          for d in $reserved; do [ -d "gh-pages/$d" ] && before="$before $d"; done
+          set -- --exclude '.git'
+          for d in $reserved; do set -- "$@" --exclude "/$d/"; done
+          rsync -a --delete "$@" site/ gh-pages/
+          for d in $before; do
+            [ -d "gh-pages/$d" ] || { echo "error: reserved path $d was removed by the docs sync" >&2; exit 1; }
+          done
+          for f in index.html install.sh .nojekyll; do
+            [ -f "gh-pages/$f" ] || { echo "error: expected gh-pages/$f after sync" >&2; exit 1; }
+          done
+      - name: Commit and push
+        working-directory: gh-pages
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          if git diff --cached --quiet; then
+            echo "No changes to deploy."
+            exit 0
+          fi
+          git commit -m "docs: deploy site from ${GITHUB_SHA::7}"
+          git push origin gh-pages

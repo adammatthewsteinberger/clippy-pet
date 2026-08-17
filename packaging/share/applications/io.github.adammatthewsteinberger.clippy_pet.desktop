@@ -1,0 +1,12 @@
+[Desktop Entry]
+Type=Application
+Version=1.0
+Name=Install Clippy Pet
+GenericName=Codex pet installer
+Comment=Install the Clippy Pet Codex pet for the current user
+Exec=clippy-pet install --gui
+Icon=io.github.adammatthewsteinberger.clippy_pet
+Terminal=false
+NoDisplay=false
+Categories=Utility;
+Keywords=codex;pet;clippy;paperclip;

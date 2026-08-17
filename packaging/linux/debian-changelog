@@ -1,0 +1,6 @@
+clippy-pet (1.1.0-1) unstable; urgency=medium
+
+  * Initial packaged release. See CHANGELOG.md for details:
+    https://github.com/adammatthewsteinberger/clippy-pet/blob/main/CHANGELOG.md
+
+ -- Adam Matthew Steinberger <adam@matthewsteinberger.com>  Mon, 17 Aug 2026 13:12:11 -0400

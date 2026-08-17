@@ -1,0 +1,31 @@
+#!/bin/sh
+# Runs after the system-domain .pkg installs its payload to
+# /usr/local/{bin,share}. Seeds the console user's own
+# ~/.codex/pets/clippy-pet/ — the pkg install itself only reaches
+# system-wide locations, and Codex reads pets from the user's home.
+set -eu
+
+target_user=${SUDO_USER:-}
+if [ -z "$target_user" ]; then
+    target_user=$(stat -f '%Su' /dev/console 2>/dev/null || true)
+fi
+
+case "$target_user" in
+    ""|root|loginwindow|_*)
+        # No real console user to seed (e.g. run during a remote/unattended
+        # install). The system-wide payload is still installed; the user
+        # can run `clippy-pet install` themselves later.
+        exit 0
+        ;;
+esac
+
+user_home=$(dscl . -read "/Users/$target_user" NFSHomeDirectory 2>/dev/null | awk '{print $2}')
+if [ -z "$user_home" ] || [ ! -d "$user_home" ]; then
+    exit 0
+fi
+
+# Never fail the package install because of this best-effort step.
+sudo -u "$target_user" -H /usr/local/bin/clippy-pet install --quiet \
+    --codex-home "$user_home/.codex" || true
+
+exit 0
