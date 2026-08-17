@@ -40,6 +40,12 @@ bootstrap() {
     need curl
     need tar
 
+    for arg in "$@"; do
+        if [ "$arg" = "--link" ]; then
+            echo "error: --link is only supported when installing from a checkout or an extracted tarball you keep (remote installs clean up the extracted payload)" >&2
+            exit 2
+        fi
+    done
     version=${CLIPPY_PET_VERSION:-latest}
     if [ "$version" = latest ]; then
         release_url="https://github.com/$REPO/releases/latest"
