@@ -56,33 +56,111 @@ full design rationale; this file is the day-to-day operational reference.
   aports, GURU, Snap Store, Flathub, Debian ITP, Fedora review, openSUSE
   Factory.
 
-## One-time setup required before the next phase
+## One-time setup: status
 
-These are account/credential steps only the repo owner can do; nothing
-else is blocked on them, but each corresponding package manager is:
+### Done
 
-- Rename the GitHub repo `clipster` → `clippy-pet` (the rename in this
-  codebase is already done; this is the GitHub-side rename plus updating
-  the local remote).
-- Create the `homebrew-tap` repository.
-- Enable GitHub Pages (serves `install.sh` and the static package repos).
-- Generate and store as repo secrets: a GPG key (RSA-4096) for apt/rpm/
-  alpine signing, an APK RSA signing key, an SSH key for AUR, a GitHub
-  token scoped to the tap repo.
-- Apple Developer ID certificate + notarization credentials as repo
-  secrets, consumed by the `macos` job in `release.yml`:
-  - `MACOS_CERT_P12` — base64-encoded `.p12` export of the Developer ID
-    Application *and* Developer ID Installer certificates (`base64 -i
-    cert.p12 | pbcopy`), and `MACOS_CERT_PASSWORD` for that export.
-  - `APPLE_TEAM_NAME` and `APPLE_TEAM_ID` — as shown in the certificate
-    name ("Developer ID Application: `<name>` (`<team id>`)").
-  - `APPLE_ID`, `APPLE_APP_PASSWORD` (an app-specific password from
-    appleid.apple.com), and reuse of `APPLE_TEAM_ID` — for
-    `notarytool`/`stapler`.
-  Until these are set, the macOS job still builds and uploads ad-hoc
-  signed, unnotarized artifacts.
-- Accounts: AUR, Launchpad, COPR, OBS, Ubuntu One (Snap Store), GitLab
-  (Alpine aports), GURU contributor access.
+- **GitHub repo renamed** `clipster` → `clippy-pet` (GitHub redirects the
+  old URL automatically). Local remote updated. Topics updated.
+- **`homebrew-tap` repository created**:
+  <https://github.com/adammatthewsteinberger/homebrew-tap> (empty
+  `Formula/`/`Casks/` directories, ready for the formula/cask once
+  written).
+- **GitHub Pages enabled**, serving the `gh-pages` branch at
+  <https://adammatthewsteinberger.github.io/clippy-pet/>.
+- **Signing keys generated and stored as repo secrets**
+  (`gh secret list -R adammatthewsteinberger/clippy-pet`):
+  - `GPG_PRIVATE_KEY` / `GPG_PASSPHRASE` — RSA-4096 key for apt/rpm
+    repository signing, expires 2026-08 + 2y. Public key committed at
+    [`packaging/keys/clippy-pet-signing.gpg.asc`](../packaging/keys/clippy-pet-signing.gpg.asc)
+    (fingerprint `49B2 46A2 9CD4 0801 4D5C  1EEE 57F1 8C00 88A5 8920`).
+  - `APK_PRIVATE_KEY` — RSA-4096 key for Alpine `apk` repository signing.
+    Public key committed at
+    [`packaging/keys/clippy-pet-signing.apk.rsa.pub`](../packaging/keys/clippy-pet-signing.apk.rsa.pub),
+    key name `adam@matthewsteinberger.com-6a834891` (already referenced
+    by `apk.signature.key_name` wherever the apk repo signing step is
+    added).
+  - `AUR_SSH_PRIVATE_KEY` — ed25519 keypair for pushing to AUR. Public
+    key is in `~/.clippy-pet-signing/aur-ed25519.pub` on the packaging
+    machine (not committed, since it's only useful once attached to an
+    AUR account — see the checklist below).
+  - All four private keys/passphrase also live locally under
+    `~/.clippy-pet-signing/` (mode 600) as a backup; that directory is
+    outside the repo and is not tracked by git.
+
+### Still needed (requires your action)
+
+`release.yml` and future publishing steps read these secrets from
+`repos/adammatthewsteinberger/clippy-pet` (Settings > Secrets and
+variables > Actions) or, where noted, from a separate service's own
+account settings. None of this can be done by an agent — each involves
+identity verification, payment, or a web-only signup flow.
+
+1. **Apple Developer ID** (unlocks signed/notarized macOS installers —
+   highest-value remaining item):
+   - Enroll at <https://developer.apple.com/programs/enroll/> ($99/yr).
+   - In Xcode or the [developer portal](https://developer.apple.com/account/resources/certificates/list),
+     create a **Developer ID Application** and a **Developer ID
+     Installer** certificate.
+   - Export both as one `.p12` from Keychain Access (File > Export
+     Items), set a password.
+   - Generate an app-specific password at <https://appleid.apple.com>
+     (Sign-In and Security > App-Specific Passwords) for `notarytool`.
+   - Set repo secrets: `MACOS_CERT_P12` (`base64 -i cert.p12 | pbcopy`),
+     `MACOS_CERT_PASSWORD`, `APPLE_TEAM_NAME` and `APPLE_TEAM_ID` (shown
+     in the certificate name, "Developer ID Application: `<name>`
+     (`<team id>`)"), `APPLE_ID`, `APPLE_APP_PASSWORD`.
+
+2. **AUR account** (<https://aur.archlinux.org/register>): after signing
+   up, add this public key to your account's SSH Public Key field
+   (Account Details > My Account):
+
+   ```
+   ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIBCAy9elXRWE/sg7x99FXS9+S24xcjaARo1R8nk7MR/t adam@matthewsteinberger.com (AUR clippy-pet)
+   ```
+
+   (also at `~/.clippy-pet-signing/aur-ed25519.pub`). No further secret
+   needed — `AUR_SSH_PRIVATE_KEY` is already set.
+
+3. **Launchpad account** (<https://launchpad.net/+login>) + create a PPA
+   (Personal Package Archive) named `clippy-pet` under your account, then
+   upload the GPG public key above to your Launchpad OpenPGP keys
+   (Account > OpenPGP keys) and confirm it via the emailed challenge.
+   Set repo secret `LAUNCHPAD_SSH_PRIVATE_KEY` (a separate SSH key
+   registered to your Launchpad account for `dput`/SFTP uploads — not
+   the AUR or GPG key).
+
+4. **COPR account** (Fedora Accounts System,
+   <https://accounts.fedoraproject.org>) → create a COPR project at
+   <https://copr.fedorainfracloud.org>, then get an API token from
+   <https://copr.fedorainfracloud.org/api/> and set repo secret
+   `COPR_API_TOKEN` (the whole `~/.config/copr` file contents `gh
+   secret set COPR_API_TOKEN < ~/.config/copr` works well).
+
+5. **OBS account** (<https://build.opensuse.org>) → set repo secrets
+   `OBS_USERNAME`/`OBS_PASSWORD` (or an API token, once wired into the
+   `osc` step).
+
+6. **Ubuntu One account** (<https://login.ubuntu.com>) for the Snap
+   Store → `snapcraft login`, then `snapcraft export-login` to produce a
+   credentials file for repo secret `SNAPCRAFT_STORE_CREDENTIALS`, and
+   `snapcraft register clippy-pet` to claim the name.
+
+7. **GitLab account** (<https://gitlab.alpinelinux.org>) for submitting
+   the Alpine aports merge request. No secret needed for the self-hosted
+   apk repo (already covered by `APK_PRIVATE_KEY`); this is only for the
+   upstream aports submission.
+
+8. **Gentoo GURU contributor access**: request via
+   <https://wiki.gentoo.org/wiki/Project:GURU/Access_Request> (needs a
+   Gentoo/GitHub identity and a short access request).
+
+9. **Homebrew tap push token**: create a fine-grained GitHub Personal
+   Access Token (<https://github.com/settings/personal-access-tokens/new>)
+   scoped to just the `homebrew-tap` repository with Contents:
+   Read-and-write, then set it as repo secret `TAP_GITHUB_TOKEN` on
+   `clippy-pet`. (Deliberately not reusing a broader personal token here
+   — CI should only be able to touch the tap repo.)
 
 ## Local build commands
 
