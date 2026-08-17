@@ -23,11 +23,21 @@ Clippy Pet is an unofficial, Codex-compatible v2 animated pet inspired by the vi
 
 ## Install
 
-Run the portable installer:
+```sh
+curl -fsSL https://adammatthewsteinberger.github.io/clippy-pet/install.sh | sh
+```
+
+Or, from a checkout:
 
 ```sh
 ./scripts/install.sh
 ```
+
+Native `.deb`, `.rpm`, `.apk`, and `.pkg.tar.zst` packages are attached to
+every [release](https://github.com/adammatthewsteinberger/clippy-pet/releases).
+See [docs/INSTALL.md](docs/INSTALL.md) for the full list of installers and
+package managers (including ones still in progress), the CLI reference, and
+checksum/signature verification.
 
 Or copy the two runtime files manually:
 
@@ -61,8 +71,10 @@ The validator checks the manifest, sprite contract version, dimensions, alpha ch
 │   └── row-strips/          Selected generated source strips
 ├── qa/                      Visual and deterministic QA evidence
 ├── scripts/
-│   ├── install.sh           Portable local installer
+│   ├── install.sh           Portable/bootstrap installer
 │   └── validate.py          Atlas and manifest validator
+├── packaging/                Installer CLI, packaging configs, and shared desktop/AppStream assets
+├── docs/                      INSTALL.md and PACKAGING.md
 └── .github/                 CI and contribution templates
 ```
 

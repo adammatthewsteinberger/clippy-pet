@@ -1,0 +1,80 @@
+name: Release
+on:
+  push:
+    tags: ["v*"]
+permissions:
+  contents: write
+  id-token: write
+  attestations: write
+jobs:
+  guard:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Tag must be an ancestor of main
+        run: |
+          git fetch origin main
+          git merge-base --is-ancestor "$GITHUB_SHA" origin/main
+      - name: VERSION / CHANGELOG / CITATION must agree with the tag
+        run: |
+          tag=${GITHUB_REF_NAME#v}
+          version_file=$(cat VERSION)
+          changelog_top=$(sed -n 's/^## \[\([0-9][^]]*\)\].*/\1/p' CHANGELOG.md | head -n1)
+          citation_version=$(sed -n 's/^version: //p' CITATION.cff)
+          echo "tag=$tag version=$version_file changelog=$changelog_top citation=$citation_version"
+          test "$tag" = "$version_file"
+          test "$tag" = "$changelog_top"
+          test "$tag" = "$citation_version"
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install -r requirements-dev.txt
+      - run: python scripts/validate.py
+
+  build:
+    needs: guard
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install nfpm
+        run: |
+          echo 'deb [trusted=yes] https://repo.goreleaser.com/apt/ /' | sudo tee /etc/apt/sources.list.d/goreleaser.list
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq nfpm
+      - name: Build tarballs
+        run: ./packaging/dist/make-tarballs.sh
+      - name: Build Linux packages
+        run: ./packaging/linux/build.sh
+      - name: Checksums
+        working-directory: dist
+        run: shasum -a 256 -- * > SHA256SUMS
+      - uses: actions/attest-build-provenance@v2
+        with:
+          subject-path: dist/*
+      - name: Sign checksums (cosign keyless)
+        uses: sigstore/cosign-installer@v3
+      - run: cosign sign-blob --yes --bundle dist/SHA256SUMS.sigstore.json dist/SHA256SUMS
+      - uses: actions/upload-artifact@v4
+        with:
+          name: release-assets
+          path: dist/
+
+  publish:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: release-assets
+          path: dist
+      - name: Create GitHub Release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release create "$GITHUB_REF_NAME" \
+            --repo "$GITHUB_REPOSITORY" \
+            --title "Clippy Pet $GITHUB_REF_NAME" \
+            --notes "See CHANGELOG.md for details." \
+            dist/*
