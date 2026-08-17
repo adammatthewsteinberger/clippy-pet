@@ -41,15 +41,14 @@ cp "$ROOT/spritesheet.webp" "$STAGE/share/clippy-pet/spritesheet.webp"
 
 gzip -9n -c "$ROOT/packaging/share/man/man1/clippy-pet.1" > "$STAGE/share/man/man1/clippy-pet.1.gz"
 
-[ -f "$ROOT/packaging/share/applications/io.github.adammatthewsteinberger.clippy_pet.desktop" ] && \
-    cp "$ROOT/packaging/share/applications/io.github.adammatthewsteinberger.clippy_pet.desktop" \
-       "$STAGE/share/applications/" || true
-[ -f "$ROOT/packaging/share/metainfo/io.github.adammatthewsteinberger.clippy_pet.metainfo.xml" ] && \
-    cp "$ROOT/packaging/share/metainfo/io.github.adammatthewsteinberger.clippy_pet.metainfo.xml" \
-       "$STAGE/share/metainfo/" || true
-[ -f "$ROOT/packaging/share/icons/hicolor/256x256/apps/io.github.adammatthewsteinberger.clippy_pet.png" ] && \
-    cp "$ROOT/packaging/share/icons/hicolor/256x256/apps/io.github.adammatthewsteinberger.clippy_pet.png" \
-       "$STAGE/share/icons/hicolor/256x256/apps/" || true
+for extra in \
+    "share/applications/io.github.adammatthewsteinberger.clippy_pet.desktop" \
+    "share/metainfo/io.github.adammatthewsteinberger.clippy_pet.metainfo.xml" \
+    "share/icons/hicolor/256x256/apps/io.github.adammatthewsteinberger.clippy_pet.png"; do
+    if [ -f "$ROOT/packaging/$extra" ]; then
+        cp "$ROOT/packaging/$extra" "$STAGE/$extra"
+    fi
+done
 
 cp "$ROOT/LICENSE" "$STAGE/LICENSE"
 cp "$ROOT/NOTICE.md" "$STAGE/NOTICE.md"
