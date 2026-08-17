@@ -1,5 +1,8 @@
 # Support
 
-Use GitHub Issues for reproducible bugs and feature requests. Use Discussions, if enabled, for questions and ideas.
+- **Questions and ideas**: [GitHub Discussions](https://github.com/adammatthewsteinberger/clippy-pet/discussions) (Q&A, Ideas, and Show and tell).
+- **Reproducible bugs and feature requests**: [GitHub Issues](https://github.com/adammatthewsteinberger/clippy-pet/issues/new/choose).
+- **Security problems**: privately, per [SECURITY.md](https://github.com/adammatthewsteinberger/clippy-pet/blob/main/SECURITY.md). Never in a public issue.
+- **Documentation**: <https://adammatthewsteinberger.github.io/clippy-pet/>, starting with [troubleshooting](https://adammatthewsteinberger.github.io/clippy-pet/get-started/troubleshooting/).
 
-Before requesting help, read `README.md`, run `python3 scripts/validate.py`, and include your Codex version, operating system, validator output, and relevant screenshots. Remove personal paths, credentials, and private information. This volunteer project offers no guaranteed response time or warranty.
+Before requesting help, run `clippy-pet status; clippy-pet path; clippy-pet version` (or `python3 scripts/validate.py` from a checkout) and include the output, your operating system, and which surface you use (ChatGPT desktop app, Codex CLI, or ChatGPT web). Remove personal paths, credentials, and private information first. This volunteer project offers no guaranteed response time or warranty.

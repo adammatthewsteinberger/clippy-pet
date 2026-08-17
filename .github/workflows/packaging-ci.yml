@@ -1,0 +1,158 @@
+name: Packaging CI
+on:
+  pull_request:
+  push:
+    branches: [develop, main]
+permissions:
+  contents: read
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Lint shell scripts
+        run: |
+          shellcheck -s sh packaging/bin/clippy-pet scripts/install.sh \
+            packaging/dist/make-tarballs.sh packaging/linux/build.sh
+      - name: Lint .desktop files
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq desktop-file-utils
+          desktop-file-validate packaging/share/applications/*.desktop
+          desktop-file-validate packaging/share/autostart/*.desktop
+      - name: Validate AppStream metainfo
+        run: |
+          sudo apt-get install -y -qq appstream
+          appstreamcli validate --strict --pedantic \
+            packaging/share/metainfo/*.metainfo.xml || \
+            appstreamcli validate --strict packaging/share/metainfo/*.metainfo.xml
+
+  build-and-smoke:
+    needs: lint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install nfpm
+        run: |
+          echo 'deb [trusted=yes] https://repo.goreleaser.com/apt/ /' | sudo tee /etc/apt/sources.list.d/goreleaser.list
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq nfpm
+      - name: Build tarballs
+        run: ./packaging/dist/make-tarballs.sh
+      - name: Build Linux packages
+        run: ./packaging/linux/build.sh
+      - name: Smoke test tarball
+        run: |
+          workdir=$(mktemp -d)
+          tar xzf dist/clippy-pet-*.tar.gz -C "$workdir"
+          extracted=$(find "$workdir" -maxdepth 1 -type d -name 'clippy-pet-*')
+          CODEX_HOME="$workdir/codexhome" "$extracted/bin/clippy-pet" install
+          test -f "$workdir/codexhome/pets/clippy-pet/pet.json"
+          test -f "$workdir/codexhome/pets/clippy-pet/spritesheet.webp"
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: packages
+          path: dist/
+          retention-days: 7
+
+  smoke-deb:
+    needs: build-and-smoke
+    runs-on: ubuntu-latest
+    container: debian:stable
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: packages
+          path: dist
+      - name: Install and verify
+        run: |
+          apt-get update -qq
+          apt-get install -y -qq ./dist/clippy-pet_*_all.deb
+          export HOME=/root
+          clippy-pet install
+          clippy-pet status
+          test -f "$HOME/.codex/pets/clippy-pet/pet.json"
+          clippy-pet uninstall
+          test ! -e "$HOME/.codex/pets/clippy-pet"
+
+  smoke-rpm:
+    needs: build-and-smoke
+    runs-on: ubuntu-latest
+    container: fedora:latest
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: packages
+          path: dist
+      - name: Install and verify
+        run: |
+          dnf install -y -q ./dist/clippy-pet-*.noarch.rpm
+          export HOME=/root
+          clippy-pet install
+          clippy-pet status
+          test -f "$HOME/.codex/pets/clippy-pet/pet.json"
+          clippy-pet uninstall
+          test ! -e "$HOME/.codex/pets/clippy-pet"
+
+  smoke-apk:
+    needs: build-and-smoke
+    runs-on: ubuntu-latest
+    container: alpine:latest
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: packages
+          path: dist
+      - name: Install and verify
+        run: |
+          apk add --allow-untrusted -q ./dist/clippy-pet_*_noarch.apk
+          export HOME=/root
+          clippy-pet install
+          clippy-pet status
+          test -f "$HOME/.codex/pets/clippy-pet/pet.json"
+          clippy-pet uninstall
+          test ! -e "$HOME/.codex/pets/clippy-pet"
+
+  macos:
+    needs: lint
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: ./packaging/macos/build.sh
+      - name: Smoke test the .app's bundled CLI
+        run: |
+          app="dist"
+          find "$app" -name '*.dmg'
+          hdiutil attach dist/Clippy-Pet-*.dmg -mountpoint /tmp/clippy-pet-dmg -nobrowse -quiet
+          codex_home=$(mktemp -d)
+          CLIPPY_PET_DATA="/tmp/clippy-pet-dmg/Install Clippy Pet.app/Contents/Resources/share/clippy-pet" \
+            CODEX_HOME="$codex_home" \
+            "/tmp/clippy-pet-dmg/Install Clippy Pet.app/Contents/Resources/bin/clippy-pet" install
+          test -f "$codex_home/pets/clippy-pet/pet.json"
+          test -f "$codex_home/pets/clippy-pet/spritesheet.webp"
+          hdiutil detach /tmp/clippy-pet-dmg -quiet
+      - uses: actions/upload-artifact@v4
+        with:
+          name: macos-packages
+          path: dist/
+          retention-days: 7
+
+  smoke-arch:
+    needs: build-and-smoke
+    runs-on: ubuntu-latest
+    container: archlinux:latest
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: packages
+          path: dist
+      - name: Install and verify
+        run: |
+          pacman -U --noconfirm ./dist/clippy-pet-*-any.pkg.tar.zst
+          export HOME=/root
+          clippy-pet install
+          clippy-pet status
+          test -f "$HOME/.codex/pets/clippy-pet/pet.json"
+          clippy-pet uninstall
+          test ! -e "$HOME/.codex/pets/clippy-pet"

@@ -1,0 +1,5 @@
+{#- Privacy-friendly, cookie-free page counts via GoatCounter. Disabled unless a code is configured. -#}
+{% if config.extra.analytics and config.extra.analytics.goatcounter_code %}
+<script data-goatcounter="https://{{ config.extra.analytics.goatcounter_code }}.goatcounter.com/count"
+        async src="//gc.zgo.at/count.js"></script>
+{% endif %}

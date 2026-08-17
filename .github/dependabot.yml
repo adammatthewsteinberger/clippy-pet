@@ -4,3 +4,17 @@ updates:
     directory: /
     schedule:
       interval: monthly
+    labels: [dependencies]
+  - package-ecosystem: pip
+    directory: /docs
+    schedule:
+      interval: monthly
+    labels: [dependencies, documentation]
+    groups:
+      mkdocs:
+        patterns: ["mkdocs*"]
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: monthly
+    labels: [dependencies, ci]

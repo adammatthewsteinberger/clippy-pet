@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Validate the portable Clipster manifest and v2 spritesheet contract."""
+"""Validate the portable Clippy Pet manifest and v2 spritesheet contract."""
 
 import json
 import sys
@@ -45,7 +45,7 @@ def main() -> None:
             populated = alpha.crop(box).getbbox() is not None
             if populated != (column < used_count):
                 fail(f"unexpected cell occupancy at row {row}, column {column}")
-    print("ok: Clipster manifest and v2 spritesheet contract are valid")
+    print("ok: Clippy Pet manifest and v2 spritesheet contract are valid")
 
 if __name__ == "__main__":
     main()

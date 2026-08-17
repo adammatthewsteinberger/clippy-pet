@@ -1,0 +1,397 @@
+#!/bin/sh
+# clippy-pet - install the Clippy Pet Codex pet into a user's CODEX_HOME.
+#
+# This is a plain POSIX sh script: it must run under dash, bash, zsh, and
+# busybox ash without modification. Do not add bashisms.
+set -eu
+
+PROG=clippy-pet
+VERSION_PLACEHOLDER='@VERSION@'
+DATADIR_DEFAULT='@DATADIR@'
+PET_ID=clippy-pet
+
+usage() {
+    cat <<'EOF'
+usage: clippy-pet [install] [options]
+       clippy-pet uninstall [options]
+       clippy-pet status [options]
+       clippy-pet sync [options]
+       clippy-pet path
+       clippy-pet autostart {enable|disable|status}
+       clippy-pet version | --version
+       clippy-pet help | --help
+
+Installs the Clippy Pet Codex pet (pet.json + spritesheet.webp) into
+${CODEX_HOME:-$HOME/.codex}/pets/clippy-pet/.
+
+Options (install/uninstall/status/sync):
+  --codex-home DIR   Use DIR instead of ${CODEX_HOME:-$HOME/.codex}
+  --link             Symlink the pet directory instead of copying files
+  --force            Overwrite an existing installation
+  --if-missing       Only install if not already installed (used by sync)
+  --migrate          Remove a legacy ~/.codex/pets/clipster/ install first
+  --quiet            Suppress non-error output
+  --gui              Report progress/errors via a desktop dialog when possible
+EOF
+}
+
+# ---------------------------------------------------------------------------
+# logging / gui feedback
+
+QUIET=0
+GUI=0
+
+log() {
+    [ "$QUIET" = 1 ] && return 0
+    printf '%s\n' "$*"
+}
+
+err() {
+    printf '%s: error: %s\n' "$PROG" "$*" >&2
+}
+
+notify() {
+    # notify TITLE MESSAGE
+    title=$1
+    message=$2
+    [ "$GUI" = 1 ] || return 0
+    if command -v osascript >/dev/null 2>&1; then
+        osascript -e "display notification \"$message\" with title \"$title\"" >/dev/null 2>&1 || true
+    elif command -v notify-send >/dev/null 2>&1; then
+        notify-send "$title" "$message" >/dev/null 2>&1 || true
+    elif command -v zenity >/dev/null 2>&1; then
+        zenity --info --title="$title" --text="$message" >/dev/null 2>&1 || true
+    elif command -v kdialog >/dev/null 2>&1; then
+        kdialog --title "$title" --passivepopup "$message" 5 >/dev/null 2>&1 || true
+    elif command -v gdbus >/dev/null 2>&1; then
+        gdbus call --session --dest org.freedesktop.Notifications \
+            --object-path /org/freedesktop/Notifications \
+            --method org.freedesktop.Notifications.Notify \
+            "$PROG" 0 "" "$title" "$message" "[]" "{}" 5000 >/dev/null 2>&1 || true
+    fi
+}
+
+fail_gui() {
+    message=$1
+    if [ "$GUI" = 1 ] && command -v osascript >/dev/null 2>&1; then
+        osascript -e "display dialog \"$message\" with title \"Clippy Pet\" buttons {\"OK\"} default button 1 with icon caution" >/dev/null 2>&1 || true
+    else
+        notify "Clippy Pet" "$message"
+    fi
+}
+
+# ---------------------------------------------------------------------------
+# portable helpers (no readlink -f / realpath assumed)
+
+resolve_path() {
+    # resolve_path PATH -> prints an absolute, symlink-resolved path
+    target=$1
+    if command -v realpath >/dev/null 2>&1; then
+        realpath "$target" 2>/dev/null && return 0
+    fi
+    if command -v readlink >/dev/null 2>&1 && readlink -f "$target" >/dev/null 2>&1; then
+        readlink -f "$target"
+        return 0
+    fi
+    # manual fallback: resolve symlinks in a loop, then cd -P for the dir part
+    p=$target
+    i=0
+    while [ -L "$p" ] && [ "$i" -lt 20 ]; do
+        # shellcheck disable=SC2012
+        link=$(ls -ld -- "$p" 2>/dev/null | sed 's/.*-> //')
+        case $link in
+            /*) p=$link ;;
+            *) p=$(dirname -- "$p")/$link ;;
+        esac
+        i=$((i + 1))
+    done
+    dir=$(dirname -- "$p")
+    base=$(basename -- "$p")
+    # shellcheck disable=SC1007
+    (CDPATH= cd -- "$dir" 2>/dev/null && printf '%s/%s\n' "$(pwd -P)" "$base")
+}
+
+script_dir() {
+    resolve_path "$0" | xargs dirname
+}
+
+# ---------------------------------------------------------------------------
+# locate the payload (pet.json + spritesheet.webp)
+
+find_datadir() {
+    if [ -n "${CLIPPY_PET_DATA:-}" ] && [ -f "${CLIPPY_PET_DATA}/pet.json" ]; then
+        printf '%s\n' "$CLIPPY_PET_DATA"
+        return 0
+    fi
+
+    if [ "$DATADIR_DEFAULT" != "@DATADIR@" ] && [ -f "$DATADIR_DEFAULT/pet.json" ]; then
+        printf '%s\n' "$DATADIR_DEFAULT"
+        return 0
+    fi
+
+    sd=$(script_dir 2>/dev/null || printf '%s' "$PWD")
+    for candidate in \
+        "$sd/../share/clippy-pet" \
+        "$sd/../Resources/share/clippy-pet" \
+        "$sd/../Resources" \
+        "$sd" \
+        "${SNAP:-}/share/clippy-pet" \
+        "/app/share/clippy-pet" \
+        "${APPDIR:-}/usr/share/clippy-pet" \
+        "/usr/local/share/clippy-pet" \
+        "/opt/homebrew/share/clippy-pet" \
+        "/usr/share/clippy-pet"
+    do
+        [ -n "$candidate" ] || continue
+        if [ -f "$candidate/pet.json" ]; then
+            resolve_path "$candidate"
+            return 0
+        fi
+    done
+
+    return 1
+}
+
+files_equal() {
+    # files_equal A B -> true if A and B have identical content.
+    # Prefers cmp, but falls back to size+checksum for minimal images
+    # (e.g. some container base images) that lack diffutils.
+    a=$1
+    b=$2
+    if command -v cmp >/dev/null 2>&1; then
+        cmp -s -- "$a" "$b"
+        return $?
+    fi
+    sa=$(wc -c < "$a") || return 1
+    sb=$(wc -c < "$b") || return 1
+    [ "$sa" -eq "$sb" ] || return 1
+    if command -v cksum >/dev/null 2>&1; then
+        ca=$(cksum < "$a") || return 1
+        cb=$(cksum < "$b") || return 1
+        [ "$ca" = "$cb" ]
+        return $?
+    fi
+    if command -v md5sum >/dev/null 2>&1; then
+        [ "$(md5sum < "$a")" = "$(md5sum < "$b")" ]
+        return $?
+    fi
+    # Sizes matched and no checksum tool is available; accept it.
+    return 0
+}
+
+# ---------------------------------------------------------------------------
+# codex home / target resolution
+
+codex_home() {
+    if [ -n "${OPT_CODEX_HOME:-}" ]; then
+        printf '%s\n' "$OPT_CODEX_HOME"
+        return 0
+    fi
+    if [ -n "${CODEX_HOME:-}" ]; then
+        printf '%s\n' "$CODEX_HOME"
+        return 0
+    fi
+    home=${SNAP_REAL_HOME:-$HOME}
+    printf '%s\n' "$home/.codex"
+}
+
+target_dir() {
+    printf '%s/pets/%s\n' "$(codex_home)" "$PET_ID"
+}
+
+legacy_dir() {
+    printf '%s/pets/clipster\n' "$(codex_home)"
+}
+
+# ---------------------------------------------------------------------------
+# commands
+
+cmd_path() {
+    target_dir
+}
+
+cmd_status() {
+    dest=$(target_dir)
+    if [ ! -f "$dest/pet.json" ] || [ ! -f "$dest/spritesheet.webp" ]; then
+        log "not installed: $dest"
+        return 1
+    fi
+    datadir=$(find_datadir) || { log "installed (source payload not found for comparison): $dest"; return 0; }
+    if files_equal "$dest/pet.json" "$datadir/pet.json" && files_equal "$dest/spritesheet.webp" "$datadir/spritesheet.webp"; then
+        log "up to date: $dest"
+        return 0
+    fi
+    log "outdated: $dest"
+    return 2
+}
+
+do_migrate() {
+    old=$(legacy_dir)
+    [ -d "$old" ] || return 0
+    log "removing legacy install at $old"
+    rm -rf -- "$old"
+}
+
+cmd_install() {
+    datadir=$(find_datadir) || {
+        err "could not locate pet.json / spritesheet.webp (set CLIPPY_PET_DATA)"
+        fail_gui "Clippy Pet could not find its own data files. Please reinstall."
+        exit 1
+    }
+
+    dest=$(target_dir)
+
+    if [ "$OPT_IF_MISSING" = 1 ] && [ -f "$dest/pet.json" ] && [ -f "$dest/spritesheet.webp" ]; then
+        log "already installed: $dest"
+        return 0
+    fi
+
+    if [ -e "$dest" ] && [ "$OPT_FORCE" != 1 ] && [ "$OPT_IF_MISSING" != 1 ]; then
+        if [ -f "$dest/pet.json" ] && [ -f "$dest/spritesheet.webp" ]; then
+            log "already installed: $dest (use --force to reinstall)"
+            return 0
+        fi
+    fi
+
+    [ "$OPT_MIGRATE" = 1 ] && do_migrate
+
+    mkdir -p -- "$(dirname -- "$dest")"
+
+    if [ "$OPT_LINK" = 1 ]; then
+        rm -rf -- "$dest"
+        ln -s -- "$datadir" "$dest"
+        log "linked $dest -> $datadir"
+        notify "Clippy Pet" "Installed. Reload Codex, then Settings > Pets > Clippy Pet."
+        return 0
+    fi
+
+    tmp="$dest.tmp.$$"
+    rm -rf -- "$tmp"
+    mkdir -p -- "$tmp"
+    cp -- "$datadir/pet.json" "$tmp/pet.json"
+    cp -- "$datadir/spritesheet.webp" "$tmp/spritesheet.webp"
+
+    if ! files_equal "$tmp/pet.json" "$datadir/pet.json" || ! files_equal "$tmp/spritesheet.webp" "$datadir/spritesheet.webp"; then
+        rm -rf -- "$tmp"
+        err "copy verification failed"
+        fail_gui "Installing Clippy Pet failed while copying files."
+        exit 1
+    fi
+
+    rm -rf -- "$dest"
+    mv -- "$tmp" "$dest"
+
+    log "installed: $dest"
+    log "Reload Codex, then open Settings > Pets > Clippy Pet (or run /pets clippy-pet in the Codex CLI TUI)."
+    notify "Clippy Pet" "Installed. Reload Codex, then Settings > Pets > Clippy Pet."
+}
+
+cmd_uninstall() {
+    dest=$(target_dir)
+    if [ ! -e "$dest" ]; then
+        log "not installed: $dest"
+        return 0
+    fi
+    rm -rf -- "$dest"
+    log "removed: $dest"
+    notify "Clippy Pet" "Uninstalled."
+}
+
+cmd_autostart() {
+    sub=${1:-status}
+    autostart_dir="${XDG_CONFIG_HOME:-$HOME/.config}/autostart"
+    entry="$autostart_dir/io.github.adammatthewsteinberger.clippy_pet.desktop"
+    case "$sub" in
+        enable)
+            mkdir -p -- "$autostart_dir"
+            cat > "$entry" <<EOF
+[Desktop Entry]
+Type=Application
+Name=Clippy Pet sync
+Comment=Keep the Clippy Pet Codex pet installed
+Exec=clippy-pet sync --quiet
+X-GNOME-Autostart-enabled=true
+NoDisplay=true
+EOF
+            log "autostart enabled: $entry"
+            ;;
+        disable)
+            rm -f -- "$entry"
+            log "autostart disabled"
+            ;;
+        status)
+            if [ -f "$entry" ]; then
+                log "autostart enabled: $entry"
+            else
+                log "autostart disabled"
+                return 1
+            fi
+            ;;
+        *)
+            err "unknown autostart subcommand: $sub"
+            usage >&2
+            exit 2
+            ;;
+    esac
+}
+
+# ---------------------------------------------------------------------------
+# arg parsing
+
+OPT_CODEX_HOME=""
+OPT_LINK=0
+OPT_FORCE=0
+OPT_IF_MISSING=0
+OPT_MIGRATE=0
+
+COMMAND=install
+if [ $# -gt 0 ]; then
+    case "$1" in
+        install|uninstall|status|sync|path|autostart|version|help|--version|--help)
+            COMMAND=$1
+            shift
+            ;;
+    esac
+fi
+
+AUTOSTART_SUB=""
+if [ "$COMMAND" = autostart ]; then
+    AUTOSTART_SUB=${1:-status}
+    [ $# -gt 0 ] && shift
+fi
+
+while [ $# -gt 0 ]; do
+    case "$1" in
+        --codex-home) OPT_CODEX_HOME=$2; shift 2 ;;
+        --codex-home=*) OPT_CODEX_HOME=${1#*=}; shift ;;
+        --link) OPT_LINK=1; shift ;;
+        --force) OPT_FORCE=1; shift ;;
+        --if-missing) OPT_IF_MISSING=1; shift ;;
+        --migrate) OPT_MIGRATE=1; shift ;;
+        --quiet) QUIET=1; shift ;;
+        --gui) GUI=1; shift ;;
+        -h|--help) usage; exit 0 ;;
+        *)
+            err "unrecognized option: $1"
+            usage >&2
+            exit 2
+            ;;
+    esac
+done
+
+[ "$COMMAND" = sync ] && OPT_IF_MISSING=1
+
+case "$COMMAND" in
+    install|sync) cmd_install ;;
+    uninstall) cmd_uninstall ;;
+    status) cmd_status ;;
+    path) cmd_path ;;
+    autostart) cmd_autostart "$AUTOSTART_SUB" ;;
+    version|--version) printf '%s %s\n' "$PROG" "$VERSION_PLACEHOLDER" ;;
+    help|--help) usage ;;
+    *)
+        err "unknown command: $COMMAND"
+        usage >&2
+        exit 2
+        ;;
+esac

@@ -1,0 +1,158 @@
+name: Release
+on:
+  push:
+    tags: ["v*"]
+permissions:
+  contents: write
+  id-token: write
+  attestations: write
+jobs:
+  guard:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Tag must be an ancestor of main
+        run: |
+          git fetch origin main
+          git merge-base --is-ancestor "$GITHUB_SHA" origin/main
+      - name: VERSION / CHANGELOG / CITATION must agree with the tag
+        run: |
+          tag=${GITHUB_REF_NAME#v}
+          version_file=$(cat VERSION)
+          changelog_top=$(sed -n 's/^## \[\([0-9][^]]*\)\].*/\1/p' CHANGELOG.md | head -n1)
+          citation_version=$(sed -n 's/^version: //p' CITATION.cff)
+          echo "tag=$tag version=$version_file changelog=$changelog_top citation=$citation_version"
+          test "$tag" = "$version_file"
+          test "$tag" = "$changelog_top"
+          test "$tag" = "$citation_version"
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install -r requirements-dev.txt
+      - run: python scripts/validate.py
+
+  build:
+    needs: guard
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install nfpm
+        run: |
+          echo 'deb [trusted=yes] https://repo.goreleaser.com/apt/ /' | sudo tee /etc/apt/sources.list.d/goreleaser.list
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq nfpm
+      - name: Build tarballs
+        run: ./packaging/dist/make-tarballs.sh
+      - name: Build Linux packages
+        run: ./packaging/linux/build.sh
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Build v1 (web upload) spritesheet
+        run: |
+          pip install -r requirements-dev.txt
+          python scripts/build-v1-spritesheet.py dist/spritesheet-v1.webp
+      - name: Checksums
+        working-directory: dist
+        run: shasum -a 256 -- * > SHA256SUMS
+      - uses: actions/attest-build-provenance@v2
+        with:
+          subject-path: dist/*
+      - name: Sign checksums (cosign keyless)
+        uses: sigstore/cosign-installer@v3
+      - run: cosign sign-blob --yes --bundle dist/SHA256SUMS.sigstore.json dist/SHA256SUMS
+      - uses: actions/upload-artifact@v4
+        with:
+          name: release-assets
+          path: dist/
+
+  macos:
+    needs: guard
+    runs-on: macos-latest
+    env:
+      HAS_MACOS_CERT: ${{ secrets.MACOS_CERT_P12 != '' }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Import signing certificate
+        if: ${{ env.HAS_MACOS_CERT == 'true' }}
+        env:
+          MACOS_CERT_P12: ${{ secrets.MACOS_CERT_P12 }}
+          MACOS_CERT_PASSWORD: ${{ secrets.MACOS_CERT_PASSWORD }}
+        run: |
+          keychain=build.keychain
+          security create-keychain -p "" "$keychain"
+          security default-keychain -s "$keychain"
+          security unlock-keychain -p "" "$keychain"
+          echo "$MACOS_CERT_P12" | base64 --decode > cert.p12
+          security import cert.p12 -k "$keychain" -P "$MACOS_CERT_PASSWORD" \
+            -T /usr/bin/codesign -T /usr/bin/productsign
+          security set-key-partition-list -S apple-tool:,apple:,codesign: -s -k "" "$keychain"
+          rm -f cert.p12
+          {
+            echo "MACOS_APP_SIGNING_IDENTITY=Developer ID Application: ${{ secrets.APPLE_TEAM_NAME }} (${{ secrets.APPLE_TEAM_ID }})"
+            echo "MACOS_INSTALLER_SIGNING_IDENTITY=Developer ID Installer: ${{ secrets.APPLE_TEAM_NAME }} (${{ secrets.APPLE_TEAM_ID }})"
+          } >> "$GITHUB_ENV"
+      - name: Build macOS installers
+        env:
+          APPLE_ID: ${{ secrets.APPLE_ID }}
+          APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
+          APPLE_APP_PASSWORD: ${{ secrets.APPLE_APP_PASSWORD }}
+        run: ./packaging/macos/build.sh
+      - uses: actions/upload-artifact@v4
+        with:
+          name: release-assets-macos
+          path: dist/
+
+  publish:
+    needs: [build, macos]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: release-assets
+          path: dist
+      - uses: actions/download-artifact@v4
+        with:
+          name: release-assets-macos
+          path: dist
+      - uses: actions/checkout@v4
+        with:
+          path: src
+      - name: Compose release notes from CHANGELOG.md
+        run: |
+          version=${GITHUB_REF_NAME#v}
+          {
+            echo "📎 *It looks like you're installing a paperclip.*"
+            echo
+            echo '```sh'
+            echo 'curl -fsSL https://adammatthewsteinberger.github.io/clippy-pet/install.sh | sh'
+            echo '```'
+            echo
+            echo "macOS: open \`Clippy-Pet-$version.dmg\`. Linux: install the \`.deb\` / \`.rpm\` / \`.apk\` / \`.pkg.tar.zst\` below, then run \`clippy-pet install\`. ChatGPT web: upload \`spritesheet-v1.webp\`. Full guide: https://adammatthewsteinberger.github.io/clippy-pet/get-started/install/"
+            echo
+            echo "## Changes"
+            echo
+            awk -v v="$version" '
+              /^## \[/ { if (found) exit; if ($0 ~ "\\[" v "\\]") { found=1; next } }
+              found { print }
+            ' src/CHANGELOG.md
+            echo
+            echo "## Verify"
+            echo
+            # shellcheck disable=SC2016
+            echo 'Every asset is listed in `SHA256SUMS`, which is signed with cosign (`SHA256SUMS.sigstore.json`) and attested via GitHub artifact attestations. See https://adammatthewsteinberger.github.io/clippy-pet/packages/verify/'
+            echo
+            echo "_Clippy Pet is unofficial and not affiliated with or endorsed by Microsoft or OpenAI. See NOTICE.md._"
+          } > notes.md
+          cat notes.md
+      - name: Create GitHub Release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release create "$GITHUB_REF_NAME" \
+            --repo "$GITHUB_REPOSITORY" \
+            --title "Clippy Pet $GITHUB_REF_NAME" \
+            --notes-file notes.md \
+            dist/*

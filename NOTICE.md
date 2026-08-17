@@ -1,6 +1,6 @@
 # Notices
 
-Clipster is an unofficial open-source project by Adam Matthew Steinberger.
+Clippy Pet is an unofficial open-source project by Adam Matthew Steinberger.
 
 The project intentionally evokes the visual language of Microsoft's historical Clippy/Clippit Office Assistant. Microsoft, Office, Clippy, and Clippit may be trademarks or protected properties of Microsoft Corporation. Microsoft has not endorsed, sponsored, or affiliated itself with this project.
 
