@@ -27,7 +27,7 @@ jobs:
           test "$tag" = "$version_file"
           test "$tag" = "$changelog_top"
           test "$tag" = "$citation_version"
-      - uses: actions/setup-python@v5
+      - uses: actions/setup-python@v7
         with:
           python-version: "3.12"
       - run: pip install -r requirements-dev.txt
@@ -47,7 +47,7 @@ jobs:
         run: ./packaging/dist/make-tarballs.sh
       - name: Build Linux packages
         run: ./packaging/linux/build.sh
-      - uses: actions/setup-python@v5
+      - uses: actions/setup-python@v7
         with:
           python-version: "3.12"
       - name: Build v1 (web upload) spritesheet
