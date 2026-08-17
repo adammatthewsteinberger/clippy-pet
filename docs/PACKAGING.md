@@ -24,13 +24,27 @@ full design rationale; this file is the day-to-day operational reference.
 - `.github/workflows/release.yml` — on a `v*` tag: guards version
   consistency (`VERSION` == `CHANGELOG.md` top entry == `CITATION.cff`
   version == tag) and that the tag is on `main`, builds tarballs + Linux
-  packages, checksums them, signs the checksum file with cosign
-  (keyless/OIDC), attaches a GitHub artifact attestation, and publishes a
-  GitHub Release.
+  packages + macOS installers, checksums them, signs the checksum file
+  with cosign (keyless/OIDC), attaches a GitHub artifact attestation, and
+  publishes a GitHub Release.
+- `packaging/macos/{build.sh,postinstall,install.applescript,
+  distribution.xml,resources/,clippy-pet.icns}` — builds "Install Clippy
+  Pet.app" (no admin required; runs the CLI against the current user's
+  Codex home), `Clippy-Pet-<v>.pkg` (system-domain install to
+  `/usr/local`, with a postinstall script that seeds the console user's
+  own `~/.codex/pets/clippy-pet/`), and `Clippy-Pet-<v>.dmg` (bundles
+  both plus README/LICENSE/NOTICE). Verified locally: `pkgbuild`/
+  `productbuild` output inspected via `pkgutil --expand-full` (correct
+  4-file payload, correct Distribution/postinstall), the console-user/
+  home-directory resolution the postinstall script performs was
+  independently confirmed, and the bundled CLI was smoke-tested via the
+  same code path the `.app` uses. Signing/notarization are wired into
+  `release.yml` behind the Apple secrets listed below; without them the
+  build still produces ad-hoc-signed, unnotarized artifacts (so forks
+  and local builds work), which macOS Gatekeeper will flag until signed
+  builds are published.
 
 ### Not yet built (tracked, see the plan for full detail per target)
-- macOS `.app`/`.pkg`/`.dmg` (signed + notarized — Apple Developer ID is
-  available; secrets not yet wired into CI).
 - AppImage, Flatpak, Snap.
 - Homebrew tap + formula/cask, MacPorts Portfile, Nix flake + Home
   Manager module, AUR PKGBUILD, Alpine aports, Gentoo GURU ebuild, conda
@@ -55,8 +69,18 @@ else is blocked on them, but each corresponding package manager is:
 - Generate and store as repo secrets: a GPG key (RSA-4096) for apt/rpm/
   alpine signing, an APK RSA signing key, an SSH key for AUR, a GitHub
   token scoped to the tap repo.
-- Apple Developer ID certificate + notarization credentials (App Store
-  Connect API key or app-specific password) as repo secrets.
+- Apple Developer ID certificate + notarization credentials as repo
+  secrets, consumed by the `macos` job in `release.yml`:
+  - `MACOS_CERT_P12` — base64-encoded `.p12` export of the Developer ID
+    Application *and* Developer ID Installer certificates (`base64 -i
+    cert.p12 | pbcopy`), and `MACOS_CERT_PASSWORD` for that export.
+  - `APPLE_TEAM_NAME` and `APPLE_TEAM_ID` — as shown in the certificate
+    name ("Developer ID Application: `<name>` (`<team id>`)").
+  - `APPLE_ID`, `APPLE_APP_PASSWORD` (an app-specific password from
+    appleid.apple.com), and reuse of `APPLE_TEAM_ID` — for
+    `notarytool`/`stapler`.
+  Until these are set, the macOS job still builds and uploads ad-hoc
+  signed, unnotarized artifacts.
 - Accounts: AUR, Launchpad, COPR, OBS, Ubuntu One (Snap Store), GitLab
   (Alpine aports), GURU contributor access.
 

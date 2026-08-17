@@ -114,6 +114,30 @@ jobs:
           clippy-pet uninstall
           test ! -e "$HOME/.codex/pets/clippy-pet"
 
+  macos:
+    needs: lint
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: ./packaging/macos/build.sh
+      - name: Smoke test the .app's bundled CLI
+        run: |
+          app="dist"
+          find "$app" -name '*.dmg'
+          hdiutil attach dist/Clippy-Pet-*.dmg -mountpoint /tmp/clippy-pet-dmg -nobrowse -quiet
+          codex_home=$(mktemp -d)
+          CLIPPY_PET_DATA="/tmp/clippy-pet-dmg/Install Clippy Pet.app/Contents/Resources/share/clippy-pet" \
+            CODEX_HOME="$codex_home" \
+            "/tmp/clippy-pet-dmg/Install Clippy Pet.app/Contents/Resources/bin/clippy-pet" install
+          test -f "$codex_home/pets/clippy-pet/pet.json"
+          test -f "$codex_home/pets/clippy-pet/spritesheet.webp"
+          hdiutil detach /tmp/clippy-pet-dmg -quiet
+      - uses: actions/upload-artifact@v4
+        with:
+          name: macos-packages
+          path: dist/
+          retention-days: 7
+
   smoke-arch:
     needs: build-and-smoke
     runs-on: ubuntu-latest

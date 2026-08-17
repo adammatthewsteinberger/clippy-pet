@@ -67,9 +67,21 @@ installed across package upgrades.
 
 ## macOS GUI installers
 
-`.pkg`, `.app`, and `.dmg` installers, signed and notarized with a Developer
-ID, are planned but not yet published — see [PACKAGING.md](PACKAGING.md) for
-status.
+Every [release](https://github.com/adammatthewsteinberger/clippy-pet/releases)
+includes:
+
+- **`Clippy-Pet-<version>.dmg`** — the easiest option. Open it, then either:
+  - double-click **Install Clippy Pet.app** to install for your user only
+    (no administrator password), or
+  - double-click **Clippy-Pet-\<version\>.pkg** to install for every user
+    on the Mac.
+- **`Clippy-Pet-<version>.pkg`** on its own, for `sudo installer -pkg
+  Clippy-Pet-<version>.pkg -target /`.
+
+Until signed release builds are published (see
+[PACKAGING.md](PACKAGING.md)), Gatekeeper will block the unsigned/
+ad-hoc-signed `.app` and `.pkg`: right-click > Open, or System Settings >
+Privacy & Security > Open Anyway.
 
 ## CLI reference
 
