@@ -1,0 +1,84 @@
+.TH CLIPPY-PET 1 "2026" "clippy-pet" "User Commands"
+.SH NAME
+clippy-pet \- install the Clippy Pet Codex pet
+.SH SYNOPSIS
+.B clippy-pet
+.RI [ install ]
+.RI [ options ]
+.br
+.B clippy-pet
+.BR uninstall | status | sync | path
+.RI [ options ]
+.br
+.B clippy-pet
+.B autostart
+.BR enable | disable | status
+.br
+.B clippy-pet
+.BR version | help
+.SH DESCRIPTION
+.B clippy-pet
+copies the Clippy Pet Codex pet manifest and spritesheet into
+.IR $CODEX_HOME/pets/clippy-pet/ ,
+where the Codex desktop app and Codex CLI TUI discover custom pets.
+When
+.B CODEX_HOME
+is unset, Codex defaults to
+.IR $HOME/.codex .
+.SH COMMANDS
+.TP
+.B install
+Copy the pet into place (the default command).
+.TP
+.B uninstall
+Remove the installed pet.
+.TP
+.B status
+Report whether the pet is installed and up to date. Exit status is 0 for
+up to date, 1 for not installed, 2 for outdated.
+.TP
+.B sync
+Equivalent to \fBinstall --if-missing\fR; used by the autostart entry.
+.TP
+.B path
+Print the resolved install directory.
+.TP
+.B autostart enable|disable|status
+Manage an XDG autostart entry that runs \fBsync --quiet\fR at login.
+.SH OPTIONS
+.TP
+.BR \-\-codex\-home " " \fIDIR\fR
+Use \fIDIR\fR instead of \fI$CODEX_HOME\fR or \fI$HOME/.codex\fR.
+.TP
+.B \-\-link
+Symlink the pet directory to the package's data directory instead of
+copying, so it stays current automatically.
+.TP
+.B \-\-force
+Overwrite an existing installation.
+.TP
+.B \-\-if\-missing
+Only install if not already installed.
+.TP
+.B \-\-migrate
+Remove a legacy \fI~/.codex/pets/clipster/\fR installation before installing.
+.TP
+.B \-\-quiet
+Suppress non-error output.
+.TP
+.B \-\-gui
+Report progress and errors via a desktop notification or dialog when
+available (osascript, notify-send, zenity, kdialog, or a D-Bus call).
+.SH ENVIRONMENT
+.TP
+.B CODEX_HOME
+Overrides the Codex configuration directory.
+.TP
+.B CLIPPY_PET_DATA
+Overrides the directory containing pet.json and spritesheet.webp.
+.SH FILES
+.I $CODEX_HOME/pets/clippy-pet/pet.json
+.br
+.I $CODEX_HOME/pets/clippy-pet/spritesheet.webp
+.SH SEE ALSO
+Project homepage: https://github.com/adammatthewsteinberger/clippy-pet

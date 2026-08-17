@@ -1,0 +1,102 @@
+name: clippy-pet
+arch: all
+platform: linux
+version: ${CLIPPY_PET_VERSION}
+section: misc
+priority: optional
+maintainer: Adam Matthew Steinberger <adam@matthewsteinberger.com>
+description: |
+  Unofficial animated paperclip Codex pet
+  Clippy Pet installs a Codex-compatible v2 pet manifest and spritesheet
+  into the current user's Codex configuration directory, where the Codex
+  desktop app and Codex CLI TUI can offer it as a selectable pet. This
+  project is not affiliated with or endorsed by Microsoft.
+vendor: Adam Matthew Steinberger
+homepage: https://github.com/adammatthewsteinberger/clippy-pet
+license: MIT
+
+contents:
+  - src: ${CLIPPY_PET_STAGE}/usr/bin/clippy-pet
+    dst: /usr/bin/clippy-pet
+    expand: true
+    file_info:
+      mode: 0755
+
+  - src: ${CLIPPY_PET_STAGE}/usr/share/clippy-pet/pet.json
+    dst: /usr/share/clippy-pet/pet.json
+    expand: true
+    file_info:
+      mode: 0644
+  - src: ${CLIPPY_PET_STAGE}/usr/share/clippy-pet/spritesheet.webp
+    dst: /usr/share/clippy-pet/spritesheet.webp
+    expand: true
+    file_info:
+      mode: 0644
+
+  - src: ${CLIPPY_PET_STAGE}/usr/share/man/man1/clippy-pet.1.gz
+    dst: /usr/share/man/man1/clippy-pet.1.gz
+    expand: true
+    file_info:
+      mode: 0644
+
+  - src: ${CLIPPY_PET_STAGE}/usr/share/applications/io.github.adammatthewsteinberger.clippy_pet.desktop
+    dst: /usr/share/applications/io.github.adammatthewsteinberger.clippy_pet.desktop
+    expand: true
+    file_info:
+      mode: 0644
+
+  - src: ${CLIPPY_PET_STAGE}/usr/share/metainfo/io.github.adammatthewsteinberger.clippy_pet.metainfo.xml
+    dst: /usr/share/metainfo/io.github.adammatthewsteinberger.clippy_pet.metainfo.xml
+    expand: true
+    file_info:
+      mode: 0644
+
+  - src: ${CLIPPY_PET_STAGE}/usr/share/icons/hicolor/256x256/apps/io.github.adammatthewsteinberger.clippy_pet.png
+    dst: /usr/share/icons/hicolor/256x256/apps/io.github.adammatthewsteinberger.clippy_pet.png
+    expand: true
+    file_info:
+      mode: 0644
+
+  - src: ${CLIPPY_PET_STAGE}/etc/xdg/autostart/io.github.adammatthewsteinberger.clippy_pet.desktop
+    dst: /etc/xdg/autostart/io.github.adammatthewsteinberger.clippy_pet.desktop
+    expand: true
+    type: config|noreplace
+    file_info:
+      mode: 0644
+
+  - src: ${CLIPPY_PET_STAGE}/usr/share/doc/clippy-pet/copyright
+    dst: /usr/share/doc/clippy-pet/copyright
+    expand: true
+    file_info:
+      mode: 0644
+    packager: deb
+
+  - src: ${CLIPPY_PET_STAGE}/usr/share/doc/clippy-pet/changelog.gz
+    dst: /usr/share/doc/clippy-pet/changelog.gz
+    expand: true
+    file_info:
+      mode: 0644
+    packager: deb
+
+  - src: ${CLIPPY_PET_STAGE}/usr/share/licenses/clippy-pet/LICENSE
+    dst: /usr/share/licenses/clippy-pet/LICENSE
+    expand: true
+    type: license
+    file_info:
+      mode: 0644
+    packager: rpm
+
+  - src: ${CLIPPY_PET_STAGE}/usr/share/licenses/clippy-pet/LICENSE
+    dst: /usr/share/licenses/clippy-pet/LICENSE
+    expand: true
+    file_info:
+      mode: 0644
+    packager: archlinux
+
+overrides:
+  deb:
+    recommends:
+      - zenity
+
+archlinux:
+  packager: Adam Matthew Steinberger <adam@matthewsteinberger.com>

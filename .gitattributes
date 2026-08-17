@@ -4,3 +4,5 @@
 *.jpeg binary
 *.png binary
 *.webp binary
+source/ export-ignore
+qa/ export-ignore

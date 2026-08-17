@@ -5,3 +5,13 @@ __pycache__/
 *.py[cod]
 *.tmp
 .coverage
+
+# packaging build output
+/dist/
+/.build/
+*.pkg
+*.dmg
+*.AppImage
+*.AppImage.zsync
+*.flatpak
+*.snap

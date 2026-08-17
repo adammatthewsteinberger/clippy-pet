@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component type="desktop-application">
+  <id>io.github.adammatthewsteinberger.clippy_pet</id>
+  <name>Clippy Pet</name>
+  <summary>An unofficial animated paperclip Codex pet</summary>
+  <metadata_license>MIT</metadata_license>
+  <project_license>MIT</project_license>
+  <developer id="io.github.adammatthewsteinberger">
+    <name>Adam Matthew Steinberger</name>
+  </developer>
+  <description>
+    <p>
+      Clippy Pet is an unofficial, Codex-compatible v2 animated pet inspired by
+      the visual language of classic late-1990s desktop assistants. It is not
+      affiliated with or endorsed by Microsoft.
+    </p>
+    <p>
+      Installing Clippy Pet copies its manifest and spritesheet into your
+      Codex configuration directory so the Codex desktop app and Codex CLI
+      TUI can offer it as a selectable pet.
+    </p>
+  </description>
+  <launchable type="desktop-id">io.github.adammatthewsteinberger.clippy_pet.desktop</launchable>
+  <icon type="stock">io.github.adammatthewsteinberger.clippy_pet</icon>
+  <url type="homepage">https://github.com/adammatthewsteinberger/clippy-pet</url>
+  <url type="bugtracker">https://github.com/adammatthewsteinberger/clippy-pet/issues</url>
+  <url type="vcs-browser">https://github.com/adammatthewsteinberger/clippy-pet</url>
+  <categories>
+    <category>Utility</category>
+  </categories>
+  <content_rating type="oars-1.1"/>
+  <releases>
+    <release version="1.1.0" date="2026-08-17"/>
+  </releases>
+  <provides>
+    <binary>clippy-pet</binary>
+  </provides>
+</component>
