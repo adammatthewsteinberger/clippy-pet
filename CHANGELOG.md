@@ -4,6 +4,10 @@ Notable changes are documented here using [Keep a Changelog](https://keepachange
 
 ## [Unreleased]
 
+### Changed
+
+- Renamed the project from Clipster to Clippy Pet. The pet id, install directory, and package name are now `clippy-pet`.
+
 ### Added
 
 - FOSS governance, validation, installation, and GitHub community files.
@@ -17,5 +21,5 @@ Notable changes are documented here using [Keep a Changelog](https://keepachange
 - Nine standard animation states and sixteen clockwise look directions.
 - Source strips, normalized frames, previews, and QA evidence.
 
-[Unreleased]: https://github.com/adammatthewsteinberger/clipster/compare/v1.0.0...HEAD
-[1.0.0]: https://github.com/adammatthewsteinberger/clipster/releases/tag/v1.0.0
+[Unreleased]: https://github.com/adammatthewsteinberger/clippy-pet/compare/v1.0.0...HEAD
+[1.0.0]: https://github.com/adammatthewsteinberger/clippy-pet/releases/tag/v1.0.0

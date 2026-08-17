@@ -1,11 +1,11 @@
-# Clipster
+# Clippy Pet
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
-[![Validate](https://github.com/adammatthewsteinberger/clipster/actions/workflows/validate.yml/badge.svg)](https://github.com/adammatthewsteinberger/clipster/actions/workflows/validate.yml)
+[![Validate](https://github.com/adammatthewsteinberger/clippy-pet/actions/workflows/validate.yml/badge.svg)](https://github.com/adammatthewsteinberger/clippy-pet/actions/workflows/validate.yml)
 
-Clipster is an unofficial, Codex-compatible v2 animated pet inspired by the visual language of classic late-1990s desktop assistants. It provides nine standard animation states, sixteen clockwise look directions, portable source assets, and visual QA evidence.
+Clippy Pet is an unofficial, Codex-compatible v2 animated pet inspired by the visual language of classic late-1990s desktop assistants. It provides nine standard animation states, sixteen clockwise look directions, portable source assets, and visual QA evidence.
 
-![Clipster animation contact sheet](qa/contact-sheet.png)
+![Clippy Pet animation contact sheet](qa/contact-sheet.png)
 
 > [!IMPORTANT]
 > This project is not affiliated with or endorsed by Microsoft. The MIT License covers original project contributions only and does not grant trademark rights or rights the author does not own. Read [NOTICE.md](NOTICE.md) before redistributing or using the project commercially.
@@ -32,7 +32,7 @@ Run the portable installer:
 Or copy the two runtime files manually:
 
 ```text
-$CODEX_HOME/pets/clipster/
+$CODEX_HOME/pets/clippy-pet/
   pet.json
   spritesheet.webp
 ```
@@ -70,7 +70,7 @@ Atlas rows are idle, running-right, running-left, waving, jumping, failed, waiti
 
 ## Contributing and support
 
-Clipster uses GitFlow: `main` is release-only, while ordinary feature, fix, documentation, maintenance, and dependency pull requests target `develop`. Release and hotfix branches are merged back into both long-lived branches. Read [CONTRIBUTING.md](CONTRIBUTING.md) for the complete branch and release workflow before submitting changes.
+Clippy Pet uses GitFlow: `main` is release-only, while ordinary feature, fix, documentation, maintenance, and dependency pull requests target `develop`. Release and hotfix branches are merged back into both long-lived branches. Read [CONTRIBUTING.md](CONTRIBUTING.md) for the complete branch and release workflow before submitting changes.
 
 Community behavior is governed by [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md). Use GitHub Issues for bugs and feature requests, and follow [SECURITY.md](SECURITY.md) for private vulnerability reports.
 

@@ -1,6 +1,6 @@
 # Contributing
 
-Thanks for helping improve Clipster.
+Thanks for helping improve Clippy Pet.
 
 ## Setup
 
@@ -15,7 +15,7 @@ python3 scripts/validate.py
 
 ## Branching model
 
-Clipster uses GitFlow with two protected long-lived branches:
+Clippy Pet uses GitFlow with two protected long-lived branches:
 
 - `main` contains production-ready releases. Do not target ordinary contribution pull requests at `main`.
 - `develop` is the integration branch for the next release. Feature, documentation, maintenance, and dependency pull requests normally target `develop`.
