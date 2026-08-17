@@ -50,7 +50,7 @@ jobs:
           test -f "$workdir/codexhome/pets/clippy-pet/pet.json"
           test -f "$workdir/codexhome/pets/clippy-pet/spritesheet.webp"
       - name: Upload artifacts
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: packages
           path: dist/
@@ -132,7 +132,7 @@ jobs:
           test -f "$codex_home/pets/clippy-pet/pet.json"
           test -f "$codex_home/pets/clippy-pet/spritesheet.webp"
           hdiutil detach /tmp/clippy-pet-dmg -quiet
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         with:
           name: macos-packages
           path: dist/
