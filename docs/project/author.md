@@ -18,7 +18,7 @@ He builds and maintains privacy-first, open-source software, prefers tools that 
 - GitHub: [@adammatthewsteinberger](https://github.com/adammatthewsteinberger)
 - Books: *Engineering Influence* and *From Novice to Navigator*, both on Amazon
 
-<!-- ADAM: optional one-paragraph personal note on why you made Clippy Pet, in your own words. Delete this comment or replace it. -->
+Clippy Pet was made to brighten the hearts of Clippy lovers and to bring the old school Digital AI Assistant into the 21st century.
 
 ## Supporting the project
 

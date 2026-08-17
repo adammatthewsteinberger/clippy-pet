@@ -77,9 +77,7 @@ extra:
   generator: false
   analytics:
     provider: custom
-    # Privacy-friendly, cookie-free analytics (GoatCounter). Leave empty to disable.
-    # Set to your GoatCounter site code, e.g. "clippy-pet" for https://clippy-pet.goatcounter.com
-    goatcounter_code: ""
+    goatcounter_code: "adam-matthew-steinberger"
   social:
     - icon: fontawesome/brands/github
       link: https://github.com/adammatthewsteinberger/clippy-pet

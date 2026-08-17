@@ -10,8 +10,6 @@ description: Clippy Pet 1.1 brings a one-line install on every Unix, native macO
 
 Clippy Pet started as two files in a repository and a ten-line script that copied them into `~/.codex/pets/`. Version 1.1 keeps the two files exactly as they were and changes everything around them: how you get them, how you check them, and how you find out what they are. Here's what's in the release, and, in keeping with house style, what isn't yet.
 
-<!-- more -->
-
 ## The one-liner
 
 ```sh
