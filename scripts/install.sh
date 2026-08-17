@@ -88,8 +88,8 @@ verify_checksum() {
     file=$2
     line=$(grep -- "  $file\$" "$dir/SHA256SUMS" 2>/dev/null || true)
     if [ -z "$line" ]; then
-        echo "warning: no checksum entry found for $file; skipping verification" >&2
-        return 0
+        echo "error: no checksum entry found for $file in SHA256SUMS" >&2
+        exit 1
     fi
     expected=$(printf '%s' "$line" | awk '{print $1}')
     if command -v sha256sum >/dev/null 2>&1; then
