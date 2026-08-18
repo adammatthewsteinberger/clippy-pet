@@ -120,8 +120,22 @@ make validate      # manifest, contract version, 1536×2288, alpha, path safety,
 
 GitFlow: `develop` is the default branch; `main` is release-only; tags on `main` build releases. Read [CONTRIBUTING.md](CONTRIBUTING.md), be kind per [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md), ask in [Discussions](https://github.com/adammatthewsteinberger/clippy-pet/discussions), report bugs in [Issues](https://github.com/adammatthewsteinberger/clippy-pet/issues/new/choose), and report vulnerabilities privately per [SECURITY.md](SECURITY.md). Docs preview: `pip install -r docs/requirements.txt && make docs-serve`.
 
+## Related projects
+
+Clippy Pet is the fun one in a family of otherwise serious open-source tools by the same author, all MIT:
+
+- **[claudeloop](https://github.com/adammatthewsteinberger/claudeloop)** · **[codexloop](https://github.com/adammatthewsteinberger/codexloop)** · **[cursorloop](https://github.com/adammatthewsteinberger/cursorloop)** · **[agyloop](https://github.com/adammatthewsteinberger/agyloop)** — autonomous coding-session runners: same contract, different vendor
+- **[vibey](https://github.com/adammatthewsteinberger/vibey)** — six-phase queue conductor over the loop runners
+- **[azure-bootstrap](https://github.com/adammatthewsteinberger/azure-bootstrap)** — Azure Functions cross-cutting layer (App Config + Key Vault + App Insights bootstrap)
+- **[vibe-engineering-skills](https://github.com/adammatthewsteinberger/vibe-engineering-skills)** — Claude Code plugin marketplace: 18 plugins / 71 Agent Skills
+- **[homebrew-tap](https://github.com/adammatthewsteinberger/homebrew-tap)** — `brew tap adammatthewsteinberger/tap`; the Clippy Pet formula lands there when [the roadmap](https://adammatthewsteinberger.github.io/clippy-pet/project/roadmap/) says so
+
 ## License & notice
 
 Copyright © 2026 [Adam Matthew Steinberger](https://hire.adam.matthewsteinberger.com). Original project contributions are [MIT](LICENSE) licensed; see [AUTHORS.md](AUTHORS.md). **Clippy Pet is not affiliated with or endorsed by Microsoft or OpenAI**; "Clippy", "Clippit", "Office", and "Microsoft" may be trademarks of Microsoft Corporation, and the MIT license grants no rights to them. Read [NOTICE.md](NOTICE.md) before redistributing or using commercially.
 
 <p align="center"><sub>Made in Greenville, SC by an engineer who thinks a good disclaimer is a feature. <a href="https://adammatthewsteinberger.github.io/clippy-pet/project/author/">About the author</a></sub></p>
+
+---
+
+Built by [Adam Matthew Steinberger](https://hire.adam.matthewsteinberger.com) · [more open source](https://hire.adam.matthewsteinberger.com/open-source)
