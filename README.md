@@ -126,8 +126,8 @@ Clippy Pet is the fun one in a family of otherwise serious open-source tools by 
 
 - **[claudeloop](https://github.com/adammatthewsteinberger/claudeloop)** · **[codexloop](https://github.com/adammatthewsteinberger/codexloop)** · **[cursorloop](https://github.com/adammatthewsteinberger/cursorloop)** · **[agyloop](https://github.com/adammatthewsteinberger/agyloop)** — autonomous coding-session runners: same contract, different vendor
 - **[vibey](https://github.com/adammatthewsteinberger/vibey)** — six-phase queue conductor over the loop runners
-- **[azure-bootstrap](https://github.com/adammatthewsteinberger/azure-bootstrap)** — Azure Functions cross-cutting layer (App Config + Key Vault + App Insights bootstrap)
-- **[vibe-engineering-skills](https://github.com/adammatthewsteinberger/vibe-engineering-skills)** — Claude Code plugin marketplace: 18 plugins / 71 Agent Skills
+- **[vibey-bootstrap](https://github.com/adammatthewsteinberger/vibey-bootstrap)** — Azure Functions cross-cutting layer (App Config + Key Vault + App Insights bootstrap)
+- **[vibey-skills](https://github.com/adammatthewsteinberger/vibey-skills)** — Claude Code plugin marketplace: 18 plugins / 71 Agent Skills
 - **[homebrew-tap](https://github.com/adammatthewsteinberger/homebrew-tap)** — `brew tap adammatthewsteinberger/tap`; the Clippy Pet formula lands there when [the roadmap](https://adammatthewsteinberger.github.io/clippy-pet/project/roadmap/) says so
 
 ## License & notice
