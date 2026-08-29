@@ -13,11 +13,11 @@ He writes, too. *Engineering Influence* is a 200-plus-source field manual on how
 
 He builds and maintains privacy-first, open-source software, prefers tools that don't phone home, and thinks a good disclaimer is a feature.
 
-- Portfolio and hiring: [hire.adam.matthewsteinberger.com](https://hire.adam.matthewsteinberger.com)
+- Portfolio and hiring: [vibewithadam.matthewsteinberger.com](https://vibewithadam.matthewsteinberger.com)
 - LinkedIn: [linkedin.com/in/adammatthewsteinberger](https://www.linkedin.com/in/adammatthewsteinberger/)
 - GitHub: [@adammatthewsteinberger](https://github.com/adammatthewsteinberger)
-- Books: [*Novice to Navigator* and *Engineering Influence*](https://hire.adam.matthewsteinberger.com/books) — neither is for sale; the first edition of *Novice to Navigator* is [free to read](https://hire.adam.matthewsteinberger.com/novice-to-navigator)
-- More open source: [hire.adam.matthewsteinberger.com/open-source](https://hire.adam.matthewsteinberger.com/open-source)
+- Books: [*Novice to Navigator* and *Engineering Influence*](https://vibewithadam.matthewsteinberger.com/books) — neither is for sale; the first edition of *Novice to Navigator* is [free to read](https://vibewithadam.matthewsteinberger.com/novice-to-navigator)
+- More open source: [vibewithadam.matthewsteinberger.com/open-source](https://vibewithadam.matthewsteinberger.com/open-source)
 
 Clippy Pet was made to brighten the hearts of Clippy lovers and to bring the old school Digital AI Assistant into the 21st century.
 
