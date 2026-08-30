@@ -6,3 +6,6 @@
 *.webp binary
 source/ export-ignore
 qa/ export-ignore
+
+# vibey-gh: append-only files merge instead of conflicting
+CHANGELOG.md merge=union

@@ -1,0 +1,31 @@
+# vibey-gh adoption — starter configuration (1.58.0).
+#
+# Deliberately conservative for a first adoption: the commit trailer (via the installed
+# hooks) makes provenance total from day one, while the pieces that need per-repository
+# curation stay off until the operator turns them on:
+#
+# - [fingerprint] sources is empty: no file-header globs are imposed on this codebase
+#   until its file types are curated (a header in the wrong format breaks builds).
+#   Every COMMIT still carries the Made-With trailer, so provenance is already total.
+# - [documentation] is disabled: the doc contract (agent docs, project map, README
+#   sections) is adopted deliberately, not by surprise. Same for require_roadmap —
+#   the living-roadmap doctrine applies when the operator writes this repository's
+#   roadmap in the shape they want.
+# - [install] renders provenance.yml only: it is self-contained (no secrets). The AI
+#   lanes (pr-automation, issue-automation, merge train) need the ANTHROPIC_API_KEY
+#   and AUTOMERGE_TOKEN secrets on THIS repository before they are worth rendering.
+
+[fingerprint]
+sources = []
+
+[documentation]
+enabled = false
+require_roadmap = false
+
+[merge_train]
+owner = "adammatthewsteinberger"
+trusted_authors = ["adammatthewsteinberger"]
+
+[install]
+workflows = ["provenance.yml"]
+pin_version = true
