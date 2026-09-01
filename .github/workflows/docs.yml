@@ -45,7 +45,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v7
+      - uses: actions/checkout@v7.0.1
         with:
           fetch-depth: 0   # git-revision-date-localized needs history
       - uses: actions/setup-python@v7
@@ -89,7 +89,7 @@ jobs:
           path: site
       # gh-pages may not exist yet (first deploy). actions/checkout fails hard on a
       # missing ref, so check out the default branch and switch/create manually.
-      - uses: actions/checkout@v7
+      - uses: actions/checkout@v7.0.1
         with:
           path: gh-pages
       - name: Switch to gh-pages (create orphan branch if missing)
