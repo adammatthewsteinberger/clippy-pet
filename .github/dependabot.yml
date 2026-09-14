@@ -18,3 +18,11 @@ updates:
     schedule:
       interval: monthly
     labels: [dependencies, ci]
+    # vibey-gh owns the action versions used by the workflows it generates, and
+    # ships them through its own releases. A bump applied here instead makes the
+    # rendered file stop matching its template, which fails `vibey-gh check` and
+    # makes the pre-push hook refuse every push from the branch. Upgrade these
+    # by upgrading vibey-gh.
+    ignore:
+      - dependency-name: actions/checkout
+      - dependency-name: actions/setup-python
