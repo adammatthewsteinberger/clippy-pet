@@ -1,4 +1,4 @@
-# Made with ❤️ by [Vibey](https://adammatthewsteinberger.github.io/vibey/), Developed by [Adam Matthew Steinberger](https://vibewithadam.matthewsteinberger.com/) ([@adammatthewsteinberger](https://github.com/adammatthewsteinberger/)).
+# Made with ❤️ by [Vibey](https://the-vibey-project.github.io/vibey/), Developed by [Adam Matthew Steinberger](https://vibewithadam.matthewsteinberger.com/) ([@adammatthewsteinberger](https://github.com/adammatthewsteinberger/)).
 name: Provenance
 
 # Server-side half of the provenance rule. The pre-push hook is the fast, local half, but
@@ -15,7 +15,22 @@ on:
   push:
     branches: ["**"]
   pull_request:
+  # Where a repository puts this job behind a merge queue, the queue only ever sees
+  # checks a `merge_group` event started; without this the gate never reports and every
+  # queued pull request is ejected on timeout. On a merge group there is no
+  # `pull_request` payload, so the step below falls through to the whole-repository
+  # check -- the right scope, since each group member's commits were already walked on
+  # its own pull request (ADR-0036).
+  merge_group:
 
+# Deliberately minimal, and deliberately WITHOUT a forge credential. `check --ci` also
+# surveys cloud clutter through `gh pr list` and `gh release list`, and it is tempting to
+# add `pull-requests: read` and a `GH_TOKEN` here so that survey can run. Do not: the job
+# below installs the tooling from the CHECKED-OUT TREE when a repository self-hosts, so on
+# a pull request the credentialed step would be running the contributor's own code. A
+# token in this job is a token handed to whatever that pull request contains. The survey
+# reporting "not surveyed" here is the correct outcome, not a bug to fix with a secret --
+# it belongs in a job whose checkout is trusted.
 permissions:
   contents: read
 
@@ -34,7 +49,7 @@ jobs:
           fetch-depth: 0
 
       - name: Set up Python
-        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5
         with:
           python-version: "3.12"
 
@@ -43,11 +58,22 @@ jobs:
       - name: Install the tooling
         run: |
           set -euo pipefail
-          if grep -qE '^name = "vibey-(gh|bootstrap)"' pyproject.toml 2>/dev/null; then
+          # Where this repository keeps its own copy of the tooling, from
+          # `[install] self_source` in .vibey-gh.toml -- a DECLARED path, never a search.
+          # Searching the tree for a pyproject declaring `name = "vibey-gh"` would read a
+          # pull request's own files: a branch that adds one anywhere gets it installed
+          # here, with this job's permissions, and hands the provenance gate a tool of the
+          # contributor's choosing. The path is verified below before anything runs.
+          self="."
+          # Verified, not assumed: a misconfigured path must fall back to the published
+          # release rather than install whatever happens to sit there. That release is
+          # `vibey`: `vibey_gh` ships inside it, not as a project of its own (ADR-0037).
+          grep -qE '^name = "vibey-gh"' "$self/pyproject.toml" 2>/dev/null || self=""
+          if [ -n "$self" ]; then
             echo "this repository provides the tooling — installing from source"
-            python -m pip install --quiet -e .
+            python -m pip install --quiet -e "$self"
           else
-            python -m pip install --quiet "vibey-gh==1.58.0"
+            python -m pip install --quiet vibey
           fi
 
       # --ci skips the core.hooksPath assertion, which is per-clone local git config that
@@ -56,9 +82,19 @@ jobs:
       # injection surface even though it comes from github.event.
       - name: Check provenance
         env:
+          # No GH_TOKEN here, on purpose -- see `permissions:` above. This step runs the
+          # tooling installed from the checkout, which on a pull request is the
+          # contributor's code; a credential in this environment would be readable by it.
           BASE_SHA: ${{ github.event.pull_request.base.sha }}
           BASE_REF: ${{ github.event.pull_request.base.ref }}
           HEAD_REF: ${{ github.event.pull_request.head.ref }}
+          # The PULL REQUEST's head, not the checked-out ref. On a pull_request event
+          # actions/checkout gives you `refs/pull/N/merge`, a synthetic merge whose FIRST
+          # parent is the base branch -- so a first-parent walk from it goes straight into
+          # the base and finds nothing. Measured on this repository: 0 commits from the
+          # merge ref, 16 from the branch head. Walking `HEAD` there reports a green gate
+          # having examined nothing at all.
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
           INTEGRATION_BRANCH: develop
           RELEASE_BRANCH: main
         run: |
@@ -69,7 +105,8 @@ jobs:
             vibey-gh check --ci
           elif [ -n "${BASE_SHA:-}" ]; then
             git fetch --quiet --depth=50 origin "${BASE_SHA}" 2>/dev/null || true
-            vibey-gh check --ci --commits "${BASE_SHA}..HEAD"
+            git fetch --quiet --depth=50 origin "${HEAD_SHA}" 2>/dev/null || true
+            vibey-gh check --ci --commits "${BASE_SHA}..${HEAD_SHA}"
           else
             vibey-gh check --ci
           fi
