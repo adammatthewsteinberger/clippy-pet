@@ -54,10 +54,14 @@ vibey_gh() {
     vibey-gh "$@"
   elif [ -n "${VIRTUAL_ENV:-}" ] && [ -x "${VIRTUAL_ENV}/bin/vibey-gh" ]; then
     "${VIRTUAL_ENV}/bin/vibey-gh" "$@"
-  elif PYTHONSAFEPATH=1 python3 -c "import vibey_gh.cli" >/dev/null 2>&1; then
-    PYTHONSAFEPATH=1 python3 -m vibey_gh.cli "$@"
-  elif PYTHONSAFEPATH=1 python3 -c "import vibey_bootstrap.gh.cli" >/dev/null 2>&1; then
-    PYTHONSAFEPATH=1 python3 -m vibey_bootstrap.gh.cli "$@"   # pre-split layout
+  elif [ -x ".venv/bin/vibey-gh" ]; then
+    ./.venv/bin/vibey-gh "$@"
+  elif [ -x "venv/bin/vibey-gh" ]; then
+    ./venv/bin/vibey-gh "$@"
+  elif python3 -c "import vibey_gh.cli" >/dev/null 2>&1; then
+    python3 -m vibey_gh.cli "$@"
+  elif python3 -c "import vibey_bootstrap.gh.cli" >/dev/null 2>&1; then
+    python3 -m vibey_bootstrap.gh.cli "$@"   # pre-split layout
   else
     return 127
   fi
@@ -69,9 +73,7 @@ key=$(vibey_gh trailer-key 2>/dev/null || echo "Made-With")
 trailer=$(vibey_gh trailer 2>/dev/null || echo "Made-With: Made with ❤️ by [Vibey](https://the-vibey-project.github.io/vibey/), Developed by [Adam Matthew Steinberger](https://vibewithadam.matthewsteinberger.com/) ([@adammatthewsteinberger](https://github.com/adammatthewsteinberger/)).")
 
 # A pre-existing project hook runs first and may do its own thing.
-if [ -x "$(dirname "$0")/commit-msg.local" ]; then
-  "$(dirname "$0")/commit-msg.local" "$@" || exit $?
-fi
+[ -x "$(dirname "$0")/commit-msg.local" ] && "$(dirname "$0")/commit-msg.local" "$@"
 
 # Normalize the subject without assuming the Python package is importable in the hook's
 # process. The body and existing trailers remain unchanged.

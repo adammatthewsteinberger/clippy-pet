@@ -70,10 +70,10 @@ vibey_gh() {
     ./.venv/bin/vibey-gh "$@"
   elif [ -x "venv/bin/vibey-gh" ]; then
     ./venv/bin/vibey-gh "$@"
-  elif PYTHONSAFEPATH=1 python3 -c "import vibey_gh.cli" >/dev/null 2>&1; then
-    PYTHONSAFEPATH=1 python3 -m vibey_gh.cli "$@"
-  elif PYTHONSAFEPATH=1 python3 -c "import vibey_bootstrap.gh.cli" >/dev/null 2>&1; then
-    PYTHONSAFEPATH=1 python3 -m vibey_bootstrap.gh.cli "$@"   # pre-split layout
+  elif python3 -c "import vibey_gh.cli" >/dev/null 2>&1; then
+    python3 -m vibey_gh.cli "$@"
+  elif python3 -c "import vibey_bootstrap.gh.cli" >/dev/null 2>&1; then
+    python3 -m vibey_bootstrap.gh.cli "$@"   # pre-split layout
   else
     return 127
   fi

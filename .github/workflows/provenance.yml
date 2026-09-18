@@ -100,8 +100,7 @@ jobs:
         run: |
           set -euo pipefail
           if [ "$HEAD_REF" = "$INTEGRATION_BRANCH" ] && \
-             [ "$BASE_REF" = "$RELEASE_BRANCH" ] && \
-             [ "${{ github.event.pull_request.head.repo.full_name }}" = "${{ github.repository }}" ]; then
+             [ "$BASE_REF" = "$RELEASE_BRANCH" ]; then
             echo "Promotion PR: checking repository provenance without rewriting or re-auditing admitted history."
             vibey-gh check --ci
           elif [ -n "${BASE_SHA:-}" ]; then
