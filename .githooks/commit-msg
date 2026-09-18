@@ -18,20 +18,16 @@ vibey_gh() {
   # tool the obvious way cannot commit to it. The package is dependency-free stdlib, so
   # `python3 -m` against the checkout needs no install and no virtualenv at all.
   if [ -f pyproject.toml ] && grep -qE '^name = "vibey-gh"' pyproject.toml \
-    && [ -d vibey_gh ] && python3 -c "import vibey_gh.cli" >/dev/null 2>&1; then
-    python3 -m vibey_gh.cli "$@"
+    && [ -d vibey_gh ] && PYTHONSAFEPATH=1 python3 -c "import vibey_gh.cli" >/dev/null 2>&1; then
+    PYTHONSAFEPATH=1 python3 -m vibey_gh.cli "$@"
   elif command -v vibey-gh >/dev/null 2>&1; then
     vibey-gh "$@"
   elif [ -n "${VIRTUAL_ENV:-}" ] && [ -x "${VIRTUAL_ENV}/bin/vibey-gh" ]; then
     "${VIRTUAL_ENV}/bin/vibey-gh" "$@"
-  elif [ -x ".venv/bin/vibey-gh" ]; then
-    ./.venv/bin/vibey-gh "$@"
-  elif [ -x "venv/bin/vibey-gh" ]; then
-    ./venv/bin/vibey-gh "$@"
-  elif python3 -c "import vibey_gh.cli" >/dev/null 2>&1; then
-    python3 -m vibey_gh.cli "$@"
-  elif python3 -c "import vibey_bootstrap.gh.cli" >/dev/null 2>&1; then
-    python3 -m vibey_bootstrap.gh.cli "$@"   # pre-split layout
+  elif PYTHONSAFEPATH=1 python3 -c "import vibey_gh.cli" >/dev/null 2>&1; then
+    PYTHONSAFEPATH=1 python3 -m vibey_gh.cli "$@"
+  elif PYTHONSAFEPATH=1 python3 -c "import vibey_bootstrap.gh.cli" >/dev/null 2>&1; then
+    PYTHONSAFEPATH=1 python3 -m vibey_bootstrap.gh.cli "$@"   # pre-split layout
   else
     return 127
   fi
