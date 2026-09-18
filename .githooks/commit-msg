@@ -39,7 +39,9 @@ key=$(vibey_gh trailer-key 2>/dev/null || echo "Made-With")
 trailer=$(vibey_gh trailer 2>/dev/null || echo "Made-With: Made with ❤️ by [Vibey](https://adammatthewsteinberger.github.io/vibey/), Developed by [Adam Matthew Steinberger](https://vibewithadam.matthewsteinberger.com/) ([@adammatthewsteinberger](https://github.com/adammatthewsteinberger/)).")
 
 # A pre-existing project hook runs first and may do its own thing.
-[ -x "$(dirname "$0")/commit-msg.local" ] && "$(dirname "$0")/commit-msg.local" "$@"
+if [ -x "$(dirname "$0")/commit-msg.local" ]; then
+  "$(dirname "$0")/commit-msg.local" "$@" || exit $?
+fi
 
 # Normalize the subject without assuming the Python package is importable in the hook's
 # process. The body and existing trailers remain unchanged.
