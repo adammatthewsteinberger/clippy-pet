@@ -23,14 +23,15 @@ on:
   # its own pull request (ADR-0036).
   merge_group:
 
-# Deliberately minimal, and deliberately WITHOUT a forge credential. `check --ci` also
-# surveys cloud clutter through `gh pr list` and `gh release list`, and it is tempting to
-# add `pull-requests: read` and a `GH_TOKEN` here so that survey can run. Do not: the job
-# below installs the tooling from the CHECKED-OUT TREE when a repository self-hosts, so on
-# a pull request the credentialed step would be running the contributor's own code. A
-# token in this job is a token handed to whatever that pull request contains. The survey
-# reporting "not surveyed" here is the correct outcome, not a bug to fix with a secret --
-# it belongs in a job whose checkout is trusted.
+# Deliberately minimal. `check --ci` also surveys cloud clutter through `gh pr list` and
+# `gh release list`, and it is tempting to add `pull-requests: read` and a `GH_TOKEN` here
+# so that survey can run. Do not: the job below installs the tooling from the CHECKED-OUT
+# TREE when a repository self-hosts, so on a pull request the credentialed step would be
+# running the contributor's own code. The survey reporting "not surveyed" here is the
+# correct outcome, not a bug to fix with a secret -- it belongs in a job whose checkout is
+# trusted. The pinned checkout action is the only component allowed to use the read-only
+# token, and `persist-credentials: false` removes it before any checkout-sourced tooling
+# runs. No pull-request-controlled shell step receives a forge credential.
 permissions:
   contents: read
 
@@ -45,8 +46,14 @@ jobs:
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
         with:
-          # Needed to walk the commits a pull request adds.
+          # Never inspect the synthetic merge ref: provenance must walk the contributor's
+          # exact head against the exact base supplied by the event.
+          repository: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name || github.repository }}
+          ref: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.sha || github.sha }}
           fetch-depth: 0
+          # The next steps execute tooling from this checkout. Do not leave the runner's
+          # GITHUB_TOKEN in .git/config where that code can read it.
+          persist-credentials: false
 
       - name: Set up Python
         uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5
@@ -73,13 +80,20 @@ jobs:
             echo "this repository provides the tooling — installing from source"
             python -m pip install --quiet -e "$self"
           else
-            python -m pip install --quiet vibey
+            python -m pip install --quiet "vibey==1.5.0"
           fi
 
       # --ci skips the core.hooksPath assertion, which is per-clone local git config that
       # no runner can satisfy. The hook FILES are repository state and are still checked.
-      # The base SHA goes through env: rather than into the shell, so there is no
+      # Every event value goes through env: rather than into the shell, so there is no
       # injection surface even though it comes from github.event.
+      #
+      # The promotion shortcut skips the per-commit audit, so it is taken only for a pull
+      # request whose head is a branch of THIS repository. Branch names alone are not
+      # enough: a fork can name its branch after the integration branch, and a pull
+      # request from it into the release branch would otherwise be treated as a promotion
+      # and have its commits waved through unaudited. A fork's head repository is the
+      # fork, so it takes the per-commit path like any other contribution.
       - name: Check provenance
         env:
           # No GH_TOKEN here, on purpose -- see `permissions:` above. This step runs the
@@ -95,17 +109,21 @@ jobs:
           # merge ref, 16 from the branch head. Walking `HEAD` there reports a green gate
           # having examined nothing at all.
           HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+          # Where the head branch lives, and this repository. Empty on a push or merge
+          # group, and on a pull request whose fork has since been deleted -- none of
+          # which is a promotion.
+          HEAD_REPO: ${{ github.event.pull_request.head.repo.full_name }}
+          THIS_REPO: ${{ github.repository }}
           INTEGRATION_BRANCH: develop
           RELEASE_BRANCH: main
         run: |
           set -euo pipefail
           if [ "$HEAD_REF" = "$INTEGRATION_BRANCH" ] && \
-             [ "$BASE_REF" = "$RELEASE_BRANCH" ]; then
+             [ "$BASE_REF" = "$RELEASE_BRANCH" ] && \
+             [ -n "$HEAD_REPO" ] && [ "$HEAD_REPO" = "$THIS_REPO" ]; then
             echo "Promotion PR: checking repository provenance without rewriting or re-auditing admitted history."
             vibey-gh check --ci
           elif [ -n "${BASE_SHA:-}" ]; then
-            git fetch --quiet --depth=50 origin "${BASE_SHA}" 2>/dev/null || true
-            git fetch --quiet --depth=50 origin "${HEAD_SHA}" 2>/dev/null || true
             vibey-gh check --ci --commits "${BASE_SHA}..${HEAD_SHA}"
           else
             vibey-gh check --ci
