@@ -8,7 +8,7 @@ description: Run Clippy Pet's full pre-commit check suite (manifest/spritesheet 
 Run the checks that apply to what actually changed in the working tree, per `AGENTS.md` and `CONTRIBUTING.md`'s PR checklist. Don't run steps that don't apply — e.g. don't require a docs build for a change that only touched `packaging/`.
 
 1. Determine what changed: `git status --porcelain` and/or `git diff --stat` against the target branch.
-2. Always run the manifest/spritesheet validator if `pet.json`, `spritesheet.webp`, or anything under `source/` changed (or when in doubt — it's fast):
+2. Always run the manifest/spritesheet validator (it is fast, and the PR checklist requires it):
    ```sh
    . .venv/bin/activate 2>/dev/null || python3 -m venv .venv && . .venv/bin/activate && python3 -m pip install -r requirements-dev.txt
    make validate
