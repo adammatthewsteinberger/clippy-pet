@@ -25,8 +25,8 @@ vibey_gh_self() {
   # checkout alone; this keeps execution control outside branch-controlled content.
   #
   # A DECLARED path, never a search.
-  dir=$(git config --local --get vibey-gh.self-source 2>/dev/null | head -n 1)
-  [ -n "$dir" ] || dir=.
+  dir=$(git config --local --get vibey-gh.self_source 2>/dev/null | head -n 1)
+  [ -n "$dir" ] || return 0
   case "$dir" in /*|*..*) return 0 ;; esac
   grep -qE '^name = "vibey-gh"' "$dir/pyproject.toml" 2>/dev/null || return 0
   [ -d "$dir/vibey_gh" ] || return 0
