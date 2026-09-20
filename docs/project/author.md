@@ -9,7 +9,7 @@ description: "Adam Matthew Steinberger, the engineer behind Clippy Pet: Staff So
 
 **Adam Matthew Steinberger** is a Staff Software Architect & AI Automation Engineer in Greenville, South Carolina — 13+ years of Azure, RAG systems, and event-driven services — and an autistic engineer who says so in his headline because it's part of how he works: systematically, thoroughly, and with a preference for evidence over adjectives. That's the sensibility behind a paperclip pet that ships with blind QA reports.
 
-He writes, too. *Engineering Influence* is a 200-plus-source field manual on how influence, attention, and culture actually work — hooks that deliver what they promise, awe over outrage, and a hard rule against manipulating the audience you're trying to serve. It is explicitly a Christian book, written from a Messianic Jewish perspective, and says so plainly. This documentation site is an attempt to practise the honest half of that on a small, silly, well-made thing. His other book, *Novice to Navigator*, is a plain-language guide to AI chatbots for business; the first edition is free to read on his site.
+He writes, too. *Engineering Influence* is a 200-plus-source field manual on how influence, attention, and culture actually work — hooks that deliver what they promise, awe over outrage, and a hard rule against manipulating the audience you're trying to serve. This documentation site is an attempt to practise the honest half of that on a small, silly, well-made thing. His other book, *Novice to Navigator*, is a plain-language guide to AI chatbots for business; the first edition is free to read on his site.
 
 He builds and maintains privacy-first, open-source software, prefers tools that don't phone home, and thinks a good disclaimer is a feature.
 
