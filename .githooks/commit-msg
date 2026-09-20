@@ -20,15 +20,12 @@
 # `site/` can never match, and it is available here by definition: hooks run inside a
 # git repository, from the top of the working tree.
 vibey_gh_self() {
-  # Read from `[install] self_source` in .vibey-gh.toml at runtime rather than rendered
-  # in: `install.installed()` compares these hooks byte-for-byte against the template, so
-  # a substituted hook would be permanently "out of date" and refuse every push.
+  # Resolve self source from local git config, not from tracked repository files.
+  # A checked-out branch can modify .vibey-gh.toml, but cannot change .git/config by
+  # checkout alone; this keeps execution control outside branch-controlled content.
   #
-  # A DECLARED path, never a search. Searching the tree for a pyproject that declares
-  # `name = "vibey-gh"` reads whatever is in the working tree, which on a contributor's
-  # branch is whatever they put there -- and this hook executes what it finds.
-  dir=$(sed -n 's/^[[:space:]]*self_source[[:space:]]*=[[:space:]]*"\(.*\)".*/\1/p' \
-    .vibey-gh.toml 2>/dev/null | head -n 1)
+  # A DECLARED path, never a search.
+  dir=$(git config --local --get vibey-gh.self-source 2>/dev/null | head -n 1)
   [ -n "$dir" ] || dir=.
   case "$dir" in /*|*..*) return 0 ;; esac
   grep -qE '^name = "vibey-gh"' "$dir/pyproject.toml" 2>/dev/null || return 0
