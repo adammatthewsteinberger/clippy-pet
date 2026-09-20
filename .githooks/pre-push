@@ -37,7 +37,7 @@ vibey_gh_self() {
   #
   # Expected key: vibey-gh.self_source
   dir=$(git config --local --get vibey-gh.self_source 2>/dev/null | head -n 1)
-  [ -n "$dir" ] || dir=.
+  [ -n "$dir" ] || return 0
   case "$dir" in /*|*..*) return 0 ;; esac
   grep -qE '^name = "vibey-gh"' "$dir/pyproject.toml" 2>/dev/null || return 0
   [ -d "$dir/vibey_gh" ] || return 0
