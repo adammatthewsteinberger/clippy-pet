@@ -52,6 +52,29 @@ vertical-7 A and B were classified as the same vertical direction
 
 All three flagged pairs involve shallow diagonals where the vertical component is a few pixels of pupil and eyebrow. They read correctly in motion and in the semantic review; the classifier's caution is documented rather than tuned away.
 
+!!! note "These numbers describe the art before the 2026-09 pupil retouch"
+
+    The report above and the semantic review below were produced by the original asset pipeline, which is not in this repository, and they have not been re-run. The recheck below uses a different protocol, so its numbers are reported separately rather than replacing these.
+
+## Look-frame retouch and blind recheck (issue #29)
+
+The four flagged frames had a minor-axis cue that was missing or pointed the wrong way when compared with their neighbours: 112.5° sat higher than 90°, 157.5° was nearly bottom-centre, 202.5° matched 180°, and 292.5° was level with 270°. [`scripts/retouch-look-pupils.py`](https://github.com/adammatthewsteinberger/clippy-pet/blob/develop/scripts/retouch-look-pupils.py) nudges each pupil by 3 to 4 px (about 1.3 px at 64 px), inside the eye only. It never changes alpha, and it is guarded by per-cell SHA-256 so it edits only the original art and re-running it changes nothing.
+
+![The four retouched look frames, before (top) and after (bottom), each between its neighbours, at 100 %](../assets/qa/look-retouch-100.png){ loading=lazy }
+
+![The same frames at about 64 px](../assets/qa/look-retouch-64.png){ loading=lazy }
+
+`qa/direction-blind-recheck.json` records a blind recheck. All sixteen look frames, before and after, were rendered at 64 px, given random names, shuffled into two independent sets, and labelled by two raters (separate AI vision agents with no access to the answer key). The raters labelled each image's horizontal and vertical direction; an axis with no component is not scored.
+
+| Judgements correct | Before | After |
+|---|---|---|
+| The four retouched frames (16 judgements) | 10 | **13** |
+| All sixteen frames (56 judgements) | 38 | 40 |
+
+One rater read all four retouched frames correctly afterwards; the other still read 157.5° and 202.5° as horizontally centred and 292.5° as level. The untouched frames are identical pixels in both sets, yet one rater labelled two of them differently across the copies, so treat a one-judgement difference as noise. The improvement is real and modest: 4 px is at the edge of what survives 64 px.
+
+The recheck also found something broader. Both raters read most of the upper arc (22.5° to 67.5°, 292.5° to 337.5°) as level rather than up, before and after. Fixing that means raising the pupils across the whole arc together, which is a separate piece of work.
+
 ## Semantic review
 
 `qa/direction-semantics.json`. An independent visual pass judged each of the sixteen frames against its expected direction with a one-line reason.

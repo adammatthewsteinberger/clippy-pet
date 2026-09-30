@@ -11,9 +11,9 @@ Each ecosystem has its own author path, its own review, and its own timeline. We
 
 | Manager | Command (once live) | Channel we're using | Status |
 |---|---|---|---|
-| Homebrew | `brew install adammatthewsteinberger/tap/clippy-pet` | Tap `adammatthewsteinberger/homebrew-tap` (repo exists, formula written); homebrew-core once notable | <span class="cp-chip cp-chip--planned">planned</span> |
+| Homebrew | `brew install adammatthewsteinberger/tap/clippy-pet` | Tap `adammatthewsteinberger/homebrew-tap` (formula drafted; the tap repository is not public yet); homebrew-core once notable | <span class="cp-chip cp-chip--planned">planned</span> |
 | MacPorts | `sudo port install clippy-pet` | PR to `macports-ports` (`sysutils/clippy-pet`, noarch) | <span class="cp-chip cp-chip--planned">planned</span> |
-| Nix | `nix profile install github:adammatthewsteinberger/clippy-pet` | `flake.nix` in-repo + Home Manager module; nixpkgs `pkgs/by-name` PR | <span class="cp-chip cp-chip--planned">planned</span> |
+| Nix | `nix profile install github:adammatthewsteinberger/clippy-pet` | `flake.nix` in-repo + Home Manager module ([written and checked in CI on `develop`](linux.md#nix-and-home-manager)); nixpkgs `pkgs/by-name` PR | <span class="cp-chip cp-chip--planned">planned</span> |
 | apt (Debian, Ubuntu, …) | `deb [signed-by=…] https://adammatthewsteinberger.github.io/clippy-pet/apt stable main` | Signed static repo on GitHub Pages (GPG key [published](verify.md#gpg-and-apk-keys)); Launchpad PPA; Debian ITP long-term | <span class="cp-chip cp-chip--planned">planned</span> |
 | dnf (Fedora, RHEL) | `dnf copr enable adammatthewsteinberger/clippy-pet` | COPR; Pages rpm-md repo; Fedora review long-term | <span class="cp-chip cp-chip--planned">planned</span> |
 | zypper (openSUSE) | via OBS `home:adammatthewsteinberger:clippy-pet` | OBS; Factory later | <span class="cp-chip cp-chip--planned">planned</span> |

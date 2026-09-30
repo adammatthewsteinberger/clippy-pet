@@ -1,0 +1,576 @@
+{
+ "check": "blind look-direction recheck for issue #29",
+ "date": "2026-09-30",
+ "method": "All 16 look cells from the atlas before and after scripts/retouch-look-pupils.py were downscaled to 64x69 px (Lanczos) over #f5f5f5, enlarged 3x nearest-neighbour, given random file names, and shuffled into two independent sets. Two raters (separate AI vision-model agents with no access to the answer key or to each other) labelled each image horizontal: screen-left/screen-right/centre and vertical: up/down/level. Expected labels: sign of sin(deg) and -cos(deg); an axis with no component (0/180 horizontally, 90/270 vertically) is not scored.",
+ "not_comparable_with": "qa/direction-blind-validation.json, which used a different, pair-based protocol; its numbers are left as they were.",
+ "noise_floor": "Untouched cells are byte-identical in both sets, yet rater 2 labelled 67.5 and 247.5 differently across the two copies: treat single-judgement differences as noise.",
+ "summary": {
+  "retouched_frames": {
+   "before": {
+    "correct": 10,
+    "judgements": 16
+   },
+   "after": {
+    "correct": 13,
+    "judgements": 16
+   }
+  },
+  "all_frames": {
+   "before": {
+    "correct": 38,
+    "judgements": 56
+   },
+   "after": {
+    "correct": 40,
+    "judgements": 56
+   }
+  }
+ },
+ "finding": "Both raters read most of the upper arc (22.5-67.5 and 292.5-337.5 before the retouch) as level rather than up, before and after. That is a systemic cue problem beyond the four frames in #29 and is tracked separately.",
+ "frames": {
+  "0": {
+   "after": [
+    {
+     "rater": 1,
+     "horizontal": "centre",
+     "vertical": "down",
+     "horizontal_ok": null,
+     "vertical_ok": false
+    },
+    {
+     "rater": 2,
+     "horizontal": "centre",
+     "vertical": "up",
+     "horizontal_ok": null,
+     "vertical_ok": true
+    }
+   ],
+   "before": [
+    {
+     "rater": 1,
+     "horizontal": "centre",
+     "vertical": "down",
+     "horizontal_ok": null,
+     "vertical_ok": false
+    },
+    {
+     "rater": 2,
+     "horizontal": "centre",
+     "vertical": "up",
+     "horizontal_ok": null,
+     "vertical_ok": true
+    }
+   ]
+  },
+  "202.5": {
+   "before": [
+    {
+     "rater": 1,
+     "horizontal": "centre",
+     "vertical": "down",
+     "horizontal_ok": false,
+     "vertical_ok": true
+    },
+    {
+     "rater": 2,
+     "horizontal": "centre",
+     "vertical": "down",
+     "horizontal_ok": false,
+     "vertical_ok": true
+    }
+   ],
+   "after": [
+    {
+     "rater": 1,
+     "horizontal": "centre",
+     "vertical": "down",
+     "horizontal_ok": false,
+     "vertical_ok": true
+    },
+    {
+     "rater": 2,
+     "horizontal": "screen-left",
+     "vertical": "down",
+     "horizontal_ok": true,
+     "vertical_ok": true
+    }
+   ]
+  },
+  "135": {
+   "before": [
+    {
+     "rater": 1,
+     "horizontal": "screen-right",
+     "vertical": "down",
+     "horizontal_ok": true,
+     "vertical_ok": true
+    },
+    {
+     "rater": 2,
+     "horizontal": "screen-right",
+     "vertical": "down",
+     "horizontal_ok": true,
+     "vertical_ok": true
+    }
+   ],
+   "after": [
+    {
+     "rater": 1,
+     "horizontal": "screen-right",
+     "vertical": "down",
+     "horizontal_ok": true,
+     "vertical_ok": true
+    },
+    {
+     "rater": 2,
+     "horizontal": "screen-right",
+     "vertical": "down",
+     "horizontal_ok": true,
+     "vertical_ok": true
+    }
+   ]
+  },
+  "45": {
+   "after": [
+    {
+     "rater": 1,
+     "horizontal": "screen-right",
+     "vertical": "down",
+     "horizontal_ok": true,
+     "vertical_ok": false
+    },
+    {
+     "rater": 2,
+     "horizontal": "screen-right",
+     "vertical": "level",
+     "horizontal_ok": true,
+     "vertical_ok": false
+    }
+   ],
+   "before": [
+    {
+     "rater": 1,
+     "horizontal": "screen-right",
+     "vertical": "down",
+     "horizontal_ok": true,
+     "vertical_ok": false
+    },
+    {
+     "rater": 2,
+     "horizontal": "screen-right",
+     "vertical": "level",
+     "horizontal_ok": true,
+     "vertical_ok": false
+    }
+   ]
+  },
+  "225": {
+   "after": [
+    {
+     "rater": 1,
+     "horizontal": "screen-left",
+     "vertical": "down",
+     "horizontal_ok": true,
+     "vertical_ok": true
+    },
+    {
+     "rater": 2,
+     "horizontal": "screen-left",
+     "vertical": "down",
+     "horizontal_ok": true,
+     "vertical_ok": true
+    }
+   ],
+   "before": [
+    {
+     "rater": 1,
+     "horizontal": "screen-left",
+     "vertical": "down",
+     "horizontal_ok": true,
+     "vertical_ok": true
+    },
+    {
+     "rater": 2,
+     "horizontal": "screen-left",
+     "vertical": "down",
+     "horizontal_ok": true,
+     "vertical_ok": true
+    }
+   ]
+  },
+  "157.5": {
+   "after": [
+    {
+     "rater": 1,
+     "horizontal": "centre",
+     "vertical": "down",
+     "horizontal_ok": false,
+     "vertical_ok": true
+    },
+    {
+     "rater": 2,
+     "horizontal": "screen-right",
+     "vertical": "down",
+     "horizontal_ok": true,
+     "vertical_ok": true
+    }
+   ],
+   "before": [
+    {
+     "rater": 1,
+     "horizontal": "centre",
+     "vertical": "down",
+     "horizontal_ok": false,
+     "vertical_ok": true
+    },
+    {
+     "rater": 2,
+     "horizontal": "screen-right",
+     "vertical": "down",
+     "horizontal_ok": true,
+     "vertical_ok": true
+    }
+   ]
+  },
+  "90": {
+   "before": [
+    {
+     "rater": 1,
+     "horizontal": "screen-right",
+     "vertical": "down",
+     "horizontal_ok": true,
+     "vertical_ok": null
+    },
+    {
+     "rater": 2,
+     "horizontal": "screen-right",
+     "vertical": "level",
+     "horizontal_ok": true,
+     "vertical_ok": null
+    }
+   ],
+   "after": [
+    {
+     "rater": 1,
+     "horizontal": "screen-right",
+     "vertical": "down",
+     "horizontal_ok": true,
+     "vertical_ok": null
+    },
+    {
+     "rater": 2,
+     "horizontal": "screen-right",
+     "vertical": "level",
+     "horizontal_ok": true,
+     "vertical_ok": null
+    }
+   ]
+  },
+  "180": {
+   "after": [
+    {
+     "rater": 1,
+     "horizontal": "centre",
+     "vertical": "down",
+     "horizontal_ok": null,
+     "vertical_ok": true
+    },
+    {
+     "rater": 2,
+     "horizontal": "centre",
+     "vertical": "down",
+     "horizontal_ok": null,
+     "vertical_ok": true
+    }
+   ],
+   "before": [
+    {
+     "rater": 1,
+     "horizontal": "centre",
+     "vertical": "down",
+     "horizontal_ok": null,
+     "vertical_ok": true
+    },
+    {
+     "rater": 2,
+     "horizontal": "centre",
+     "vertical": "down",
+     "horizontal_ok": null,
+     "vertical_ok": true
+    }
+   ]
+  },
+  "247.5": {
+   "after": [
+    {
+     "rater": 1,
+     "horizontal": "screen-left",
+     "vertical": "level",
+     "horizontal_ok": true,
+     "vertical_ok": false
+    },
+    {
+     "rater": 2,
+     "horizontal": "screen-left",
+     "vertical": "level",
+     "horizontal_ok": true,
+     "vertical_ok": false
+    }
+   ],
+   "before": [
+    {
+     "rater": 1,
+     "horizontal": "screen-left",
+     "vertical": "level",
+     "horizontal_ok": true,
+     "vertical_ok": false
+    },
+    {
+     "rater": 2,
+     "horizontal": "screen-left",
+     "vertical": "down",
+     "horizontal_ok": true,
+     "vertical_ok": true
+    }
+   ]
+  },
+  "292.5": {
+   "after": [
+    {
+     "rater": 1,
+     "horizontal": "screen-left",
+     "vertical": "level",
+     "horizontal_ok": true,
+     "vertical_ok": false
+    },
+    {
+     "rater": 2,
+     "horizontal": "screen-left",
+     "vertical": "up",
+     "horizontal_ok": true,
+     "vertical_ok": true
+    }
+   ],
+   "before": [
+    {
+     "rater": 1,
+     "horizontal": "screen-left",
+     "vertical": "level",
+     "horizontal_ok": true,
+     "vertical_ok": false
+    },
+    {
+     "rater": 2,
+     "horizontal": "screen-left",
+     "vertical": "level",
+     "horizontal_ok": true,
+     "vertical_ok": false
+    }
+   ]
+  },
+  "337.5": {
+   "before": [
+    {
+     "rater": 1,
+     "horizontal": "screen-left",
+     "vertical": "level",
+     "horizontal_ok": true,
+     "vertical_ok": false
+    },
+    {
+     "rater": 2,
+     "horizontal": "screen-left",
+     "vertical": "level",
+     "horizontal_ok": true,
+     "vertical_ok": false
+    }
+   ],
+   "after": [
+    {
+     "rater": 1,
+     "horizontal": "screen-left",
+     "vertical": "level",
+     "horizontal_ok": true,
+     "vertical_ok": false
+    },
+    {
+     "rater": 2,
+     "horizontal": "screen-left",
+     "vertical": "level",
+     "horizontal_ok": true,
+     "vertical_ok": false
+    }
+   ]
+  },
+  "112.5": {
+   "after": [
+    {
+     "rater": 1,
+     "horizontal": "screen-right",
+     "vertical": "down",
+     "horizontal_ok": true,
+     "vertical_ok": true
+    },
+    {
+     "rater": 2,
+     "horizontal": "screen-right",
+     "vertical": "down",
+     "horizontal_ok": true,
+     "vertical_ok": true
+    }
+   ],
+   "before": [
+    {
+     "rater": 1,
+     "horizontal": "screen-right",
+     "vertical": "down",
+     "horizontal_ok": true,
+     "vertical_ok": true
+    },
+    {
+     "rater": 2,
+     "horizontal": "screen-right",
+     "vertical": "level",
+     "horizontal_ok": true,
+     "vertical_ok": false
+    }
+   ]
+  },
+  "67.5": {
+   "before": [
+    {
+     "rater": 1,
+     "horizontal": "screen-right",
+     "vertical": "down",
+     "horizontal_ok": true,
+     "vertical_ok": false
+    },
+    {
+     "rater": 2,
+     "horizontal": "screen-right",
+     "vertical": "down",
+     "horizontal_ok": true,
+     "vertical_ok": false
+    }
+   ],
+   "after": [
+    {
+     "rater": 1,
+     "horizontal": "screen-right",
+     "vertical": "down",
+     "horizontal_ok": true,
+     "vertical_ok": false
+    },
+    {
+     "rater": 2,
+     "horizontal": "screen-right",
+     "vertical": "level",
+     "horizontal_ok": true,
+     "vertical_ok": false
+    }
+   ]
+  },
+  "22.5": {
+   "after": [
+    {
+     "rater": 1,
+     "horizontal": "screen-right",
+     "vertical": "level",
+     "horizontal_ok": true,
+     "vertical_ok": false
+    },
+    {
+     "rater": 2,
+     "horizontal": "screen-right",
+     "vertical": "level",
+     "horizontal_ok": true,
+     "vertical_ok": false
+    }
+   ],
+   "before": [
+    {
+     "rater": 1,
+     "horizontal": "screen-right",
+     "vertical": "level",
+     "horizontal_ok": true,
+     "vertical_ok": false
+    },
+    {
+     "rater": 2,
+     "horizontal": "screen-right",
+     "vertical": "level",
+     "horizontal_ok": true,
+     "vertical_ok": false
+    }
+   ]
+  },
+  "270": {
+   "before": [
+    {
+     "rater": 1,
+     "horizontal": "screen-left",
+     "vertical": "level",
+     "horizontal_ok": true,
+     "vertical_ok": null
+    },
+    {
+     "rater": 2,
+     "horizontal": "screen-left",
+     "vertical": "down",
+     "horizontal_ok": true,
+     "vertical_ok": null
+    }
+   ],
+   "after": [
+    {
+     "rater": 1,
+     "horizontal": "screen-left",
+     "vertical": "level",
+     "horizontal_ok": true,
+     "vertical_ok": null
+    },
+    {
+     "rater": 2,
+     "horizontal": "screen-left",
+     "vertical": "down",
+     "horizontal_ok": true,
+     "vertical_ok": null
+    }
+   ]
+  },
+  "315": {
+   "before": [
+    {
+     "rater": 1,
+     "horizontal": "screen-left",
+     "vertical": "level",
+     "horizontal_ok": true,
+     "vertical_ok": false
+    },
+    {
+     "rater": 2,
+     "horizontal": "screen-left",
+     "vertical": "level",
+     "horizontal_ok": true,
+     "vertical_ok": false
+    }
+   ],
+   "after": [
+    {
+     "rater": 1,
+     "horizontal": "screen-left",
+     "vertical": "level",
+     "horizontal_ok": true,
+     "vertical_ok": false
+    },
+    {
+     "rater": 2,
+     "horizontal": "screen-left",
+     "vertical": "level",
+     "horizontal_ok": true,
+     "vertical_ok": false
+    }
+   ]
+  }
+ }
+}
