@@ -3,17 +3,49 @@
 {% block extrahead %}
   {{ super() }}
   <link rel="alternate" type="text/plain" title="llms.txt" href="{{ 'llms.txt' | url }}">
-  {#- Structured data: one Person entity, referenced by the project and by blog posts. -#}
+  {#- Structured data: one Person entity, referenced by the project, blog posts and the
+      author page. Kept word-for-word consistent with profile.jsonld in the résumé repo
+      (github.com/adammatthewsteinberger/resume) so both describe the same entity. -#}
+  {%- set services_url = "https://github.com/adammatthewsteinberger/resume/blob/HEAD/SERVICES.md" -%}
+  {%- set offers = [] -%}
+  {%- for name, anchor, summary in [
+      ("AI codebase and security review", "ai-codebase-and-security-review", "A severity-ranked findings report, a one-page executive summary and a phased roadmap."),
+      ("Production RAG chatbot in 30 days", "production-rag-chatbot-in-30-days", "A chatbot that answers from your documents and cites them, with evaluation, monitoring and a handoff."),
+      ("LLM cost and policy gateway", "llm-cost-and-policy-gateway", "One API in front of your AI vendors, with spend caps, allowlists and a tamper-evident audit trail."),
+      ("Okta and Entra ID governance fixes", "okta-and-entra-id-governance-fixes", "An access review, then groups, roles and policy managed from Git with drift detection."),
+      ("SOC 2 and OWASP LLM Top 10 readiness for an AI feature", "soc-2-and-owasp-llm-top-10-readiness-for-an-ai-feature", "A threat model and a control-gap list mapped to SOC 2, the OWASP LLM Top 10 and the NIST AI RMF.")
+    ] -%}
+    {%- set _ = offers.append({
+      "@type": "Offer",
+      "name": name,
+      "description": summary,
+      "url": services_url ~ "#" ~ anchor,
+      "itemOffered": {"@type": "Service", "name": name, "serviceType": "Software engineering consulting", "areaServed": "Remote"}
+    }) -%}
+  {%- endfor -%}
   {%- set author = {
     "@type": "Person",
     "@id": config.site_url ~ "project/author/#person",
     "name": "Adam Matthew Steinberger",
+    "jobTitle": "Staff Software Engineer",
+    "description": "I build AI platforms that other teams can safely build on: no stored secrets, every call on the record, and a person signing off on anything that can't be undone.",
     "url": config.site_url ~ "project/author/",
+    "email": "mailto:adam@matthewsteinberger.com",
+    "address": {"@type": "PostalAddress", "addressLocality": "Greenville", "addressRegion": "SC", "addressCountry": "US"},
     "sameAs": [
       "https://github.com/adammatthewsteinberger",
       "https://www.linkedin.com/in/adammatthewsteinberger/",
-      "https://vibewithadam.matthewsteinberger.com"
-    ]
+      "https://vibewithadam.matthewsteinberger.com",
+      "https://github.com/adammatthewsteinberger/resume",
+      "https://github.com/the-vibey-project"
+    ],
+    "knowsAbout": [
+      "AI platform engineering", "agent orchestration", "LLM gateway", "AI governance",
+      "identity and access management", "workload identity", "secretless CI/CD",
+      "software supply chain security", "release engineering", "Kubernetes", "Python",
+      "open source", "vibey", "RAG chatbot", "AI security review"
+    ],
+    "makesOffer": offers
   } -%}
   {%- if page.is_homepage %}
   <script type="application/ld+json">
@@ -39,6 +71,16 @@
         "maintainer": {"@id": config.site_url ~ "project/author/#person"}
       }
     ]
+  } | tojson }}
+  </script>
+  {%- elif page.url == "project/author/" %}
+  <script type="application/ld+json">
+  {{ {
+    "@context": "https://schema.org",
+    "@type": "ProfilePage",
+    "url": page.canonical_url,
+    "name": page.title | striptags,
+    "mainEntity": author
   } | tojson }}
   </script>
   {%- elif page.meta and page.meta.date and page.url.startswith("blog/") %}

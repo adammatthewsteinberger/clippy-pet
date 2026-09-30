@@ -112,7 +112,7 @@ curl -fsSL https://adammatthewsteinberger.github.io/clippy-pet/install.sh | sh
 
 Clippy Pet is small enough to understand in an afternoon and built carefully enough to be worth the afternoon. Pick the way in that matches what you like doing:
 
-- **Pixel art.** Three shallow-diagonal look frames carry published QA warnings. Redraw one, run the validator, and attach the before-and-after GIF. [How to submit a variant](make/submit.md)
+- **Pixel art.** A blind recheck found that the up-looking frames read as level at 64 px, and the eyebrows vanish on dark terminals. Both are open problems with [published evidence](how-it-works/qa.md#look-frame-retouch-and-blind-recheck-issue-29) and a [preview tool](make/tiny-variant.md#judge-your-own-drawing) to judge your fix. [How to submit a variant](make/submit.md)
 - **Packaging.** Homebrew, Nix, AUR, AppImage, Flatpak, and a dozen more rows say *planned*. Each one has a drafted recipe waiting for someone who uses that ecosystem every day. [The status board](packages/managers.md)
 - **Release engineering.** Signed checksums, build attestations, reproducible tarballs, and a guard job that refuses to publish a release whose version strings disagree. Borrow any part of it. [How the release pipeline works](blog/posts/2026-09-30-shipping-two-files-like-they-matter.md)
 - **Words.** Every page has a pencil icon in the top right. A clearer sentence is a real contribution.

@@ -21,7 +21,7 @@ curl -fsSL https://adammatthewsteinberger.github.io/clippy-pet/install.sh | sh
 
 1. Resolves the latest release by reading the `Location:` header of `https://github.com/adammatthewsteinberger/clippy-pet/releases/latest` (no API calls, no rate limits). Set `CLIPPY_PET_VERSION=v1.1.0` to pin.
 2. Downloads `clippy-pet-<version>.tar.gz` **and** `SHA256SUMS` from that GitHub Release into a temporary directory.
-3. Verifies the tarball's SHA-256 against `SHA256SUMS` using `sha256sum` or `shasum -a 256`, and aborts on mismatch.
+3. Verifies the tarball's SHA-256 against `SHA256SUMS` using `sha256sum` or `shasum -a 256`, and aborts on mismatch. If neither tool is installed, it stops and names them rather than installing unverified (see `--skip-verify` below).
 4. Extracts it and runs `bin/clippy-pet install "$@"`, forwarding any flags you passed after `--`.
 5. Cleans up the temporary directory.
 
@@ -40,6 +40,16 @@ It never uses `sudo`, never writes outside the temp dir and `${CODEX_HOME:-$HOME
     ```
 
     Note that `--link` points the pet directory at the *extracted temp copy* in remote mode, which is removed at the end; use `--link` from a checkout or an extracted tarball you intend to keep.
+
+??? warning "No `sha256sum` or `shasum`? The `--skip-verify` escape hatch"
+
+    Some minimal containers and embedded systems ship without either checksum tool. The installer then exits with an error that names both, because installing a download it can't check is the wrong default. Installing coreutils (for `sha256sum`) or perl (for `shasum`) is the better fix. If you understand the trade-off and want to proceed anyway:
+
+    ```sh
+    curl -fsSL https://adammatthewsteinberger.github.io/clippy-pet/install.sh | sh -s -- --skip-verify
+    ```
+
+    `--skip-verify` is consumed by `install.sh` and never forwarded to `clippy-pet`. It only applies when no checksum tool exists: if one is installed, the tarball is always verified and a mismatch always aborts, flag or no flag.
 
 ## The tarballs
 

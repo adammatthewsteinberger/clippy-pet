@@ -123,7 +123,7 @@ Clippy Pet is small enough to read in an afternoon, and every part of it has a f
 
 | If you like… | Start here |
 |---|---|
-| Pixel art | Three shallow-diagonal look frames carry [published QA warnings](https://adammatthewsteinberger.github.io/clippy-pet/how-it-works/qa/). Redraw one, run `make validate`, attach a before/after GIF. |
+| Pixel art | A blind recheck found the up-looking frames read as level at 64 px, and the eyebrows vanish on dark terminals ([evidence](https://adammatthewsteinberger.github.io/clippy-pet/how-it-works/qa/)). Fix one frame, check it with `scripts/preview-at-size.py`, run `make validate`, attach before/after images. |
 | Packaging | Homebrew, Nix, AUR, AppImage, Flatpak and more are drafted but *planned*. If you live in one of those ecosystems, you're the reviewer it needs. [Status board](https://adammatthewsteinberger.github.io/clippy-pet/packages/managers/) |
 | Shell and CI | One POSIX `sh` CLI, shellcheck-clean, tested under dash, bash, BusyBox ash and macOS `/bin/sh`. The release workflow is readable top to bottom. |
 | Writing | Every docs page has an edit pencil. A clearer sentence counts. |
@@ -137,19 +137,18 @@ GitFlow: `develop` is the default branch; `main` is release-only; tags on `main`
 
 ## Related projects
 
-Clippy Pet is the fun one in a family of otherwise serious open-source tools by the same author, all MIT:
+- **[vibey](https://github.com/the-vibey-project/vibey)** — the maintainer's larger open-source project: a conductor that carries a change from spec to review across several AI coding agents, with an append-only PostgreSQL ledger so a crashed agent's work is picked up, not lost. MIT; `pip install vibey-engine`. [Docs](https://the-vibey-project.github.io/vibey/main/) · [contribute](https://github.com/the-vibey-project/vibey/blob/develop/CONTRIBUTING.md)
+- **[Shipping two files like they matter](https://adammatthewsteinberger.github.io/clippy-pet/blog/shipping-two-files-like-they-matter/)** — this repo's release pipeline (guard job, reproducible tarballs, signed checksums, attestations), one guarantee at a time, written so you can copy it
 
-- **[claudeloop](https://github.com/adammatthewsteinberger/claudeloop)** · **[codexloop](https://github.com/adammatthewsteinberger/codexloop)** · **[cursorloop](https://github.com/adammatthewsteinberger/cursorloop)** · **[agyloop](https://github.com/adammatthewsteinberger/agyloop)** — autonomous coding-session runners: same contract, different vendor
-- **[vibey](https://github.com/adammatthewsteinberger/vibey)** — six-phase queue conductor over the loop runners
-- **[vibey-bootstrap](https://github.com/adammatthewsteinberger/vibey-bootstrap)** — Azure Functions cross-cutting layer (App Config + Key Vault + App Insights bootstrap)
-- **[vibey-skills](https://github.com/adammatthewsteinberger/vibey-skills)** — Claude Code plugin marketplace: 18 plugins / 71 Agent Skills
-- **[homebrew-tap](https://github.com/adammatthewsteinberger/homebrew-tap)** — `brew tap adammatthewsteinberger/tap`; the Clippy Pet formula lands there when [the roadmap](https://adammatthewsteinberger.github.io/clippy-pet/project/roadmap/) says so
+## About the maintainer
+
+Clippy Pet is maintained by [Adam Matthew Steinberger](https://adammatthewsteinberger.github.io/clippy-pet/project/author/), a staff software engineer who builds AI platforms, identity governance and release pipelines for regulated teams. Outside the project he takes a small number of fixed-scope engagements (AI security reviews, RAG chatbots, LLM cost and policy gateways, Okta and Entra ID governance, SOC 2 readiness), each started from a written intake and closed with a handoff your team can run. [Catalogue](https://github.com/adammatthewsteinberger/resume/blob/HEAD/SERVICES.md) · [résumé](https://github.com/adammatthewsteinberger/resume) · [email](mailto:adam@matthewsteinberger.com). Project support stays in public [Discussions](https://github.com/adammatthewsteinberger/clippy-pet/discussions) for everyone.
 
 ## License & notice
 
 Copyright © 2026 [Adam Matthew Steinberger](https://vibewithadam.matthewsteinberger.com). Original project contributions are [MIT](LICENSE) licensed; see [AUTHORS.md](AUTHORS.md). **Clippy Pet is not affiliated with or endorsed by Microsoft or OpenAI**; "Clippy", "Clippit", "Office", and "Microsoft" may be trademarks of Microsoft Corporation, and the MIT license grants no rights to them. Read [NOTICE.md](NOTICE.md) before redistributing or using commercially.
 
-<p align="center"><sub>Made in Greenville, SC by an engineer who thinks a good disclaimer is a feature. <a href="https://adammatthewsteinberger.github.io/clippy-pet/project/author/">About the author</a></sub></p>
+<p align="center"><sub>Made in Greenville, SC by an engineer who thinks a good disclaimer is a feature. <a href="https://adammatthewsteinberger.github.io/clippy-pet/project/author/">About the maintainer</a></sub></p>
 
 ---
 

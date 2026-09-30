@@ -12,11 +12,11 @@ description: "Maintainer runbook for Clippy Pet releases: what CI builds, secret
 | Workflow | Trigger | Produces |
 |---|---|---|
 | `validate.yml` | PR, push | `scripts/validate.py` result; old-name guard (`clipster` may not reappear outside an allow-list) |
-| `packaging-ci.yml` | PR, push to `develop`/`main` | shellcheck, `desktop-file-validate`, `appstreamcli validate`; tarballs; `.deb` `.rpm` `.apk` `.pkg.tar.zst`; install/status/uninstall smoke in `debian:stable`, `fedora:latest`, `alpine:latest`, `archlinux`; macOS `.app`/`.pkg`/`.dmg` build + bundled-CLI smoke |
-| `release.yml` | tag `v*` | guard (tag on `main`; `VERSION` = `CHANGELOG` top = `CITATION.cff` = tag; validator) → Linux build → macOS build (signed + notarized when Apple secrets exist) → `SHA256SUMS`, cosign keyless bundle, GitHub artifact attestation → GitHub Release with every asset, including `spritesheet-v1.webp` |
+| `packaging-ci.yml` | PR, push to `develop`/`main` | shellcheck, `desktop-file-validate`, `appstreamcli validate`; tarballs; `.deb` `.rpm` `.apk` `.pkg.tar.zst`; install/status/uninstall smoke in `debian:stable`, `fedora:latest`, `alpine:latest`, `archlinux`; AppImages (x86_64, aarch64) with install/status/refusal/uninstall smoke on native runners of each architecture; `nix flake check` + `nix build` on x86_64 and aarch64 Linux and macOS; macOS `.app`/`.pkg`/`.dmg` build + bundled-CLI smoke |
+| `release.yml` | tag `v*` | guard (tag on `main`; `VERSION` = `CHANGELOG` top = `CITATION.cff` = tag; validator) → Linux build (tarballs, nfpm packages, AppImages) → macOS build (signed + notarized when Apple secrets exist) → `SHA256SUMS`, cosign keyless bundle, GitHub artifact attestation → GitHub Release with every asset, including `spritesheet-v1.webp` |
 | `docs.yml` | PR (build only), push to `main`, manual | `mkdocs build --strict`; deploy to `gh-pages` preserving reserved paths |
 
-Local equivalents: `make validate`, `make lint`, `make dist`, `make v1`, `./packaging/linux/build.sh` (needs nfpm), `./packaging/macos/build.sh` (macOS), `make docs` / `make docs-serve`.
+Local equivalents: `make validate`, `make lint`, `make dist`, `make v1`, `./packaging/linux/build.sh` (needs nfpm), `./packaging/appimage/build.sh` (Linux x86_64 or aarch64; downloads the pinned toolchain), `nix flake check` (needs Nix with flakes), `./packaging/macos/build.sh` (macOS), `make docs` / `make docs-serve`.
 
 ## Layout
 
@@ -25,6 +25,8 @@ packaging/bin/clippy-pet          shared POSIX CLI (@VERSION@ / @DATADIR@ substi
 packaging/share/                  man page, .desktop launcher + autostart, AppStream metainfo, icon
 packaging/dist/make-tarballs.sh   reproducible tarballs (SOURCE_DATE_EPOCH from the tag commit)
 packaging/linux/                  nfpm.yaml, build.sh, debian-copyright (DEP-5), debian-changelog
+packaging/appimage/               build.sh (pinned, hash-verified appimagetool + runtimes), AppRun
+flake.nix, flake.lock             Nix package, checks, and Home Manager module
 packaging/macos/                  build.sh, postinstall, install.applescript, distribution.xml, resources/, .icns
 packaging/keys/                   public GPG (.gpg.asc) and apk (.rsa.pub) keys + README
 scripts/install.sh                bootstrap; published as /install.sh on Pages
@@ -40,6 +42,13 @@ Identifiers: package/CLI/repo `clippy-pet`; reverse-DNS app id `io.github.adamma
 - nFPM gotchas hit so far: env vars in `src` need `expand: true`; `packager:` for Arch goes in a top-level `archlinux:` block; don't declare `depends: sh` (breaks Debian's solver); hand-written `changelog.Debian.gz` beats nfpm's `changelog:`; run nfpm from `packaging/linux/`.
 - macOS: `COPYFILE_DISABLE=1` before `pkgbuild`; PlistBuddy `Add … || Set …` for `CFBundleIdentifier`; postinstall resolves the console user via `${SUDO_USER:-$(stat -f%Su /dev/console)}`, skips `root`/`loginwindow`/`_*`, and never fails the package.
 - Alpine's `cmp` may be missing; the CLI's `files_equal` falls back to `cksum`/`md5sum`.
+- AppImages run from a transient mount, so `AppRun` refuses `--link` and `autostart` (both would leave references to it behind) and runs `install --gui` when started with no arguments and no TTY. Test them on a native runner: under emulation, binfmt handlers reject the AppImage magic bytes with `Exec format error`.
+- The Home Manager module can't read `CODEX_HOME`: flakes evaluate purely. It exposes `programs.clippy-pet.codexHome` instead.
+
+## Updating pinned toolchains
+
+- **AppImage.** `packaging/appimage/build.sh` pins `appimagetool` (`APPIMAGETOOL_TAG`) and the type2 runtime (`RUNTIME_TAG`) to exact upstream releases, each checked against a SHA-256 in the script. To update: download the new release's `appimagetool-{x86_64,aarch64}.AppImage` and `runtime-{x86_64,aarch64}`, run `sha256sum` on them, and change the tag and hashes in one commit. Never point these at `continuous`.
+- **Nix.** `nix flake update` refreshes `flake.lock`; move `nixpkgs` and `home-manager` to the next stable pair (`nixos-YY.MM`, `release-YY.MM`) together, and bump `home.stateVersion` in the flake's check to match.
 
 ## Secrets and one-time setup
 
