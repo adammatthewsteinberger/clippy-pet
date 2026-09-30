@@ -18,7 +18,7 @@ If you maintain a small project, every habit below is cheap to copy.
 
 The installer bug was one line. When neither `sha256sum` nor `shasum` existed, `install.sh` printed a warning and installed the download anyway. The fix makes it stop, and adds a `--skip-verify` flag for systems that have no checksum tool at all.
 
-Testing only the new error message would have missed the dangerous case. So the test builds a fake release (a stub tarball, its `SHA256SUMS`, and a stub `curl` that serves them locally) and runs the real script under `dash` in a Debian container through five cases: no tool; no tool with the flag; a tool present; a tampered tarball; and a tampered tarball *with* the flag. The last one is the case that matters. A flag called "skip verify" must never let a tampered download through when a checksum tool is available. It doesn't, and now there's a test that proves it.
+Testing only the new error message would have missed the dangerous case. So the test builds a fake release (a stub tarball, its `SHA256SUMS`, and a stub `curl` that serves them locally) and runs the real script under `dash` in a Debian container through five cases: no tool; no tool with the flag; a tool present; a tampered tarball; and a tampered tarball *with* the flag. The last one is the case that matters. A flag called "skip verify" must never let a tampered download through when a checksum tool is available. It doesn't, and [`tests/install-sh.sh`](https://github.com/adammatthewsteinberger/clippy-pet/blob/develop/tests/install-sh.sh) now proves it under `dash`, `bash` and `sh` on every pull request.
 
 **Copy this:** for every escape hatch you add, write the test that tries to abuse it.
 
@@ -26,7 +26,7 @@ Testing only the new error message would have missed the dangerous case. So the 
 
 AppImages bundle a per-architecture runtime, so "x86_64 and aarch64" means one payload packed twice. The first local test failed with `Exec format error`: an x86_64 AppImage under emulation on an ARM laptop, where the translation layer rejects the AppImage's magic bytes. That's an artefact of the test machine, not a bug. It's also exactly the kind of result that gets "fixed" by changing the wrong thing.
 
-The CI job now runs each AppImage on a native runner of its own architecture. The Nix flake gets the same treatment: `nix flake check` runs on x86_64 and aarch64 Linux and on macOS. The Home Manager example in the docs was tested by extracting the code block *from the Markdown file* and building a real Home Manager generation from it, so the test checks the words a reader will copy.
+The CI job now runs each AppImage on a native runner of its own architecture. The Nix flake gets the same treatment: `nix flake check` runs on x86_64 and aarch64 Linux and on macOS. The Home Manager example in the docs is tested by extracting the code block *from the Markdown file* and building a real Home Manager generation from it ([`tests/home-manager-doc-example.sh`](https://github.com/adammatthewsteinberger/clippy-pet/blob/develop/tests/home-manager-doc-example.sh), also in CI), so the test checks the words a reader will copy.
 
 **Copy this:** if your docs contain a config snippet, build the snippet, not your private copy of it.
 

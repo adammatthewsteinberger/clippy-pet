@@ -25,7 +25,7 @@ If you want to know how he works, this repository is a fair sample, and every it
 - **Releases can be checked, not just trusted.** Checksums are signed with cosign, every asset has a build-provenance attestation, and tarballs are reproducible. [How that works](../blog/posts/2026-09-30-shipping-two-files-like-they-matter.md).
 - **Status words are a contract.** *Live* means it works today; *planned* means it doesn't exist yet. The [package managers page](../packages/managers.md) says planned more often than anything else.
 - **Evidence includes the misses.** The [QA page](../how-it-works/qa.md) publishes blind-test results that failed alongside the ones that passed, with a noise floor.
-- **Changes are tested where they'll run.** On every pull request, CI installs and uninstalls the packages in Debian, Fedora, Alpine and Arch containers, runs the AppImages on native runners of each architecture, and runs `nix flake check` on Linux and macOS.
+- **Changes are tested where they'll run.** On every pull request, CI installs and uninstalls the packages in Debian, Fedora, Alpine and Arch containers, runs the AppImages on native runners of each architecture, runs `nix flake check` on Linux and macOS, tests the installer's refusal to install a tampered download, and builds the Home Manager example straight out of the docs.
 
 ## Fixed-scope engagements
 

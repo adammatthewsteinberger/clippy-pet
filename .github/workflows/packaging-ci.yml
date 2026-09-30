@@ -14,7 +14,8 @@ jobs:
         run: |
           shellcheck -s sh packaging/bin/clippy-pet scripts/install.sh \
             packaging/dist/make-tarballs.sh packaging/linux/build.sh \
-            packaging/appimage/build.sh packaging/appimage/AppRun
+            packaging/appimage/build.sh packaging/appimage/AppRun \
+            tests/install-sh.sh tests/home-manager-doc-example.sh
       - name: Lint .desktop files
         run: |
           sudo apt-get update -qq
@@ -117,6 +118,20 @@ jobs:
           clippy-pet uninstall
           test ! -e "$HOME/.codex/pets/clippy-pet"
 
+  installer-tests:
+    # tests/install-sh.sh: install.sh's checksum handling, including the
+    # abuse case (--skip-verify must never install a tampered download).
+    needs: lint
+    runs-on: ubuntu-latest
+    container: debian:stable
+    steps:
+      - uses: actions/checkout@v7
+      - name: Run under dash, bash and sh
+        run: |
+          apt-get update -qq
+          apt-get install -y -qq dash
+          for shell in dash bash sh; do sh tests/install-sh.sh "$shell"; done
+
   nix:
     # flake.nix: builds the package and runs its checks (CLI install into a
     # scratch CODEX_HOME, and the Home Manager module's file targets).
@@ -132,6 +147,9 @@ jobs:
       - run: nix flake check -L
       - run: nix build .#clippy-pet -L
       - run: nix run . -- version
+      - name: Build the Home Manager example from docs/packages/linux.md
+        if: runner.os == 'Linux'
+        run: sh tests/home-manager-doc-example.sh
 
   smoke-appimage:
     # Each AppImage runs on a native runner of its own architecture; under

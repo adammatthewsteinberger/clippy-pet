@@ -153,6 +153,6 @@ That places `pet.json` and `spritesheet.webp` in `~/.codex/pets/clippy-pet/` as 
 | `programs.clippy-pet.installCli` | `false` | Also put `clippy-pet` (for `status`, `path`, `version`) on your `PATH`. |
 | `programs.clippy-pet.package` | this flake's package | Override the package. |
 
-`nix flake check` builds the package, installs the pet into a scratch `CODEX_HOME` and compares it byte for byte, and evaluates the Home Manager module to confirm its file targets. CI runs it on x86_64 and aarch64 Linux and on macOS. The status stays *planned* until that has run green on `develop`.
+`nix flake check` builds the package, installs the pet into a scratch `CODEX_HOME` and compares it byte for byte, and evaluates the Home Manager module to confirm its file targets. CI runs it on x86_64 and aarch64 Linux and on macOS, and on Linux it also builds the example above straight out of this page. The status stays *planned* until that has run green on `develop`.
 
 [Package managers :material-arrow-right:](managers.md){ .md-button }

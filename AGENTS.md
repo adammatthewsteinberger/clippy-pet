@@ -20,6 +20,7 @@ It is not affiliated with or endorsed by Microsoft or OpenAI — see [NOTICE.md]
 | `scripts/retouch-look-pupils.py`, `scripts/prototype-tiny-frame.py` | Art tools (need `numpy`/`scipy`). The retouch is SHA-256-guarded per cell and never changes alpha; the tiny-frame script is a design probe and must not write into `spritesheet.webp`. |
 | `scripts/install.sh`, `packaging/bin/clippy-pet` | The one-line installer and the installed CLI (install/uninstall/status/sync/path/autostart). Shell, must pass `shellcheck`. |
 | `packaging/linux/`, `packaging/macos/`, `packaging/dist/` | `nfpm`-based `.deb`/`.rpm`/`.apk`/Arch builds, macOS `.app`/`.pkg`/`.dmg` builds, reproducible tarballs. |
+| `tests/` | `install-sh.sh` (installer checksum and abuse cases; Linux, run in CI under dash/bash/sh) and `home-manager-doc-example.sh` (builds the Home Manager snippet straight out of `docs/packages/linux.md`). Run `make test` after touching `scripts/install.sh`. |
 | `qa/` | Validator output, blind direction QA, semantic review, continuity/chroma reports, preview GIFs — the evidence backing README claims. Don't hand-edit; regenerate via the relevant script. |
 | `docs/`, `mkdocs.yml`, `overrides/` | MkDocs Material documentation site, deployed to `gh-pages` by `.github/workflows/docs.yml`. |
 | `.github/workflows/` | `validate.yml` (PR checks), `packaging-ci.yml` (build smoke tests), `release.yml` (tag-triggered release), `docs.yml`. |
