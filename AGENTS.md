@@ -16,6 +16,8 @@ It is not affiliated with or endorsed by Microsoft or OpenAI — see [NOTICE.md]
 | `source/frames/`, `source/row-strips/` | Editable per-state source art the atlas is composed from. |
 | `scripts/validate.py` | Validates manifest + atlas geometry/alpha/cell-occupancy. Run before every commit that touches the pet. |
 | `scripts/build-v1-spritesheet.py` | Derives the legacy v1 (web-upload) sheet from v2 source. |
+| `scripts/preview-at-size.py` | Renders cells at small on-screen sizes over light and dark backgrounds. Use it to judge any visual change at ~32-64 px. Pillow only. |
+| `scripts/retouch-look-pupils.py`, `scripts/prototype-tiny-frame.py` | Art tools (need `numpy`/`scipy`). The retouch is SHA-256-guarded per cell and never changes alpha; the tiny-frame script is a design probe and must not write into `spritesheet.webp`. |
 | `scripts/install.sh`, `packaging/bin/clippy-pet` | The one-line installer and the installed CLI (install/uninstall/status/sync/path/autostart). Shell, must pass `shellcheck`. |
 | `packaging/linux/`, `packaging/macos/`, `packaging/dist/` | `nfpm`-based `.deb`/`.rpm`/`.apk`/Arch builds, macOS `.app`/`.pkg`/`.dmg` builds, reproducible tarballs. |
 | `qa/` | Validator output, blind direction QA, semantic review, continuity/chroma reports, preview GIFs — the evidence backing README claims. Don't hand-edit; regenerate via the relevant script. |

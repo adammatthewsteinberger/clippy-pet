@@ -45,8 +45,10 @@ This is the maintainer's working list, in public. Items move only when the thing
 
 ## Ideas, no promises
 
-- A 32 px "tiny" variant for cramped terminals
-- More expressive `waiting`; better shallow-diagonal look cues
+- A 32 px "tiny" variant for cramped terminals ([design groundwork](../make/tiny-variant.md): same cells, bolder character)
+- More expressive `waiting`
+- Stronger "up" cues across the upper look arc (22.5° to 67.5°, 292.5° to 337.5°), which a blind recheck read as level at 64 px
+- Eyebrows that stay visible on dark terminals at small sizes
 - Additional variants (palette / costume) under `variants/`
 - Windows: `install.ps1`, Scoop, winget (out of scope for the "every Unix" release)
 

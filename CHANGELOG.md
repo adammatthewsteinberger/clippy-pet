@@ -11,6 +11,7 @@ Notable changes are documented here using [Keep a Changelog](https://keepachange
 - A "Pick your way in" section in the README and a "Build it with us" section on the docs home page, pointing art, packaging, CI, and writing contributors at concrete first tasks.
 - `CITATION.cff` abstract, keywords, documentation URL, and release-artifact URL; AppStream help and contribute links and keywords.
 - AppImages for x86_64 and aarch64 (`clippy-pet-<version>-<arch>.AppImage`), built by `packaging/appimage/build.sh` with a pinned, hash-verified `appimagetool` and runtime. The release workflow builds them before `SHA256SUMS` is signed, so they are covered by the cosign signature and attestations. Packaging CI smoke-tests each on a native runner. They are first attached to the next tagged release. ([#32](https://github.com/adammatthewsteinberger/clippy-pet/issues/32))
+- `scripts/preview-at-size.py` renders any cells at 32–64 px over light and dark backgrounds, so visual changes can be judged at the sizes terminals actually draw. A [design note for a tiny variant](https://adammatthewsteinberger.github.io/clippy-pet/make/tiny-variant/) answers issue #33's open questions with evidence and a prototype test frame (`scripts/prototype-tiny-frame.py`); the variant itself is still planned. ([#33](https://github.com/adammatthewsteinberger/clippy-pet/issues/33))
 - `flake.nix` with a `clippy-pet` package, `nix run` support, and a Home Manager module (`programs.clippy-pet.enable`, with `codexHome` and `installCli` options). `nix flake check` installs the pet into a scratch `CODEX_HOME` and verifies the module's file targets; CI runs it on Linux (x86_64, aarch64) and macOS. ([#31](https://github.com/adammatthewsteinberger/clippy-pet/issues/31))
 
 ### Changed
@@ -19,6 +20,7 @@ Notable changes are documented here using [Keep a Changelog](https://keepachange
 
 ### Fixed
 
+- The pupils in the 112.5°, 157.5°, 202.5° and 292.5° look frames were nudged 3–4 px so each frame's minor-axis direction reads correctly against its neighbours (`scripts/retouch-look-pupils.py`; alpha and every other pixel unchanged). In a blind 64 px recheck, correct judgements on those frames rose from 10 of 16 to 13 of 16; details and caveats are on the QA page. ([#29](https://github.com/adammatthewsteinberger/clippy-pet/issues/29))
 - The docs home page now states plainly that the site counts page views with cookie-free GoatCounter; it previously said analytics were off unless enabled.
 - The roadmap and installers page no longer describe v1.1.0 as unreleased.
 - The first blog post and the make-your-own guide now quote the QA numbers the QA page records (11 of 14 blind pairs, 13 of 16 frames in semantic review).

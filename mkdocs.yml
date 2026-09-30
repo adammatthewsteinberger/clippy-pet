@@ -199,6 +199,7 @@ nav:
   - Make your own:
       - make/index.md
       - Submit a variant: make/submit.md
+      - Designing a tiny variant: make/tiny-variant.md
   - Blog:
       - blog/index.md
   - Community:
