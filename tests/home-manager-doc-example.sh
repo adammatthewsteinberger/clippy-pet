@@ -2,8 +2,9 @@
 # Build the Home Manager example exactly as docs/packages/linux.md shows it.
 #
 # Extracts the first ```nix block after "A minimal standalone setup" from the
-# Markdown, points its clippy-pet input at this checkout (and its system at
-# the host's), builds the Home Manager generation, and checks that the pet's
+# Markdown, points its clippy-pet input at this checkout (shallow=1, because CI
+# checks out a shallow clone that has no revCount), and its system at
+# the host's; builds the Home Manager generation, and checks that the pet's
 # two files are in it. If someone edits the example into something that no
 # longer builds, this fails.
 #
@@ -21,7 +22,7 @@ awk '
     inside && /^```/ { exit }
     inside { print }
 ' "$ROOT/docs/packages/linux.md" \
-    | sed -e "s#github:adammatthewsteinberger/clippy-pet/develop#git+file://$ROOT#" \
+    | sed -e "s#github:adammatthewsteinberger/clippy-pet/develop#git+file://$ROOT?shallow=1#" \
           -e "s#x86_64-linux#$SYSTEM#" > "$WORK/flake.nix"
 grep -q 'homeManagerModules.default' "$WORK/flake.nix" || {
     echo "error: could not extract the Home Manager example from docs/packages/linux.md" >&2
