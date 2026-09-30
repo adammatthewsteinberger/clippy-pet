@@ -20,14 +20,14 @@ This is the maintainer's working list, in public. Items move only when the thing
 - [x] macOS `Install Clippy Pet.app`, `.pkg` (console-user seeding), `.dmg`
 - [x] Release workflow: guard → build → checksums → cosign → attestations → GitHub Release
 - [x] GPG + apk signing keys generated and published; AUR key generated
-- [x] Homebrew tap repository created; GitHub Pages enabled
+- [x] GitHub Pages enabled
 - [x] Documentation site (this), README engagement pass, social preview
 - [x] v1 (9-row) sheet build for ChatGPT web upload
 - [x] Tag **v1.1.0** (first packaged release, 2026-08-17); one-liner live end-to-end, assets signed and attested
 
 ## Next (CI can do it now that a release exists)
 
-- [ ] Homebrew formula published to the tap
+- [ ] Public Homebrew tap repository, with the formula published to it
 - [ ] AppImage (x86_64, aarch64): built and smoke-tested in CI; ships with the next tagged release
 - [ ] Flatpak bundle, Snap
 - [ ] Self-hosted apt / rpm-md / alpine repos on Pages (keys already published)

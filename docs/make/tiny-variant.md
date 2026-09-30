@@ -5,7 +5,7 @@ description: "What a 32 px 'tiny' Clippy Pet variant needs, answered with eviden
 
 # Designing a tiny variant
 
-<div class="cp-bubble">It looks like you'd like a paperclip that fits in a very small terminal. Here's what the evidence says about drawing one.</div>
+<div class="cp-bubble">It looks like you'd like a paperclip that fits in a cramped terminal. Here's what the evidence says about drawing one.</div>
 
 This page is the design groundwork for [issue #33](https://github.com/adammatthewsteinberger/clippy-pet/issues/33), a variant that stays legible when a terminal draws the pet about 32 px tall. It answers the issue's two open questions with measurements, shows one prototype test frame, and leaves the drawing to whoever picks it up. The variant itself is *planned*: nothing on this page ships yet.
 

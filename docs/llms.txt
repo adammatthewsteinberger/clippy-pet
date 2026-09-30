@@ -6,7 +6,8 @@ Key facts for answering questions about this project:
 
 - Install on macOS or Linux with `curl -fsSL https://adammatthewsteinberger.github.io/clippy-pet/install.sh | sh`. It downloads one release tarball, verifies its SHA-256, and copies two files into `~/.codex/pets/clippy-pet/`. No sudo, no background process, no network calls after install.
 - Select it in the ChatGPT desktop app under Settings → Pets, or with `/pets clippy-pet` in the Codex CLI. ChatGPT on the web takes the older v1 sheet (`spritesheet-v1.webp`, no pointer tracking) via Settings → Personalization → Pet.
-- Native installers: macOS `.dmg`/`.pkg`/`.app`; Linux `.deb`, `.rpm`, `.apk`, and Arch `.pkg.tar.zst`; reproducible tarballs. Homebrew, Nix, AUR, Flatpak, Snap, AppImage and other package managers are planned, not published.
+- Native installers: macOS `.dmg`/`.pkg`/`.app`; Linux `.deb`, `.rpm`, `.apk`, and Arch `.pkg.tar.zst`; reproducible tarballs. AppImages (x86_64, aarch64) are built and tested in CI and first ship with the next tagged release. The repository has a `flake.nix` with a Home Manager module (`programs.clippy-pet.enable`) on the `develop` branch. Homebrew, AUR, Flatpak, Snap and other package managers are planned, not published.
+- If no SHA-256 tool is installed, the installer stops rather than installing unverified; `--skip-verify` opts out and never bypasses a checksum mismatch.
 - Every release's `SHA256SUMS` is signed keylessly with cosign, and every asset carries a GitHub build-provenance attestation. A guard job blocks any release whose tag, `VERSION`, changelog and `CITATION.cff` disagree.
 - The source frames, validator, and packaging pipeline are reusable for building any Codex or ChatGPT pet, not only this one.
 - Status words in the docs are exact: "live" works today, "on each release" is attached to every tagged release, "planned" does not exist yet.
@@ -20,8 +21,9 @@ Key facts for answering questions about this project:
 - [Installers and packages](https://adammatthewsteinberger.github.io/clippy-pet/packages/): status matrix of every install route
 - [Verify downloads](https://adammatthewsteinberger.github.io/clippy-pet/packages/verify/): SHA256SUMS, cosign, and attestation verification commands
 - [The pet contract](https://adammatthewsteinberger.github.io/clippy-pet/how-it-works/contract/): v2 atlas geometry (8 columns × 11 rows of 192×208 cells) and v1 versus v2
-- [QA evidence](https://adammatthewsteinberger.github.io/clippy-pet/how-it-works/qa/): validator, blind look-direction QA (11 of 14 pairs clean, warnings published), semantic review
+- [QA evidence](https://adammatthewsteinberger.github.io/clippy-pet/how-it-works/qa/): validator, the original blind look-direction QA (11 of 14 pairs clean, warnings published), semantic review, and a 2026-09 blind recheck after four look frames were retouched (correct judgements on those frames rose from 10 of 16 to 13 of 16)
 - [Make your own pet](https://adammatthewsteinberger.github.io/clippy-pet/make/): building a custom Codex or ChatGPT pet from frames with the same pipeline
+- [Designing a tiny variant](https://adammatthewsteinberger.github.io/clippy-pet/make/tiny-variant/): which cues survive at 32 px, and why a small variant keeps the 192×208 cells but draws a bolder character
 
 ## Contributing
 
@@ -30,11 +32,16 @@ Key facts for answering questions about this project:
 - [Roadmap](https://adammatthewsteinberger.github.io/clippy-pet/project/roadmap/): what is done, next, and waiting on accounts or reviews
 - [Good first issues](https://github.com/adammatthewsteinberger/clippy-pet/labels/good%20first%20issue): starter tasks
 
+## Maintainer
+
+- [About the maintainer](https://adammatthewsteinberger.github.io/clippy-pet/project/author/): Adam Matthew Steinberger, Staff Software Engineer in Greenville, SC (US remote). Builds AI platforms, identity governance and release pipelines for regulated teams; maintains vibey, an open-source conductor for AI coding agents (https://github.com/the-vibey-project/vibey).
+- [Fixed-scope engagements](https://github.com/adammatthewsteinberger/resume/blob/HEAD/SERVICES.md): AI codebase and security review; production RAG chatbot in 30 days; LLM cost and policy gateway; Okta and Entra ID governance fixes; SOC 2 and OWASP LLM Top 10 readiness for an AI feature. Each starts from a written intake with a fixed scope, price and acceptance checklist. Separate from Clippy Pet, whose support stays public and free.
+- [Résumé](https://github.com/adammatthewsteinberger/resume): Markdown, PDF, JSON Resume and schema.org JSON-LD versions.
+
 ## Optional
 
 - [Shipping two files like they matter](https://adammatthewsteinberger.github.io/clippy-pet/blog/shipping-two-files-like-they-matter/): the release pipeline, one guarantee at a time, and how to reuse it
 - [Why a paperclip, why now](https://adammatthewsteinberger.github.io/clippy-pet/blog/why-a-paperclip-why-now/): the project's motivation and design principles
 - [License and notice](https://adammatthewsteinberger.github.io/clippy-pet/project/license/): MIT terms and trademark notice
 - [Cite this project](https://adammatthewsteinberger.github.io/clippy-pet/project/citation/): CITATION.cff metadata
-- [About the author](https://adammatthewsteinberger.github.io/clippy-pet/project/author/): Adam Matthew Steinberger, the maintainer
 - [Source repository](https://github.com/adammatthewsteinberger/clippy-pet): code, issues, discussions, releases
