@@ -1,5 +1,67 @@
 {% extends "base.html" %}
 
+{% block extrahead %}
+  {{ super() }}
+  <link rel="alternate" type="text/plain" title="llms.txt" href="{{ 'llms.txt' | url }}">
+  {#- Structured data: one Person entity, referenced by the project and by blog posts. -#}
+  {%- set author = {
+    "@type": "Person",
+    "@id": config.site_url ~ "project/author/#person",
+    "name": "Adam Matthew Steinberger",
+    "url": config.site_url ~ "project/author/",
+    "sameAs": [
+      "https://github.com/adammatthewsteinberger",
+      "https://www.linkedin.com/in/adammatthewsteinberger/",
+      "https://vibewithadam.matthewsteinberger.com"
+    ]
+  } -%}
+  {%- if page.is_homepage %}
+  <script type="application/ld+json">
+  {{ {
+    "@context": "https://schema.org",
+    "@graph": [
+      author,
+      {
+        "@type": ["SoftwareApplication", "SoftwareSourceCode"],
+        "@id": config.site_url ~ "#software",
+        "name": "Clippy Pet",
+        "description": config.site_description | trim,
+        "url": config.site_url,
+        "codeRepository": config.repo_url,
+        "license": "https://opensource.org/licenses/MIT",
+        "applicationCategory": "DeveloperApplication",
+        "operatingSystem": "macOS, Linux",
+        "programmingLanguage": ["Python", "Shell"],
+        "isAccessibleForFree": true,
+        "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"},
+        "keywords": "Codex pet, ChatGPT desktop pet, Codex CLI, animated paperclip, desktop pet, sprite atlas, open source, signed releases",
+        "author": {"@id": config.site_url ~ "project/author/#person"},
+        "maintainer": {"@id": config.site_url ~ "project/author/#person"}
+      }
+    ]
+  } | tojson }}
+  </script>
+  {%- elif page.meta and page.meta.date and page.url.startswith("blog/") %}
+  <script type="application/ld+json">
+  {{ {
+    "@context": "https://schema.org",
+    "@graph": [
+      author,
+      {
+        "@type": "BlogPosting",
+        "headline": page.title | striptags,
+        "description": (page.meta.description or "") | trim,
+        "datePublished": page.meta.date | string | truncate(10, true, ""),
+        "url": page.canonical_url,
+        "author": {"@id": config.site_url ~ "project/author/#person"},
+        "isPartOf": {"@id": config.site_url ~ "#software"}
+      }
+    ]
+  } | tojson }}
+  </script>
+  {%- endif %}
+{% endblock %}
+
 {% block announce %}
   📎 It looks like you're looking for a paperclip.
   <a href="{{ 'get-started/install/' | url }}"><strong>Install Clippy Pet in one line</strong></a>

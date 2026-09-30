@@ -18,7 +18,7 @@ In 1996 Microsoft shipped an animated paperclip that watched what you typed and 
 
 In 2026 an AI coding agent watches what you type and offers help. Putting a paperclip next to it is affectionate and a little self-aware, and I don't think you need to explain that joke to anyone who was alive for both halves of it. Codex and the ChatGPT desktop app grew a "pets" feature (small animated companions that idle, run, and wince at build failures) and the pets are just files. Someone was going to make the paperclip. I wanted it to be made properly.
 
-So I opened up my Research Assistant in Claude Code and got to work fast! My goal was to create a resurrection of Clippy from the 90s and bring it into the 21st century. ChatGPT offered the platform, I built the code.
+So I opened my research assistant in Claude Code and got to work. The goal was to bring the paperclip from the 1990s into the 21st century. ChatGPT supplied the platform; I built the pet.
 
 ## The craft exercise
 
@@ -28,11 +28,11 @@ So I opened up my Research Assistant in Claude Code and got to work fast! My goa
 - Sixteen look directions, because a v2 pet's eyes follow your pointer, and a pupil two pixels off at 292.5° reads as "shifty".
 - A silhouette that reads at 64 pixels on both light and dark backgrounds, which is why almost all the expression is in the eyes.
 - A validator that checks the atlas cell by cell.
-- Blind QA on the look directions: shuffle the frames, hide the labels, classify. Thirteen of sixteen came back clean; three shallow diagonals got warnings, and the warnings are published rather than tuned away.
+- Blind QA on the look directions: shuffle the frames into anonymous pairs, hide the labels, classify. Eleven of fourteen pairs came back clean, a separate semantic review passed thirteen of sixteen frames, and the warnings on the shallow diagonals are published rather than tuned away.
 
 That last part matters to me more than the paperclip does. I've spent a lot of time thinking about how engineers earn attention, and the conclusion I keep coming back to is that honesty outperforms polish over any timescale that matters. A QA page that shows only green ticks isn't evidence. A package matrix that lists commands which don't work yet isn't documentation. So this site has status chips that say *planned* on most of the package managers, and a receipts page that quotes the warnings verbatim.
 
-The plan, the journey, the vibes. It's all part of the story that continues to warm the hearts of Clippy fans world wide.
+The plan, the journey, the vibes: it's all part of a story that still warms the hearts of Clippy fans worldwide.
 
 ## Why "unofficial" is on every page
 

@@ -12,7 +12,7 @@
     <p>
       Clippy Pet is an unofficial, Codex-compatible v2 animated pet inspired by
       the visual language of classic late-1990s desktop assistants. It is not
-      affiliated with or endorsed by Microsoft.
+      affiliated with or endorsed by Microsoft or OpenAI.
     </p>
     <p>
       Installing Clippy Pet copies its manifest and spritesheet into your
@@ -25,6 +25,15 @@
   <url type="homepage">https://github.com/adammatthewsteinberger/clippy-pet</url>
   <url type="bugtracker">https://github.com/adammatthewsteinberger/clippy-pet/issues</url>
   <url type="vcs-browser">https://github.com/adammatthewsteinberger/clippy-pet</url>
+  <url type="help">https://adammatthewsteinberger.github.io/clippy-pet/</url>
+  <url type="contribute">https://adammatthewsteinberger.github.io/clippy-pet/community/contributing/</url>
+  <keywords>
+    <keyword>codex</keyword>
+    <keyword>chatgpt</keyword>
+    <keyword>pet</keyword>
+    <keyword>paperclip</keyword>
+    <keyword>animation</keyword>
+  </keywords>
   <categories>
     <category>Utility</category>
   </categories>

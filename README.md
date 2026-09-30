@@ -32,6 +32,7 @@ Then pick it: **ChatGPT desktop app → Settings → Pets → Clippy Pet**, or `
 - **Sixteen look directions** in 22.5° steps so the eyes follow your pointer (v2 pet contract).
 - **Installers, honestly labelled**: one-liner, macOS `.dmg` / `.pkg` / `.app`, Linux `.deb` / `.rpm` / `.apk` / Arch, reproducible tarballs; a [status matrix](https://adammatthewsteinberger.github.io/clippy-pet/packages/) that says which package managers are live and which are still planned.
 - **The receipts**: a validator, blind direction QA (11/14 pairs clean, warnings published), semantic review (13/16 pass), continuity and chroma reports, all in [`qa/`](qa/) and explained on the [QA page](https://adammatthewsteinberger.github.io/clippy-pet/how-it-works/qa/).
+- **Releases you can verify**: every `SHA256SUMS` is signed keylessly with cosign, every asset carries a build-provenance attestation, and tarballs are reproducible. [Check them yourself](https://adammatthewsteinberger.github.io/clippy-pet/packages/verify/), or read [how the pipeline works](https://adammatthewsteinberger.github.io/clippy-pet/blog/shipping-two-files-like-they-matter/).
 - **Remixable source** under MIT: per-state frames in [`source/frames/`](source/frames/), plus a payload-agnostic packaging pipeline you can fork to ship your own pet.
 
 ## Meet Clippy Pet
@@ -115,6 +116,20 @@ python3 -m venv .venv && . .venv/bin/activate
 python3 -m pip install -r requirements-dev.txt
 make validate      # manifest, contract version, 1536×2288, alpha, path safety, per-cell occupancy
 ```
+
+## Pick your way in
+
+Clippy Pet is small enough to read in an afternoon, and every part of it has a first task waiting:
+
+| If you like… | Start here |
+|---|---|
+| Pixel art | Three shallow-diagonal look frames carry [published QA warnings](https://adammatthewsteinberger.github.io/clippy-pet/how-it-works/qa/). Redraw one, run `make validate`, attach a before/after GIF. |
+| Packaging | Homebrew, Nix, AUR, AppImage, Flatpak and more are drafted but *planned*. If you live in one of those ecosystems, you're the reviewer it needs. [Status board](https://adammatthewsteinberger.github.io/clippy-pet/packages/managers/) |
+| Shell and CI | One POSIX `sh` CLI, shellcheck-clean, tested under dash, bash, BusyBox ash and macOS `/bin/sh`. The release workflow is readable top to bottom. |
+| Writing | Every docs page has an edit pencil. A clearer sentence counts. |
+| Your own pet | Fork the frames and pipeline, then post the result in [Show and tell](https://github.com/adammatthewsteinberger/clippy-pet/discussions/categories/show-and-tell). |
+
+Browse [good first issues](https://github.com/adammatthewsteinberger/clippy-pet/labels/good%20first%20issue), or ask in [Discussions](https://github.com/adammatthewsteinberger/clippy-pet/discussions) before starting something large.
 
 ## Contributing & community
 
