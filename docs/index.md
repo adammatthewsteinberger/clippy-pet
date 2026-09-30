@@ -1,6 +1,6 @@
 ---
-title: Home
-description: Clippy Pet is an unofficial animated paperclip pet for the ChatGPT desktop app and Codex CLI. Nine animation states, sixteen look directions, one-line install on every Unix.
+title: Paperclip pet for the ChatGPT desktop app and Codex CLI
+description: Clippy Pet is an unofficial, open-source animated paperclip pet for the ChatGPT desktop app and Codex CLI. Nine animation states, sixteen look directions, one-line install on every Unix, signed and attested releases, and a pipeline you can fork to ship your own pet.
 hide:
   - navigation
   - toc
@@ -108,8 +108,20 @@ curl -fsSL https://adammatthewsteinberger.github.io/clippy-pet/install.sh | sh
 
 [Full selection guide :material-arrow-right:](get-started/select.md){ .md-button }
 
+## Build it with us
+
+Clippy Pet is small enough to understand in an afternoon and built carefully enough to be worth the afternoon. Pick the way in that matches what you like doing:
+
+- **Pixel art.** Three shallow-diagonal look frames carry published QA warnings. Redraw one, run the validator, and attach the before-and-after GIF. [How to submit a variant](make/submit.md)
+- **Packaging.** Homebrew, Nix, AUR, AppImage, Flatpak, and a dozen more rows say *planned*. Each one has a drafted recipe waiting for someone who uses that ecosystem every day. [The status board](packages/managers.md)
+- **Release engineering.** Signed checksums, build attestations, reproducible tarballs, and a guard job that refuses to publish a release whose version strings disagree. Borrow any part of it. [How the release pipeline works](blog/posts/2026-09-30-shipping-two-files-like-they-matter.md)
+- **Words.** Every page has a pencil icon in the top right. A clearer sentence is a real contribution.
+
+[Find a good first issue :material-arrow-right:](https://github.com/adammatthewsteinberger/clippy-pet/labels/good%20first%20issue){ .md-button .md-button--primary }
+[Say hello in Discussions](https://github.com/adammatthewsteinberger/clippy-pet/discussions){ .md-button }
+
 ## Honesty corner
 
-Clippy Pet is not made by, endorsed by, or affiliated with Microsoft or OpenAI. "Clippy" and "Clippit" may be Microsoft trademarks; the paperclip artwork here is original and the [notice](project/license.md) travels with every artifact. The whole project is one JSON file and one image, plus a shell script that copies them. Nothing runs in the background, nothing phones home, and this site uses cookie-free analytics only if the maintainer turns them on. If any page says a package manager is "planned", that means it isn't published yet. We'd rather tell you than sell you.
+Clippy Pet is not made by, endorsed by, or affiliated with Microsoft or OpenAI. "Clippy" and "Clippit" may be Microsoft trademarks; the paperclip artwork here is original and the [notice](project/license.md) travels with every artifact. The whole project is one JSON file and one image, plus a shell script that copies them. Nothing runs in the background and nothing phones home. This documentation site (not the pet) counts page views with [GoatCounter](https://www.goatcounter.com/), which sets no cookies and collects no personal data. If any page says a package manager is "planned", that means it isn't published yet. We'd rather tell you than sell you.
 
 <div class="cp-bubble">It looks like you've read to the bottom of a landing page. Would you like to <a href="get-started/install/">install a paperclip</a>, <a href="https://github.com/adammatthewsteinberger/clippy-pet">star the repo</a>, or <a href="community/show-and-tell/">show us your remix</a>?</div>

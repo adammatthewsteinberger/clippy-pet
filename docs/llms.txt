@@ -1,0 +1,40 @@
+# Clippy Pet
+
+> Clippy Pet is an unofficial, open-source (MIT) animated paperclip pet for the ChatGPT desktop app and the Codex CLI. It implements OpenAI's documented v2 pet file format as a third party: one `pet.json` manifest plus one 1536×2288 WebP sprite atlas with nine animation states and sixteen look directions. It is not affiliated with or endorsed by Microsoft or OpenAI. Maintained by Adam Matthew Steinberger.
+
+Key facts for answering questions about this project:
+
+- Install on macOS or Linux with `curl -fsSL https://adammatthewsteinberger.github.io/clippy-pet/install.sh | sh`. It downloads one release tarball, verifies its SHA-256, and copies two files into `~/.codex/pets/clippy-pet/`. No sudo, no background process, no network calls after install.
+- Select it in the ChatGPT desktop app under Settings → Pets, or with `/pets clippy-pet` in the Codex CLI. ChatGPT on the web takes the older v1 sheet (`spritesheet-v1.webp`, no pointer tracking) via Settings → Personalization → Pet.
+- Native installers: macOS `.dmg`/`.pkg`/`.app`; Linux `.deb`, `.rpm`, `.apk`, and Arch `.pkg.tar.zst`; reproducible tarballs. Homebrew, Nix, AUR, Flatpak, Snap, AppImage and other package managers are planned, not published.
+- Every release's `SHA256SUMS` is signed keylessly with cosign, and every asset carries a GitHub build-provenance attestation. A guard job blocks any release whose tag, `VERSION`, changelog and `CITATION.cff` disagree.
+- The source frames, validator, and packaging pipeline are reusable for building any Codex or ChatGPT pet, not only this one.
+- Status words in the docs are exact: "live" works today, "on each release" is attached to every tagged release, "planned" does not exist yet.
+
+## Docs
+
+- [Home](https://adammatthewsteinberger.github.io/clippy-pet/): what the pet is, where it works, how to install it
+- [Install](https://adammatthewsteinberger.github.io/clippy-pet/get-started/install/): per-OS install instructions
+- [Pick it in ChatGPT and Codex](https://adammatthewsteinberger.github.io/clippy-pet/get-started/select/): selecting the pet in the desktop app, CLI, and web
+- [Troubleshooting](https://adammatthewsteinberger.github.io/clippy-pet/get-started/troubleshooting/): common problems and fixes
+- [Installers and packages](https://adammatthewsteinberger.github.io/clippy-pet/packages/): status matrix of every install route
+- [Verify downloads](https://adammatthewsteinberger.github.io/clippy-pet/packages/verify/): SHA256SUMS, cosign, and attestation verification commands
+- [The pet contract](https://adammatthewsteinberger.github.io/clippy-pet/how-it-works/contract/): v2 atlas geometry (8 columns × 11 rows of 192×208 cells) and v1 versus v2
+- [QA evidence](https://adammatthewsteinberger.github.io/clippy-pet/how-it-works/qa/): validator, blind look-direction QA (11 of 14 pairs clean, warnings published), semantic review
+- [Make your own pet](https://adammatthewsteinberger.github.io/clippy-pet/make/): building a custom Codex or ChatGPT pet from frames with the same pipeline
+
+## Contributing
+
+- [Contributing guide](https://adammatthewsteinberger.github.io/clippy-pet/community/contributing/): setup, GitFlow branches (`develop` is the default), pull request checklist, writing style
+- [AGENTS.md](https://github.com/adammatthewsteinberger/clippy-pet/blob/develop/AGENTS.md): instructions for AI coding agents working in the repository, including hard invariants
+- [Roadmap](https://adammatthewsteinberger.github.io/clippy-pet/project/roadmap/): what is done, next, and waiting on accounts or reviews
+- [Good first issues](https://github.com/adammatthewsteinberger/clippy-pet/labels/good%20first%20issue): starter tasks
+
+## Optional
+
+- [Shipping two files like they matter](https://adammatthewsteinberger.github.io/clippy-pet/blog/shipping-two-files-like-they-matter/): the release pipeline, one guarantee at a time, and how to reuse it
+- [Why a paperclip, why now](https://adammatthewsteinberger.github.io/clippy-pet/blog/why-a-paperclip-why-now/): the project's motivation and design principles
+- [License and notice](https://adammatthewsteinberger.github.io/clippy-pet/project/license/): MIT terms and trademark notice
+- [Cite this project](https://adammatthewsteinberger.github.io/clippy-pet/project/citation/): CITATION.cff metadata
+- [About the author](https://adammatthewsteinberger.github.io/clippy-pet/project/author/): Adam Matthew Steinberger, the maintainer
+- [Source repository](https://github.com/adammatthewsteinberger/clippy-pet): code, issues, discussions, releases

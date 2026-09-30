@@ -23,10 +23,10 @@ This is the maintainer's working list, in public. Items move only when the thing
 - [x] Homebrew tap repository created; GitHub Pages enabled
 - [x] Documentation site (this), README engagement pass, social preview
 - [x] v1 (9-row) sheet build for ChatGPT web upload
+- [x] Tag **v1.1.0** (first packaged release, 2026-08-17); one-liner live end-to-end, assets signed and attested
 
-## Next (CI can do it once the first release exists)
+## Next (CI can do it now that a release exists)
 
-- [ ] Tag **v1.1.0** (first packaged release); one-liner goes live end-to-end
 - [ ] Homebrew formula published to the tap
 - [ ] AppImage (x86_64, aarch64), Flatpak bundle, Snap
 - [ ] Self-hosted apt / rpm-md / alpine repos on Pages (keys already published)

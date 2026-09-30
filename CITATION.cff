@@ -10,4 +10,23 @@ license: MIT
 version: 1.1.0
 date-released: 2026-08-17
 repository-code: "https://github.com/adammatthewsteinberger/clippy-pet"
-abstract: "A Codex-compatible v2 animated paperclip pet with source assets and QA evidence."
+repository-artifact: "https://github.com/adammatthewsteinberger/clippy-pet/releases"
+url: "https://adammatthewsteinberger.github.io/clippy-pet/"
+abstract: >-
+  An unofficial, open-source animated paperclip pet for the ChatGPT desktop app
+  and Codex CLI, implementing the v2 pet format: a JSON manifest and a
+  1536x2288 WebP sprite atlas with nine animation states and sixteen look
+  directions. The repository includes editable source frames, a contract
+  validator, published QA evidence, and a reusable packaging and release
+  pipeline with reproducible tarballs, cosign-signed checksums, and build
+  provenance attestations. Not affiliated with Microsoft or OpenAI.
+keywords:
+  - codex
+  - chatgpt
+  - codex-cli
+  - desktop-pet
+  - sprite-atlas
+  - pixel-art
+  - release-engineering
+  - supply-chain-security
+  - reproducible-builds
