@@ -10,6 +10,8 @@ Notable changes are documented here using [Keep a Changelog](https://keepachange
 - `llms.txt` on the documentation site, plus schema.org structured data for the project, its maintainer, and blog posts.
 - A "Pick your way in" section in the README and a "Build it with us" section on the docs home page, pointing art, packaging, CI, and writing contributors at concrete first tasks.
 - `CITATION.cff` abstract, keywords, documentation URL, and release-artifact URL; AppStream help and contribute links and keywords.
+- AppImages for x86_64 and aarch64 (`clippy-pet-<version>-<arch>.AppImage`), built by `packaging/appimage/build.sh` with a pinned, hash-verified `appimagetool` and runtime. The release workflow builds them before `SHA256SUMS` is signed, so they are covered by the cosign signature and attestations. Packaging CI smoke-tests each on a native runner. They are first attached to the next tagged release. ([#32](https://github.com/adammatthewsteinberger/clippy-pet/issues/32))
+- `flake.nix` with a `clippy-pet` package, `nix run` support, and a Home Manager module (`programs.clippy-pet.enable`, with `codexHome` and `installCli` options). `nix flake check` installs the pet into a scratch `CODEX_HOME` and verifies the module's file targets; CI runs it on Linux (x86_64, aarch64) and macOS. ([#31](https://github.com/adammatthewsteinberger/clippy-pet/issues/31))
 
 ### Changed
 

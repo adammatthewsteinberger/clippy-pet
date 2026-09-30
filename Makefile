@@ -9,7 +9,7 @@ checksums:
 	shasum -a 256 pet.json spritesheet.webp > SHA256SUMS
 
 lint:
-	shellcheck -s sh packaging/bin/clippy-pet scripts/install.sh packaging/dist/make-tarballs.sh packaging/linux/build.sh
+	shellcheck -s sh packaging/bin/clippy-pet scripts/install.sh packaging/dist/make-tarballs.sh packaging/linux/build.sh packaging/appimage/build.sh packaging/appimage/AppRun
 
 dist: validate
 	./packaging/dist/make-tarballs.sh

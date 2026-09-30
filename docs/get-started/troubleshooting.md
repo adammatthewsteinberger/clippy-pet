@@ -36,7 +36,7 @@ That's a known limitation of the ChatGPT desktop app's Linux preview rather than
 
 ## AppImage won't start
 
-<span class="cp-chip cp-chip--planned">planned</span> Once AppImages ship: some minimal systems lack FUSE. Run with `--appimage-extract-and-run`.
+<span class="cp-chip cp-chip--planned">planned</span> AppImages ship from the next tagged release. Some minimal systems and containers lack FUSE; run with `--appimage-extract-and-run`, or set `APPIMAGE_EXTRACT_AND_RUN=1`. If you see `Exec format error` on an emulated or non-native architecture, download the AppImage that matches `uname -m`.
 
 ## Snap can't write to `~/.codex`
 

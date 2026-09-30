@@ -47,6 +47,9 @@ jobs:
         run: ./packaging/dist/make-tarballs.sh
       - name: Build Linux packages
         run: ./packaging/linux/build.sh
+      - name: Build AppImages (x86_64, aarch64)
+        # Before "Checksums", so both AppImages land in the signed SHA256SUMS.
+        run: ./packaging/appimage/build.sh
       - uses: actions/setup-python@v7.0.0
         with:
           python-version: "3.12"
@@ -130,7 +133,7 @@ jobs:
             echo 'curl -fsSL https://adammatthewsteinberger.github.io/clippy-pet/install.sh | sh'
             echo '```'
             echo
-            echo "macOS: open \`Clippy-Pet-$version.dmg\`. Linux: install the \`.deb\` / \`.rpm\` / \`.apk\` / \`.pkg.tar.zst\` below, then run \`clippy-pet install\`. ChatGPT web: upload \`spritesheet-v1.webp\`. Full guide: https://adammatthewsteinberger.github.io/clippy-pet/get-started/install/"
+            echo "macOS: open \`Clippy-Pet-$version.dmg\`. Linux: install the \`.deb\` / \`.rpm\` / \`.apk\` / \`.pkg.tar.zst\` below, then run \`clippy-pet install\`, or run the \`.AppImage\` for your architecture. ChatGPT web: upload \`spritesheet-v1.webp\`. Full guide: https://adammatthewsteinberger.github.io/clippy-pet/get-started/install/"
             echo
             echo "## Changes"
             echo

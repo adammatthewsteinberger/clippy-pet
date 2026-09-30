@@ -82,14 +82,77 @@ Or just delete the pet: `clippy-pet uninstall` doesn't get re-installed by `sync
 
 ## Universal formats <span class="cp-chip cp-chip--planned">planned</span>
 
-Designed and scaffolded, not yet built by CI. Each will land on the releases page and this table will flip to *on each release*:
+Each will land on the releases page and flip to *on each release* only after a tagged release has actually shipped it. AppImage and Nix are further along than the rest; see their sections below.
 
 | Format | Notes |
 |---|---|
-| **AppImage** (`x86_64`, `aarch64`) | Script-only AppDir; run with no arguments and no TTY to get the GUI installer. Some minimal systems need `--appimage-extract-and-run`. |
+| **AppImage** (`x86_64`, `aarch64`) | Built by `packaging/appimage/build.sh` and smoke-tested on native runners of both architectures in `packaging-ci.yml`; the release workflow builds it before `SHA256SUMS` is signed. First attached to the next tagged release. [Details](#appimage) |
 | **Flatpak** (`Clippy-Pet-<v>.flatpak` + self-hosted repo) | `org.freedesktop.Platform` runtime; needs `--filesystem=~/.codex/pets/clippy-pet:create`. A Flathub submission will be attempted; console-style apps often get pushback there, so the self-hosted repo is the fallback. |
 | **Snap** | Strict confinement; writing to `~/.codex` needs the `personal-files` interface, so `sudo snap connect clippy-pet:dot-codex-pets` once until the store grants auto-connect. |
-| **Nix** | `flake.nix` with a package, an app, and a Home Manager module (`programs.clippy-pet.enable`) that links the pet into `~/.codex/pets/`. nixpkgs submission after. |
+| **Nix** | `flake.nix` with a package, an app, `nix flake check` tests, and a Home Manager module (`programs.clippy-pet.enable`). In the repository on `develop`; nixpkgs submission after. [Details](#nix-and-home-manager) |
 | **Gentoo** | `app-misc/clippy-pet` ebuild for the GURU overlay. |
+
+## AppImage
+
+The AppImage is an installer, not a long-running app: it carries the two pet files and the `clippy-pet` CLI, copies the pet into `${CODEX_HOME:-$HOME/.codex}/pets/clippy-pet/`, and exits.
+
+```sh
+chmod +x clippy-pet-<version>-x86_64.AppImage
+./clippy-pet-<version>-x86_64.AppImage             # same as: install
+./clippy-pet-<version>-x86_64.AppImage status
+./clippy-pet-<version>-x86_64.AppImage uninstall
+```
+
+Double-clicking it in a file manager runs `install --gui`. Two CLI features are refused with an explanation, because an AppImage runs from a mount that disappears when it exits: `--link` (the link would dangle) and `autostart` (the login entry would point nowhere). Use a native package or the tarball if you want those. No FUSE? See [troubleshooting](../get-started/troubleshooting.md#appimage-wont-start).
+
+## Nix and Home Manager
+
+The repository is a flake. From a checkout, or from GitHub once this lands on the branch you point at:
+
+```sh
+nix run github:adammatthewsteinberger/clippy-pet/develop            # runs `clippy-pet install`
+nix profile install github:adammatthewsteinberger/clippy-pet/develop # CLI on your PATH
+```
+
+Declaratively, with Home Manager. A minimal standalone setup (`home.nix` holds the rest of your configuration):
+
+```nix
+{
+  inputs = {
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-26.05";
+    home-manager = {
+      url = "github:nix-community/home-manager/release-26.05";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    clippy-pet = {
+      url = "github:adammatthewsteinberger/clippy-pet/develop";
+      inputs.nixpkgs.follows = "nixpkgs";
+      inputs.home-manager.follows = "home-manager";
+    };
+  };
+
+  outputs = { nixpkgs, home-manager, clippy-pet, ... }: {
+    homeConfigurations.you = home-manager.lib.homeManagerConfiguration {
+      pkgs = nixpkgs.legacyPackages.x86_64-linux;
+      modules = [
+        clippy-pet.homeManagerModules.default
+        { programs.clippy-pet.enable = true; }
+        ./home.nix
+      ];
+    };
+  };
+}
+```
+
+That places `pet.json` and `spritesheet.webp` in `~/.codex/pets/clippy-pet/` as files Home Manager manages, so they update with your generation and disappear if you disable the module. Options:
+
+| Option | Default | Meaning |
+|---|---|---|
+| `programs.clippy-pet.enable` | `false` | Install the pet. |
+| `programs.clippy-pet.codexHome` | `".codex"` | Codex home, relative to your home directory. If you set `CODEX_HOME`, set this to match: flakes evaluate purely, so the module can't read your shell's environment. |
+| `programs.clippy-pet.installCli` | `false` | Also put `clippy-pet` (for `status`, `path`, `version`) on your `PATH`. |
+| `programs.clippy-pet.package` | this flake's package | Override the package. |
+
+`nix flake check` builds the package, installs the pet into a scratch `CODEX_HOME` and compares it byte for byte, and evaluates the Home Manager module to confirm its file targets. CI runs it on x86_64 and aarch64 Linux and on macOS. The status stays *planned* until that has run green on `develop`.
 
 [Package managers :material-arrow-right:](managers.md){ .md-button }

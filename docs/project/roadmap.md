@@ -28,9 +28,10 @@ This is the maintainer's working list, in public. Items move only when the thing
 ## Next (CI can do it now that a release exists)
 
 - [ ] Homebrew formula published to the tap
-- [ ] AppImage (x86_64, aarch64), Flatpak bundle, Snap
+- [ ] AppImage (x86_64, aarch64): built and smoke-tested in CI; ships with the next tagged release
+- [ ] Flatpak bundle, Snap
 - [ ] Self-hosted apt / rpm-md / alpine repos on Pages (keys already published)
-- [ ] `flake.nix` + Home Manager module
+- [ ] `flake.nix` + Home Manager module: in `develop`, `nix flake check` in CI; flips to live once green there
 - [ ] AUR `clippy-pet`, PKGBUILD-built `.pkg.tar.xz`
 - [ ] Apple-signed, notarized macOS builds
 

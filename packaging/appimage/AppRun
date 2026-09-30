@@ -1,0 +1,35 @@
+#!/bin/sh
+# AppRun for the Clippy Pet AppImage.
+#
+# The AppImage is an installer: it carries pet.json, spritesheet.webp and the
+# POSIX clippy-pet CLI, and copies the pet into ${CODEX_HOME:-$HOME/.codex}.
+# It runs from a transient mount ($APPDIR) that disappears when it exits, so
+# anything that would leave a reference to $APPDIR behind is refused.
+set -eu
+
+HERE=${APPDIR:-$(CDPATH='' cd -- "$(dirname -- "$0")" && pwd)}
+export CLIPPY_PET_DATA="$HERE/usr/share/clippy-pet"
+CLI="$HERE/usr/bin/clippy-pet"
+
+refuse() {
+    printf 'clippy-pet (AppImage): %s\n' "$1" >&2
+    printf 'Use a .deb/.rpm/.apk/Arch package or the tarball for that; see\n' >&2
+    printf 'https://adammatthewsteinberger.github.io/clippy-pet/packages/linux/\n' >&2
+    exit 2
+}
+
+for arg in "$@"; do
+    case $arg in
+        --link)
+            refuse "--link is unavailable: the AppImage mount is removed when it exits, so a link would dangle." ;;
+        autostart)
+            refuse "autostart is unavailable: the login entry would point at a mount that no longer exists." ;;
+    esac
+done
+
+# Double-clicked from a file manager: no arguments and no terminal.
+if [ "$#" -eq 0 ] && [ ! -t 1 ]; then
+    set -- install --gui
+fi
+
+exec "$CLI" "$@"
