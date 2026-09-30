@@ -36,6 +36,12 @@ permissions:
   contents: read
 
 concurrency:
+  # 12.g-whole-state: on `push` and `merge_group` there is no pull-request payload, so the
+  # step below runs `vibey-gh check --ci` with NO `--commits` range -- the whole repository.
+  # A cancelled run is therefore subsumed by the next one rather than leaving a window
+  # nobody walked, which is what makes cancelling these safe here and unsafe in ci.yml. On a
+  # pull request the group is per-request, so it only ever cancels its own older run, and
+  # that run covered a base..head range the newer one also covers.
   group: provenance-${{ github.ref }}
   cancel-in-progress: true
 
@@ -80,7 +86,7 @@ jobs:
             echo "this repository provides the tooling — installing from source"
             python -m pip install --quiet -e "$self"
           else
-            python -m pip install --quiet "vibey==1.5.0"
+            python -m pip install --quiet "vibey-engine==3.2.0"
           fi
 
       # --ci skips the core.hooksPath assertion, which is per-clone local git config that

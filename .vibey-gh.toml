@@ -1,4 +1,4 @@
-# vibey adoption — managed automation rendered by vibey 1.5.0.
+# vibey adoption — managed automation rendered by vibey-engine 3.2.0.
 #
 # Deliberately conservative for a first adoption: the commit trailer (via the installed
 # hooks) makes provenance total from day one, while the pieces that need per-repository
@@ -29,3 +29,6 @@ trusted_authors = ["adammatthewsteinberger"]
 [install]
 workflows = ["provenance.yml"]
 pin_version = true
+# CHANGELOG.md is deliberately NOT union-merged here (see 22414a6): an empty list keeps
+# `vibey-gh install` from re-adding the `merge=union` line to .gitattributes.
+union_merge_paths = []
