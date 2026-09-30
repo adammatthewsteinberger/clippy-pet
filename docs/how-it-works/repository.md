@@ -21,7 +21,10 @@ description: What's in the Clippy Pet repository, why the runtime tarball is sma
 ├── scripts/
 │   ├── install.sh               Bootstrap installer (checkout + curl | sh modes)
 │   ├── validate.py              Contract validator (runs in CI)
-│   └── build-v1-spritesheet.py  Crops the v1 (9-row) sheet for ChatGPT web upload
+│   ├── build-v1-spritesheet.py  Crops the v1 (9-row) sheet for ChatGPT web upload
+│   ├── preview-at-size.py       Renders cells at 32-64 px on light and dark backgrounds
+│   ├── retouch-look-pupils.py   Hash-guarded pupil nudges for four look frames (#29)
+│   └── prototype-tiny-frame.py  Design probe for a 32 px variant (#33)
 ├── packaging/
 │   ├── bin/clippy-pet           POSIX sh CLI shared by every installer
 │   ├── share/                   man page, .desktop launcher, autostart, AppStream, icon

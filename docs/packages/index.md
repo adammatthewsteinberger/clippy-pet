@@ -27,7 +27,7 @@ Clippy Pet ships as **one payload wrapped many ways**: the same two files, the s
 | Arch | `clippy-pet-<v>-1-any.pkg.tar.zst` | <span class="cp-chip cp-chip--release">on each release</span> |
 | Web (v1) sheet | `spritesheet-v1.webp` for ChatGPT web upload | <span class="cp-chip cp-chip--release">on each release</span> |
 | Arch `.pkg.tar.xz` via `makepkg` | AUR-style PKGBUILD | <span class="cp-chip cp-chip--planned">planned</span> |
-| AppImage | `Clippy-Pet-<v>-x86_64.AppImage` / `-aarch64` | <span class="cp-chip cp-chip--planned">planned</span> |
+| AppImage | `clippy-pet-<v>-x86_64.AppImage` / `-aarch64` (built and smoke-tested in CI; first attached to the next tagged release) | <span class="cp-chip cp-chip--planned">planned</span> |
 | Flatpak bundle | `Clippy-Pet-<v>.flatpak` | <span class="cp-chip cp-chip--planned">planned</span> |
 | Snap | `clippy-pet_<v>_all.snap` | <span class="cp-chip cp-chip--planned">planned</span> |
 | Gentoo ebuild | GURU overlay | <span class="cp-chip cp-chip--planned">planned</span> |

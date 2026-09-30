@@ -13,7 +13,9 @@ jobs:
       - name: Lint shell scripts
         run: |
           shellcheck -s sh packaging/bin/clippy-pet scripts/install.sh \
-            packaging/dist/make-tarballs.sh packaging/linux/build.sh
+            packaging/dist/make-tarballs.sh packaging/linux/build.sh \
+            packaging/appimage/build.sh packaging/appimage/AppRun \
+            tests/install-sh.sh tests/home-manager-doc-example.sh
       - name: Lint .desktop files
         run: |
           sudo apt-get update -qq
@@ -41,6 +43,8 @@ jobs:
         run: ./packaging/dist/make-tarballs.sh
       - name: Build Linux packages
         run: ./packaging/linux/build.sh
+      - name: Build AppImages (x86_64, aarch64)
+        run: ./packaging/appimage/build.sh
       - name: Smoke test tarball
         run: |
           workdir=$(mktemp -d)
@@ -112,6 +116,76 @@ jobs:
           clippy-pet status
           test -f "$HOME/.codex/pets/clippy-pet/pet.json"
           clippy-pet uninstall
+          test ! -e "$HOME/.codex/pets/clippy-pet"
+
+  installer-tests:
+    # tests/install-sh.sh: install.sh's checksum handling, including the
+    # abuse case (--skip-verify must never install a tampered download).
+    needs: lint
+    runs-on: ubuntu-latest
+    container: debian:stable
+    steps:
+      - uses: actions/checkout@v7
+      - name: Run under dash, bash and sh
+        run: |
+          apt-get update -qq
+          apt-get install -y -qq dash
+          for shell in dash bash sh; do sh tests/install-sh.sh "$shell"; done
+
+  nix:
+    # flake.nix: builds the package and runs its checks (CLI install into a
+    # scratch CODEX_HOME, and the Home Manager module's file targets).
+    needs: lint
+    strategy:
+      fail-fast: false
+      matrix:
+        runner: [ubuntu-latest, ubuntu-24.04-arm, macos-latest]
+    runs-on: ${{ matrix.runner }}
+    steps:
+      - uses: actions/checkout@v7
+      - uses: cachix/install-nix-action@v31.11.1
+      - run: nix flake check -L
+      - run: nix build .#clippy-pet -L
+      - run: nix run . -- version
+      - name: Build the Home Manager example from docs/packages/linux.md
+        if: runner.os == 'Linux'
+        run: sh tests/home-manager-doc-example.sh
+
+  smoke-appimage:
+    # Each AppImage runs on a native runner of its own architecture; under
+    # emulation, binfmt handlers reject the AppImage magic bytes.
+    needs: build-and-smoke
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - arch: x86_64
+            runner: ubuntu-latest
+          - arch: aarch64
+            runner: ubuntu-24.04-arm
+    runs-on: ${{ matrix.runner }}
+    steps:
+      - uses: actions/download-artifact@v8
+        with:
+          name: packages
+          path: dist
+      - name: Install, check, refuse, and uninstall
+        env:
+          APPIMAGE_EXTRACT_AND_RUN: "1"
+          ARCH: ${{ matrix.arch }}
+        run: |
+          appimage=$(ls dist/clippy-pet-*-"$ARCH".AppImage)
+          chmod +x "$appimage"
+          export HOME="$RUNNER_TEMP/home"
+          "$appimage" version
+          "$appimage" install
+          "$appimage" status
+          test -f "$HOME/.codex/pets/clippy-pet/pet.json"
+          test -f "$HOME/.codex/pets/clippy-pet/spritesheet.webp"
+          # A link or login entry would point into the transient mount.
+          if "$appimage" install --link; then echo "--link should be refused" >&2; exit 1; fi
+          if "$appimage" autostart enable; then echo "autostart should be refused" >&2; exit 1; fi
+          "$appimage" uninstall
           test ! -e "$HOME/.codex/pets/clippy-pet"
 
   macos:
