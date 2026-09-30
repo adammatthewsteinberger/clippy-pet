@@ -10,11 +10,30 @@
 #
 # Any arguments are forwarded to `clippy-pet install`, e.g.:
 #   curl -fsSL .../install.sh | sh -s -- --link
+#
+# The installer refuses to continue if it cannot verify the download's
+# SHA-256 (no sha256sum or shasum on PATH). Pass --skip-verify to install
+# anyway; it is consumed here and never forwarded.
 set -eu
 
 REPO=adammatthewsteinberger/clippy-pet
+skip_verify=0
 
 main() {
+    # Remove --skip-verify from the arguments; everything else is forwarded.
+    # POSIX sh has no arrays, so rotate the positional parameters in place.
+    remaining=$#
+    while [ "$remaining" -gt 0 ]; do
+        arg=$1
+        shift
+        remaining=$((remaining - 1))
+        if [ "$arg" = "--skip-verify" ]; then
+            skip_verify=1
+        else
+            set -- "$@" "$arg"
+        fi
+    done
+
     # shellcheck disable=SC1007
     repository_dir=$(CDPATH= cd -- "$(dirname -- "$0")/.." && pwd)
 
@@ -102,9 +121,15 @@ verify_checksum() {
         actual=$(sha256sum "$dir/$file" | awk '{print $1}')
     elif command -v shasum >/dev/null 2>&1; then
         actual=$(shasum -a 256 "$dir/$file" | awk '{print $1}')
-    else
-        echo "warning: no sha256sum/shasum available; skipping verification" >&2
+    elif [ "$skip_verify" -eq 1 ]; then
+        echo "warning: no sha256sum/shasum available; --skip-verify given, installing $file unverified" >&2
         return 0
+    else
+        echo "error: cannot verify $file: neither sha256sum nor shasum is installed" >&2
+        echo "  Install one of them (coreutils or perl provides it) and re-run," >&2
+        echo "  or re-run with --skip-verify to install without verification:" >&2
+        echo "    curl -fsSL https://adammatthewsteinberger.github.io/clippy-pet/install.sh | sh -s -- --skip-verify" >&2
+        exit 1
     fi
     if [ "$expected" != "$actual" ]; then
         echo "error: checksum mismatch for $file" >&2

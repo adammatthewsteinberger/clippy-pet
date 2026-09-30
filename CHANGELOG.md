@@ -11,6 +11,10 @@ Notable changes are documented here using [Keep a Changelog](https://keepachange
 - A "Pick your way in" section in the README and a "Build it with us" section on the docs home page, pointing art, packaging, CI, and writing contributors at concrete first tasks.
 - `CITATION.cff` abstract, keywords, documentation URL, and release-artifact URL; AppStream help and contribute links and keywords.
 
+### Changed
+
+- `install.sh` now refuses to install when neither `sha256sum` nor `shasum` is available, instead of warning and continuing unverified. The new `--skip-verify` flag restores the old behaviour for systems with no checksum tool; it never bypasses a checksum mismatch. ([#30](https://github.com/adammatthewsteinberger/clippy-pet/issues/30))
+
 ### Fixed
 
 - The docs home page now states plainly that the site counts page views with cookie-free GoatCounter; it previously said analytics were off unless enabled.
