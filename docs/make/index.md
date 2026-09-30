@@ -44,7 +44,7 @@ Start from the [contract](../how-it-works/contract.md) and the [design notes](..
 2. **Put the expression in the eyes.** They're the only feature guaranteed to survive downscaling.
 3. **Author loops, not clips.** Last frame flows into first; the host chooses timing.
 4. **Mirror poses, not pixels** for left/right so the light doesn't flip.
-5. **Do the look directions last, and test them blind.** Shuffle the sixteen frames, hide the labels, and ask someone which way each looks. Ours got 13/16 clean on the first honest pass and we published the three warnings.
+5. **Do the look directions last, and test them blind.** Shuffle the sixteen frames, hide the labels, and ask someone which way each looks. Ours passed 11 of 14 blind pairs and 13 of 16 frames in semantic review on the first honest pass, and we published the warnings.
 6. **Ship the receipts.** A contact sheet and a validator make your pet reviewable, and reviewable pets get shared.
 
 OpenAI documents the pets feature and its file format on the [ChatGPT help site](https://learn.chatgpt.com/docs/pets); if their contract changes, that page wins over anything here.

@@ -33,9 +33,9 @@ Clippy Pet ships as **one payload wrapped many ways**: the same two files, the s
 | Gentoo ebuild | GURU overlay | <span class="cp-chip cp-chip--planned">planned</span> |
 | Package managers | Homebrew, MacPorts, Nix, apt repo, COPR, OBS, AUR, aports, Snap Store, Flathub, conda-forge, vcpkg, conan | <span class="cp-chip cp-chip--planned">planned</span> ([details](managers.md)) |
 
-!!! info "About that first release"
+!!! info "Where the files come from"
 
-    Rows marked *on each release* depend on a tagged release existing. v1.1.0 is the first packaged release; if the [releases page](https://github.com/adammatthewsteinberger/clippy-pet/releases) is still empty when you read this, the one-liner will politely tell you so and the from-checkout path still works.
+    Rows marked *on each release* are attached to every [GitHub Release](https://github.com/adammatthewsteinberger/clippy-pet/releases), starting with v1.1.0 (2026-08-17). Each release's `SHA256SUMS` is signed with cosign and every asset carries a build attestation; [verify them](verify.md) before you install, or let the one-liner do the checksum for you.
 
 ## Pages in this section
 

@@ -4,6 +4,20 @@ Notable changes are documented here using [Keep a Changelog](https://keepachange
 
 ## [Unreleased]
 
+### Added
+
+- Blog post "Shipping two files like they matter", which walks through each release guarantee (validator, version guard, reproducible tarballs, cosign-signed checksums, build attestations, distro smoke tests, honest status words) and how to reuse it.
+- `llms.txt` on the documentation site, plus schema.org structured data for the project, its maintainer, and blog posts.
+- A "Pick your way in" section in the README and a "Build it with us" section on the docs home page, pointing art, packaging, CI, and writing contributors at concrete first tasks.
+- `CITATION.cff` abstract, keywords, documentation URL, and release-artifact URL; AppStream help and contribute links and keywords.
+
+### Fixed
+
+- The docs home page now states plainly that the site counts page views with cookie-free GoatCounter; it previously said analytics were off unless enabled.
+- The roadmap and installers page no longer describe v1.1.0 as unreleased.
+- The first blog post and the make-your-own guide now quote the QA numbers the QA page records (11 of 14 blind pairs, 13 of 16 frames in semantic review).
+- The AppStream description now names OpenAI as well as Microsoft in the non-affiliation notice.
+
 ## [1.1.0] - 2026-08-17
 
 ### Changed
