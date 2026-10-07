@@ -19,11 +19,12 @@ It is not affiliated with or endorsed by Microsoft or OpenAI — see [NOTICE.md]
 | `scripts/preview-at-size.py` | Renders cells at small on-screen sizes over light and dark backgrounds. Use it to judge any visual change at ~32-64 px. Pillow only. |
 | `scripts/retouch-look-pupils.py`, `scripts/prototype-tiny-frame.py` | Art tools (need `numpy`/`scipy`). The retouch is SHA-256-guarded per cell and never changes alpha; the tiny-frame script is a design probe and must not write into `spritesheet.webp`. |
 | `scripts/install.sh`, `packaging/bin/clippy-pet` | The one-line installer and the installed CLI (install/uninstall/status/sync/path/autostart). Shell, must pass `shellcheck`. |
-| `packaging/linux/`, `packaging/macos/`, `packaging/dist/` | `nfpm`-based `.deb`/`.rpm`/`.apk`/Arch builds, macOS `.app`/`.pkg`/`.dmg` builds, reproducible tarballs. |
+| `flake.nix`, `flake.lock` | Nix package, `nix run`, and Home Manager module (`programs.clippy-pet`); CI runs `nix flake check`. |
+| `packaging/linux/`, `packaging/appimage/`, `packaging/macos/`, `packaging/dist/` | `nfpm`-based `.deb`/`.rpm`/`.apk`/Arch builds, macOS `.app`/`.pkg`/`.dmg` builds, reproducible tarballs. |
 | `tests/` | `install-sh.sh` (installer checksum and abuse cases; Linux, run in CI under dash/bash/sh) and `home-manager-doc-example.sh` (builds the Home Manager snippet straight out of `docs/packages/linux.md`). Run `make test` after touching `scripts/install.sh`. |
 | `qa/` | Validator output, blind direction QA, semantic review, continuity/chroma reports, preview GIFs — the evidence backing README claims. Don't hand-edit; regenerate via the relevant script. |
-| `docs/`, `mkdocs.yml`, `overrides/` | MkDocs Material documentation site, deployed to `gh-pages` by `.github/workflows/docs.yml`. |
-| `.github/workflows/` | `validate.yml` (PR checks), `packaging-ci.yml` (build smoke tests), `release.yml` (tag-triggered release), `docs.yml`. |
+| `docs/`, `properdocs.yml`, `overrides/` | ProperDocs (Material theme) documentation site, deployed to `gh-pages` by `.github/workflows/docs.yml`. |
+| `.github/workflows/` | `validate.yml` (PR checks), `packaging-ci.yml` (build smoke tests, AppImages, installer tests, Nix), `provenance.yml` (vibey commit-trailer and generated-file checks), `release.yml` (tag-triggered release), `docs.yml`. |
 | `VERSION`, `CHANGELOG.md`, `CITATION.cff` | Must always agree on the current version string — see Release process. |
 
 ## Setup and everyday commands
@@ -37,7 +38,7 @@ python3 -m pip install -r requirements-dev.txt
 - `make lint` — `shellcheck` over the installer and packaging shell scripts. Run after touching any `.sh` file.
 - `make dist` — builds reproducible tarballs via `packaging/dist/make-tarballs.sh` (runs `validate` first).
 - `make v1` — builds `dist/spritesheet-v1.webp` for the web uploader.
-- `make docs` — `mkdocs build --strict`; this is what CI runs, and broken internal links fail the build. Requires `pip install -r docs/requirements.txt`. Run after touching `docs/` or `mkdocs.yml`.
+- `make docs` — `properdocs build --strict`; this is what CI runs, and broken internal links fail the build. Requires `pip install -r docs/requirements.txt`. Run after touching `docs/` or `properdocs.yml`.
 - `make docs-serve` — live preview at `http://127.0.0.1:8000/clippy-pet/`.
 - `make checksums` — regenerates the root `SHA256SUMS` for `pet.json` + `spritesheet.webp` (not the release artifact checksums, which CI generates separately for `dist/`).
 
@@ -64,7 +65,7 @@ Before opening or updating a PR (mirrors `CONTRIBUTING.md`):
 1. Branch from and target `develop` (unless doing the documented release/hotfix flow).
 2. For any visual change: preserve v2 geometry and transparency, include before/after media (100% and ~64px, plus a GIF if motion changed).
 3. Add an entry to the `## [Unreleased]` section of `CHANGELOG.md` for any user-visible change.
-4. Run `make validate` (always) and `make docs` (if `docs/` or `mkdocs.yml` changed); report the result in the PR.
+4. Run `make validate` (always) and `make docs` (if `docs/` or `properdocs.yml` changed); report the result in the PR.
 5. If shell scripts changed, run `make lint`.
 6. Do not add personal data, credentials, local absolute paths, cache IDs, or unlicensed assets.
 
@@ -78,7 +79,7 @@ Releases are cut from `main` and built entirely by `.github/workflows/release.ym
 
 all equal the tag name with its `v` stripped, and `python scripts/validate.py` passes, and the tag commit is an ancestor of `main`.
 
-To cut a release: on `main`, move the `## [Unreleased]` changelog content into a new dated `## [x.y.z]` section, bump `VERSION` and `CITATION.cff` to match, update the changelog's compare-link footer, commit, then tag that commit `vX.Y.Z` and push the tag. CI then builds Linux packages, macOS installers, the v1 web spritesheet, checksums, a cosign signature, and GitHub artifact attestations, and publishes a GitHub Release with notes sliced directly out of that `CHANGELOG.md` section — so the changelog entry's wording ends up in the public release notes verbatim.
+To cut a release: on `main`, move the `## [Unreleased]` changelog content into a new dated `## [x.y.z]` section, bump `VERSION` and `CITATION.cff` to match, add a `packaging/linux/debian-changelog` entry and a `<release>` in `packaging/share/metainfo/*.metainfo.xml`, update the changelog's compare-link footer, commit, then tag that commit `vX.Y.Z` and push the tag. CI then builds Linux packages, AppImages, macOS installers, the v1 web spritesheet, checksums, a cosign signature, and GitHub artifact attestations, and publishes a GitHub Release with notes sliced directly out of that `CHANGELOG.md` section — so the changelog entry's wording ends up in the public release notes verbatim.
 
 Because pushing a tag is public and hard to reverse (it builds and publishes a real GitHub release), an agent should confirm with the user before pushing a release tag rather than doing it autonomously.
 

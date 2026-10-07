@@ -13,9 +13,11 @@ python3 -m pip install -r requirements-dev.txt
 python3 scripts/validate.py
 ```
 
-For packaging work: `make lint` (shellcheck), `make dist` (tarballs), `./packaging/linux/build.sh` (needs [nfpm](https://nfpm.goreleaser.com)), `./packaging/macos/build.sh` (macOS only).
+For packaging work: `make lint` (shellcheck), `make test` (installer checks; Linux or `docker run --rm -v "$PWD":/src -w /src debian:stable sh tests/install-sh.sh`), `make dist` (tarballs), `./packaging/linux/build.sh` (needs [nfpm](https://nfpm.goreleaser.com)), `./packaging/macos/build.sh` (macOS only).
 
-For documentation: `pip install -r docs/requirements.txt` then `make docs-serve` and open <http://127.0.0.1:8000/clippy-pet/>. `make docs` runs `mkdocs build --strict`, which is what CI runs; broken links fail the build.
+For the art scripts that use `numpy`/`scipy` (`scripts/retouch-look-pupils.py`, `scripts/prototype-tiny-frame.py`): `python3 -m pip install numpy scipy` first. `scripts/preview-at-size.py` (Pillow only) shows any change at 32–64 px.
+
+For documentation: `pip install -r docs/requirements.txt` then `make docs-serve` and open <http://127.0.0.1:8000/clippy-pet/>. `make docs` runs `properdocs build --strict`, which is what CI runs; broken links fail the build.
 
 ## Branching model
 
@@ -43,7 +45,7 @@ Keep branches current with their target branch. Delete short-lived branches afte
 5. Preserve v2 geometry: 1536 by 2288 pixels, eight columns, eleven rows, and 192-by-208-pixel cells.
 6. Preserve transparency, unused cells, and `spriteVersionNumber: 2`.
 7. Update the `Unreleased` section of `CHANGELOG.md` for user-visible changes.
-8. Run `make validate` (and `make docs` if you touched `docs/` or `mkdocs.yml`) and report the result.
+8. Run `make validate` (and `make docs` if you touched `docs/` or `properdocs.yml`) and report the result.
 9. Resolve every review thread and obtain the required CODEOWNER approval.
 10. Do not add personal data, credentials, local absolute paths, cache IDs, or assets you cannot license.
 

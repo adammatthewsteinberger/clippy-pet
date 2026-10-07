@@ -35,7 +35,7 @@ Clippy Pet ships as **one payload wrapped many ways**: the same two files, the s
 
 !!! info "Where the files come from"
 
-    Rows marked *on each release* are attached to every [GitHub Release](https://github.com/adammatthewsteinberger/clippy-pet/releases), starting with v1.1.0 (2026-08-17). Each release's `SHA256SUMS` is signed with cosign and every asset carries a build attestation; [verify them](verify.md) before you install, or let the one-liner do the checksum for you.
+    Rows marked *on each release* are attached to every [GitHub Release](https://github.com/adammatthewsteinberger/clippy-pet/releases), starting with v1.1.0 (2026-08-17). Each release's `SHA256SUMS` is signed with cosign and every asset it lists carries a build attestation (the macOS `.dmg` and `.pkg` are built in a separate job and are not yet covered by the signed checksums or attestations); [verify them](verify.md) before you install, or let the one-liner do the checksum for you.
 
 ## Pages in this section
 

@@ -4,7 +4,7 @@ on:
     branches: [main]
     paths:
       - "docs/**"
-      - "mkdocs.yml"
+      - "properdocs.yml"
       - "overrides/**"
       - "scripts/install.sh"
       - "packaging/keys/**"
@@ -21,7 +21,7 @@ on:
   pull_request:
     paths:
       - "docs/**"
-      - "mkdocs.yml"
+      - "properdocs.yml"
       - "overrides/**"
       - "CHANGELOG.md"
       - "CONTRIBUTING.md"
@@ -37,9 +37,6 @@ on:
 
 permissions:
   contents: read
-
-env:
-  DISABLE_MKDOCS_2_WARNING: "true"
 
 jobs:
   build:
@@ -59,7 +56,7 @@ jobs:
           sudo apt-get install -y -qq libcairo2-dev libfreetype6-dev libffi-dev libjpeg-dev libpng-dev libz-dev pngquant
       - run: pip install -r docs/requirements.txt
       - name: Build (strict)
-        run: mkdocs build --strict
+        run: properdocs build --strict
       - name: Add non-site Pages assets
         run: |
           install -m 0755 scripts/install.sh site/install.sh
