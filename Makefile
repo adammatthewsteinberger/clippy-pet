@@ -1,7 +1,5 @@
 .PHONY: validate checksums lint test dist v1 docs docs-serve clean
 
-export DISABLE_MKDOCS_2_WARNING=true
-
 validate:
 	python3 scripts/validate.py
 
@@ -22,10 +20,10 @@ v1: validate
 	python3 scripts/build-v1-spritesheet.py dist/spritesheet-v1.webp
 
 docs:
-	mkdocs build --strict
+	properdocs build --strict
 
 docs-serve:
-	mkdocs serve
+	properdocs serve
 
 clean:
 	rm -rf dist .build site

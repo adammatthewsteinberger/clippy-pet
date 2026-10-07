@@ -20,7 +20,7 @@ description: "Fix the common reasons Clippy Pet doesn't appear: reload, CODEX_HO
 
 ## `clippy-pet status` says outdated (exit 2)
 
-Your installed files differ byte-for-byte from the packaged ones. `clippy-pet install` (or `clippy-pet sync`) refreshes them; add `--force` if you deliberately edited them and want the pristine version back.
+Your installed files differ byte-for-byte from the packaged ones. `clippy-pet install --force` refreshes them (plain `install` and `sync` leave existing files alone).
 
 ## macOS says the installer can't be opened
 

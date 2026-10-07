@@ -9,6 +9,8 @@ description: Clippy Pet macOS installers, .dmg with a no-admin .app and a system
 
 ## What's in the `.dmg`
 
+The app requires macOS 11 or later.
+
 Every release attaches **`Clippy-Pet-<version>.dmg`** <span class="cp-chip cp-chip--release">on each release</span>. Open it and you'll find:
 
 | Item | What it does | Admin? |
@@ -38,7 +40,7 @@ Meanwhile:
 
 ## Homebrew
 
-<span class="cp-chip cp-chip--planned">planned</span> A tap repository exists at [`adammatthewsteinberger/homebrew-tap`](https://github.com/adammatthewsteinberger/homebrew-tap) and the formula is written; publishing waits on the v1.1.0 tarball being live so the formula's URL and checksum resolve. Once published:
+<span class="cp-chip cp-chip--planned">planned</span> The formula is drafted, but the public tap repository is not created yet (see the [roadmap](../project/roadmap.md)). Once it is published:
 
 ```sh
 brew install adammatthewsteinberger/tap/clippy-pet

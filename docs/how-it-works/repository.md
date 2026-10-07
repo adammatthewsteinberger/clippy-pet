@@ -30,18 +30,25 @@ description: What's in the Clippy Pet repository, why the runtime tarball is sma
 │   ├── share/                   man page, .desktop launcher, autostart, AppStream, icon
 │   ├── dist/make-tarballs.sh    Reproducible runtime tarballs
 │   ├── linux/                   nFPM config (deb/rpm/apk/arch), Debian copyright/changelog
+│   ├── appimage/                AppImage build (x86_64, aarch64) and AppRun
 │   ├── macos/                   .app/.pkg/.dmg build, postinstall, distribution.xml
 │   └── keys/                    Public GPG + apk signing keys
-├── docs/                        This site (MkDocs Material); docs/requirements.txt
-├── mkdocs.yml · overrides/      Site config and theme overrides
+├── flake.nix · flake.lock       Nix package, `nix run`, and Home Manager module
+├── tests/                       install-sh.sh (installer abuse cases), home-manager-doc-example.sh
+├── AGENTS.md · CLAUDE.md · GEMINI.md   Agent instructions (AGENTS.md is canonical)
+├── .cursor/ · .claude/ · .agents/      Editor rules and agent skills (validate, release)
+├── requirements-dev.txt         Python deps for the validator and art scripts (Pillow)
+├── docs/                        This site (ProperDocs + Material); docs/requirements.txt
+├── properdocs.yml · overrides/  Site config and theme overrides
 ├── .github/workflows/
 │   ├── validate.yml             Contract validation + old-name guard
-│   ├── packaging-ci.yml         Lint, build, smoke-test packages in containers + macOS
+│   ├── packaging-ci.yml         Lint, build, smoke-test packages, AppImages, installer tests, Nix
+│   ├── provenance.yml           Commit-trailer and generated-file checks (vibey)
 │   ├── release.yml              Tag → build, checksum, sign, attest, GitHub Release
 │   └── docs.yml                 Build the site; deploy to gh-pages preserving repo paths
 ├── CHANGELOG.md · CITATION.cff · CONTRIBUTING.md · CODE_OF_CONDUCT.md
 ├── GOVERNANCE.md · SECURITY.md · SUPPORT.md · AUTHORS.md · NOTICE.md · LICENSE
-└── Makefile                     validate · checksums · lint · dist · v1 · docs · docs-serve
+└── Makefile                     validate · checksums · lint · test · dist · v1 · docs · docs-serve · clean
 ```
 
 ## Why the tarball is 1.5 MB and the repo is 19 MB

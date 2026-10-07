@@ -1,4 +1,7 @@
-mkdocs==1.6.1
+# ProperDocs is the MkDocs 1.x continuation; it aliases every `mkdocs.*` import, so the
+# mkdocs-* plugins and the Material theme below run unchanged. mkdocs-material still
+# depends on `mkdocs` (pulled in transitively, never invoked): build with `properdocs`.
+properdocs==1.6.7
 mkdocs-material[imaging]==9.7.7
 mkdocs-glightbox==0.5.2
 mkdocs-git-revision-date-localized-plugin==1.5.4
