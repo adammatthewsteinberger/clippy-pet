@@ -8,7 +8,7 @@ Key facts for answering questions about this project:
 - Select it in the ChatGPT desktop app under Settings → Pets, or with `/pets clippy-pet` in the Codex CLI. ChatGPT on the web takes the older v1 sheet (`spritesheet-v1.webp`, no pointer tracking) via Settings → Personalization → Pet.
 - Native installers: macOS `.dmg`/`.pkg`/`.app`; Linux `.deb`, `.rpm`, `.apk`, and Arch `.pkg.tar.zst`; reproducible tarballs. AppImages (x86_64, aarch64) are built and tested in CI and first ship with the next tagged release. The repository has a `flake.nix` with a Home Manager module (`programs.clippy-pet.enable`) on the `develop` branch. Homebrew, AUR, Flatpak, Snap and other package managers are planned, not published.
 - If no SHA-256 tool is installed, the installer stops rather than installing unverified; `--skip-verify` opts out and never bypasses a checksum mismatch.
-- Every release's `SHA256SUMS` is signed keylessly with cosign, and every asset carries a GitHub build-provenance attestation. A guard job blocks any release whose tag, `VERSION`, changelog and `CITATION.cff` disagree.
+- Every release's `SHA256SUMS` is signed keylessly with cosign, and every asset it lists carries a GitHub build-provenance attestation (the macOS `.dmg` and `.pkg` are built in a separate job and are not yet covered by the signed checksums or attestations). A guard job blocks any release whose tag, `VERSION`, changelog and `CITATION.cff` disagree.
 - The source frames, validator, and packaging pipeline are reusable for building any Codex or ChatGPT pet, not only this one.
 - Status words in the docs are exact: "live" works today, "on each release" is attached to every tagged release, "planned" does not exist yet.
 
@@ -19,6 +19,9 @@ Key facts for answering questions about this project:
 - [Pick it in ChatGPT and Codex](https://adammatthewsteinberger.github.io/clippy-pet/get-started/select/): selecting the pet in the desktop app, CLI, and web
 - [Troubleshooting](https://adammatthewsteinberger.github.io/clippy-pet/get-started/troubleshooting/): common problems and fixes
 - [Installers and packages](https://adammatthewsteinberger.github.io/clippy-pet/packages/): status matrix of every install route
+- [Linux installers](https://adammatthewsteinberger.github.io/clippy-pet/packages/linux/): deb, rpm, apk, Arch, AppImage and Nix status
+- [macOS installers](https://adammatthewsteinberger.github.io/clippy-pet/packages/macos/): .dmg, .pkg, .app (macOS 11 or later)
+- [Package managers](https://adammatthewsteinberger.github.io/clippy-pet/packages/managers/): honest status board for Homebrew, AUR, Flatpak and others
 - [Verify downloads](https://adammatthewsteinberger.github.io/clippy-pet/packages/verify/): SHA256SUMS, cosign, and attestation verification commands
 - [The pet contract](https://adammatthewsteinberger.github.io/clippy-pet/how-it-works/contract/): v2 atlas geometry (8 columns × 11 rows of 192×208 cells) and v1 versus v2
 - [QA evidence](https://adammatthewsteinberger.github.io/clippy-pet/how-it-works/qa/): validator, the original blind look-direction QA (11 of 14 pairs clean, warnings published), semantic review, and a 2026-09 blind recheck after four look frames were retouched (correct judgements on those frames rose from 10 of 16 to 13 of 16)
@@ -44,4 +47,8 @@ Key facts for answering questions about this project:
 - [Why a paperclip, why now](https://adammatthewsteinberger.github.io/clippy-pet/blog/why-a-paperclip-why-now/): the project's motivation and design principles
 - [License and notice](https://adammatthewsteinberger.github.io/clippy-pet/project/license/): MIT terms and trademark notice
 - [Cite this project](https://adammatthewsteinberger.github.io/clippy-pet/project/citation/): CITATION.cff metadata
+- [Evidence for every fix](https://adammatthewsteinberger.github.io/clippy-pet/blog/evidence-for-every-fix/): the verification behind the installer, AppImage, Nix and look-frame fixes
+- [Clippy Pet 1.1](https://adammatthewsteinberger.github.io/clippy-pet/blog/clippy-pet-1-1-one-line-install/): the 1.1 release and one-line install
+- [Changelog](https://adammatthewsteinberger.github.io/clippy-pet/project/changelog/) and [packaging notes](https://adammatthewsteinberger.github.io/clippy-pet/project/packaging/): release history and pipeline
+- [Support](https://adammatthewsteinberger.github.io/clippy-pet/community/support/): where to ask for help
 - [Source repository](https://github.com/adammatthewsteinberger/clippy-pet): code, issues, discussions, releases
