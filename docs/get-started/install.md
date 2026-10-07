@@ -58,7 +58,7 @@ What it does, in order: resolves the latest release, downloads the small runtime
 
     Then run `clippy-pet install` once as your user (or click **Install Clippy Pet** in your application menu). Packages put the payload in `/usr/share/clippy-pet`; the pet itself always lives in *your* home directory.
 
-    AppImage, Flatpak, Snap, AUR, COPR, and Nix are <span class="cp-chip cp-chip--planned">planned</span>. [Linux installers](../packages/linux.md) has the full, honest matrix.
+    Flatpak, Snap, AUR, and COPR are <span class="cp-chip cp-chip--planned">planned</span>; AppImage and Nix already build or check in CI and ship with the next release (Nix users: `nix run github:adammatthewsteinberger/clippy-pet/develop`, see the Linux page). [Linux installers](../packages/linux.md) has the full, honest matrix.
 
 === ":material-console: From a checkout"
 

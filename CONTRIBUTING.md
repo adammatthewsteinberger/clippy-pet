@@ -13,7 +13,9 @@ python3 -m pip install -r requirements-dev.txt
 python3 scripts/validate.py
 ```
 
-For packaging work: `make lint` (shellcheck), `make dist` (tarballs), `./packaging/linux/build.sh` (needs [nfpm](https://nfpm.goreleaser.com)), `./packaging/macos/build.sh` (macOS only).
+For packaging work: `make lint` (shellcheck), `make test` (installer checks; Linux or `docker run --rm -v "$PWD":/src -w /src debian:stable sh tests/install-sh.sh`), `make dist` (tarballs), `./packaging/linux/build.sh` (needs [nfpm](https://nfpm.goreleaser.com)), `./packaging/macos/build.sh` (macOS only).
+
+For the art scripts that use `numpy`/`scipy` (`scripts/retouch-look-pupils.py`, `scripts/prototype-tiny-frame.py`): `python3 -m pip install numpy scipy` first. `scripts/preview-at-size.py` (Pillow only) shows any change at 32–64 px.
 
 For documentation: `pip install -r docs/requirements.txt` then `make docs-serve` and open <http://127.0.0.1:8000/clippy-pet/>. `make docs` runs `properdocs build --strict`, which is what CI runs; broken links fail the build.
 

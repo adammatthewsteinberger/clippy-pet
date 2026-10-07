@@ -72,13 +72,13 @@ The pet itself always ends up in `${CODEX_HOME:-$HOME/.codex}/pets/clippy-pet/`,
 
 ### About the autostart entry
 
-The packages ship an XDG autostart entry that runs `clippy-pet sync --quiet` at login. `sync` means *install only if missing or outdated*, so after a package upgrade your pet is refreshed without you remembering to. It writes nothing when the pet is already current, and it never touches Codex configuration. If you'd rather it didn't run:
+The packages ship an XDG autostart entry that runs `clippy-pet sync --quiet` at login. `sync` means *install only if missing*: it puts the pet back if it is gone and writes nothing when both files are already there, so it never overwrites. After a package upgrade, run `clippy-pet install --force` to refresh the files. It never touches Codex configuration. If you'd rather it didn't run:
 
 ```sh
-clippy-pet autostart disable     # writes a Hidden=true override in ~/.config/autostart
+clippy-pet autostart disable     # removes the per-user autostart entry (~/.config/autostart)
 ```
 
-Or just delete the pet: `clippy-pet uninstall` doesn't get re-installed by `sync`; only a *stale* pet does. (If you'd prefer autostart to be opt-in rather than opt-out, [say so](https://github.com/adammatthewsteinberger/clippy-pet/discussions); it's a one-line policy change.)
+The packages also ship a system-wide entry in `/etc/xdg/autostart`, which `autostart disable` does not remove; to opt out of that one, copy it to `~/.config/autostart/` with `Hidden=true`. Note that after `clippy-pet uninstall`, a later `sync` (including the login-time one) installs the pet again. (If you'd prefer autostart to be opt-in rather than opt-out, [say so](https://github.com/adammatthewsteinberger/clippy-pet/discussions); it's a one-line policy change.)
 
 ## Universal formats <span class="cp-chip cp-chip--planned">planned</span>
 

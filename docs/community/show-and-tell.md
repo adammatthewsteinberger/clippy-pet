@@ -20,4 +20,4 @@ Include a GIF or PNG if you can, and note the surface (desktop app / Codex CLI /
 
 ## Reusing the previews elsewhere
 
-The animated GIFs on this site are MIT-licensed project files (`qa/previews/`). Embed them in READMEs, blog posts, and chat; please keep the "unofficial, not affiliated with Microsoft" note nearby if the context might otherwise imply otherwise.
+The animated GIFs on this site are MIT-licensed project files (`qa/previews/`). Embed them in READMEs, blog posts, and chat; please keep the "unofficial, not affiliated with Microsoft or OpenAI" note nearby if the context might otherwise imply otherwise.

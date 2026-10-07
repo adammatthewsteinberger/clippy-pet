@@ -44,7 +44,7 @@ The retouch script refuses to run on any cell whose SHA-256 isn't the original a
 
 ## Answer the question that was asked
 
-Issue #33 asked for a 32 px variant, and it asked for a sketch or a single test frame first. The honest deliverable was the groundwork, not 83 redrawn cells: the contract fixes cells at 192 × 208, so a tiny variant is a bolder character, not a smaller one. The same measurements found that the near-black eyebrows vanish entirely on dark terminals, at 64 px as well as 32. A prototype frame shows the trade-off in one image: thicker wire reads at 32 px, but it starts to fill the paperclip's loops. That judgement belongs to whoever draws it. [The design note](../../make/tiny-variant.md) has the evidence and a preview tool.
+Issue #33 asked for a 32 px variant, and it asked for a sketch or a single test frame first. The honest deliverable was the groundwork, not 74 redrawn cells: the contract fixes cells at 192 × 208, so a tiny variant is a bolder character, not a smaller one. The same measurements found that the near-black eyebrows vanish entirely on dark terminals, at 64 px as well as 32. A prototype frame shows the trade-off in one image: thicker wire reads at 32 px, but it starts to fill the paperclip's loops. That judgement belongs to whoever draws it. [The design note](../../make/tiny-variant.md) has the evidence and a preview tool.
 
 **Copy this:** close the issue that was asked, and open the ones you found.
 
