@@ -18,11 +18,11 @@ Run the checks that apply to what actually changed in the working tree, per `AGE
    make lint
    ```
    (requires `shellcheck`; report if it isn't installed rather than skipping silently)
-4. If `docs/` or `mkdocs.yml` changed:
+4. If `docs/` or `properdocs.yml` changed:
    ```sh
    pip install -r docs/requirements.txt
    make docs
    ```
-   This runs `mkdocs build --strict`, so broken internal links fail it.
+   This runs `properdocs build --strict`, so broken internal links fail it.
 5. If `CHANGELOG.md`, `VERSION`, or `CITATION.cff` changed, sanity-check by eye that they still agree with each other (the release guard enforces this strictly at tag time — see the `release` skill).
 6. Report which checks ran and their pass/fail result. Do not report the task as validated if a required check couldn't be run (e.g. missing `shellcheck`) — say so explicitly instead of skipping it quietly.

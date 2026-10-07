@@ -1,4 +1,4 @@
-# vibey adoption — managed automation rendered by vibey-engine 3.2.0.
+# vibey adoption — managed automation rendered by vibey-engine 4.2.0.
 #
 # Deliberately conservative for a first adoption: the commit trailer (via the installed
 # hooks) makes provenance total from day one, while the pieces that need per-repository

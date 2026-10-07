@@ -32,7 +32,7 @@ Then pick it: **ChatGPT desktop app → Settings → Pets → Clippy Pet**, or `
 - **Sixteen look directions** in 22.5° steps so the eyes follow your pointer (v2 pet contract).
 - **Installers, honestly labelled**: one-liner, macOS `.dmg` / `.pkg` / `.app`, Linux `.deb` / `.rpm` / `.apk` / Arch, reproducible tarballs; a [status matrix](https://adammatthewsteinberger.github.io/clippy-pet/packages/) that says which package managers are live and which are still planned.
 - **The receipts**: a validator, blind direction QA (11/14 pairs clean, warnings published), semantic review (13/16 pass), continuity and chroma reports, all in [`qa/`](qa/) and explained on the [QA page](https://adammatthewsteinberger.github.io/clippy-pet/how-it-works/qa/).
-- **Releases you can verify**: every `SHA256SUMS` is signed keylessly with cosign, every asset carries a build-provenance attestation, and tarballs are reproducible. [Check them yourself](https://adammatthewsteinberger.github.io/clippy-pet/packages/verify/), or read [how the pipeline works](https://adammatthewsteinberger.github.io/clippy-pet/blog/shipping-two-files-like-they-matter/).
+- **Releases you can verify**: every `SHA256SUMS` is signed keylessly with cosign, every asset in it carries a build-provenance attestation (the macOS installers are not covered yet), and tarballs are reproducible. [Check them yourself](https://adammatthewsteinberger.github.io/clippy-pet/packages/verify/), or read [how the pipeline works](https://adammatthewsteinberger.github.io/clippy-pet/blog/shipping-two-files-like-they-matter/).
 - **Remixable source** under MIT: per-state frames in [`source/frames/`](source/frames/), plus a payload-agnostic packaging pipeline you can fork to ship your own pet.
 
 ## Meet Clippy Pet
@@ -70,7 +70,7 @@ sudo pacman -U ./clippy-pet-<version>-1-any.pkg.tar.zst
 clippy-pet install                                           # copies the pet into *your* ~/.codex
 ```
 
-AppImage, Flatpak, Snap, AUR, COPR, Nix: planned. [Details](https://adammatthewsteinberger.github.io/clippy-pet/packages/linux/)
+Flatpak, Snap, AUR, COPR: planned; AppImage and Nix are built or checked in CI but not yet released. [Details](https://adammatthewsteinberger.github.io/clippy-pet/packages/linux/)
 </details>
 
 <details>
@@ -99,13 +99,13 @@ The frames, the atlas layout, the validator, and the entire installer/packaging 
 
 **Is this official?** No. Not Microsoft's, not OpenAI's. It implements OpenAI's documented pet file format as a third party, and the paperclip artwork is original. See [NOTICE.md](NOTICE.md).
 
-**Does it run anything in the background?** No. It's a JSON file and an image. The optional Linux login-time `sync` only re-copies the files if a package upgrade changed them, and `clippy-pet autostart disable` turns it off.
+**Does it run anything in the background?** No. It's a JSON file and an image. The optional Linux login-time `sync` only installs the pet when it is missing (it never overwrites), and `clippy-pet autostart disable` removes the per-user entry (see the [Linux page](https://adammatthewsteinberger.github.io/clippy-pet/packages/linux/) for the system-wide one).
 
 **Why don't the eyes move on the web?** Web upload uses the v1 layout, which has no look-direction rows. Desktop app and CLI use v2 and track the pointer.
 
 **Why does macOS warn me?** Builds aren't Apple-notarized yet. Right-click → Open, or use the one-liner. Tracked on the [roadmap](https://adammatthewsteinberger.github.io/clippy-pet/project/roadmap/).
 
-**Where's Homebrew / Nix / AUR / apt repo?** Drafted, not published. The [package managers page](https://adammatthewsteinberger.github.io/clippy-pet/packages/managers/) is the truthful status board.
+**Where's Homebrew / Nix / AUR / apt repo?** Drafted, not published (Nix and AppImage are the furthest along: `flake.nix` is on `develop`, AppImages are built in CI). The [package managers page](https://adammatthewsteinberger.github.io/clippy-pet/packages/managers/) is the truthful status board.
 
 **Can I uninstall cleanly?** `clippy-pet uninstall` (or delete the directory). Nothing else was written.
 
@@ -124,7 +124,7 @@ Clippy Pet is small enough to read in an afternoon, and every part of it has a f
 | If you like… | Start here |
 |---|---|
 | Pixel art | A blind recheck found the up-looking frames read as level at 64 px, and the eyebrows vanish on dark terminals ([evidence](https://adammatthewsteinberger.github.io/clippy-pet/how-it-works/qa/)). Fix one frame, check it with `scripts/preview-at-size.py`, run `make validate`, attach before/after images. |
-| Packaging | Homebrew, Nix, AUR, AppImage, Flatpak and more are drafted but *planned*. If you live in one of those ecosystems, you're the reviewer it needs. [Status board](https://adammatthewsteinberger.github.io/clippy-pet/packages/managers/) |
+| Packaging | Homebrew, AUR, Flatpak and more are drafted but *planned*; AppImage and Nix already build or check in CI and ship with the next release. If you live in one of those ecosystems, you're the reviewer it needs. [Status board](https://adammatthewsteinberger.github.io/clippy-pet/packages/managers/) |
 | Shell and CI | One POSIX `sh` CLI, shellcheck-clean, tested under dash, bash, BusyBox ash and macOS `/bin/sh`. The release workflow is readable top to bottom. |
 | Writing | Every docs page has an edit pencil. A clearer sentence counts. |
 | Your own pet | Fork the frames and pipeline, then post the result in [Show and tell](https://github.com/adammatthewsteinberger/clippy-pet/discussions/categories/show-and-tell). |

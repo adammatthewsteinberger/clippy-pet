@@ -11,7 +11,7 @@ Every release <span class="cp-chip cp-chip--release">on each release</span> publ
 
 ## 1. Checksums
 
-`SHA256SUMS` lists every asset. Download it next to the file(s) you fetched and:
+`SHA256SUMS` lists every Linux package, AppImage, tarball and the v1 sheet. The macOS `.dmg` and `.pkg` are built in a separate job and are **not yet** listed in it (or attested); verify those with Gatekeeper and by comparing against the release page. Download it next to the file(s) you fetched and:
 
 ```sh
 shasum -a 256 -c SHA256SUMS --ignore-missing     # macOS / BSD
@@ -34,7 +34,7 @@ cosign verify-blob \
 
 ## 3. GitHub artifact attestation
 
-Each release asset carries a build-provenance attestation you can check with the GitHub CLI:
+Each asset listed in `SHA256SUMS` carries a build-provenance attestation you can check with the GitHub CLI:
 
 ```sh
 gh attestation verify clippy-pet-<version>.tar.gz -R adammatthewsteinberger/clippy-pet

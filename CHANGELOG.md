@@ -19,10 +19,15 @@ Notable changes are documented here using [Keep a Changelog](https://keepachange
 
 ### Changed
 
+- The documentation site is now built with [ProperDocs](https://properdocs.org/), the MkDocs 1.x continuation, instead of MkDocs itself. The configuration file is `properdocs.yml`, `make docs` and CI run `properdocs build --strict`, and the Material theme and every plugin are unchanged, so the site looks and behaves the same.
 - `install.sh` now refuses to install when neither `sha256sum` nor `shasum` is available, instead of warning and continuing unverified. The new `--skip-verify` flag restores the old behaviour for systems with no checksum tool; it never bypasses a checksum mismatch. ([#30](https://github.com/adammatthewsteinberger/clippy-pet/issues/30))
 
 ### Fixed
 
+- Documentation now matches the code on three behaviours: `clippy-pet sync` (and the login-time autostart) only installs a missing pet and never overwrites, so `install --force` is the way to refresh; `autostart disable` removes only the per-user entry, not the system-wide one the packages ship; and the checksum, cosign and attestation coverage excludes the macOS `.dmg`/`.pkg`, which are built in a separate job.
+- Corrected the Homebrew tap wording (no public tap exists yet), the AppImage and Nix status qualifiers on the README, home and install pages, the blog's description of the installer's checksum fallback, and the "redrawn cells" count (74).
+- `NOTICE.md`, the package descriptions, the macOS welcome page and the show-and-tell page now name OpenAI as well as Microsoft in the non-affiliation notice.
+- Repository layout, `AGENTS.md`, `CONTRIBUTING.md` and `llms.txt` now cover AppImage, the Nix flake, the installer tests, the art-script dependencies and the release checklist's changelog and AppStream steps.
 - The README's "Related projects" listed seven repositories that no longer resolve; it now links vibey at its current home and the release-pipeline write-up.
 - The package managers page and roadmap said a public Homebrew tap repository existed; it does not yet, and both now say so.
 - The project page no longer describes v1.1.0 as unreleased.

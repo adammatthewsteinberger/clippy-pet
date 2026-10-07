@@ -12,7 +12,7 @@ updates:
     labels: [dependencies, documentation]
     groups:
       mkdocs:
-        patterns: ["mkdocs*"]
+        patterns: ["mkdocs*", "properdocs*"]
   - package-ecosystem: github-actions
     directory: /
     schedule:
