@@ -19,6 +19,7 @@ Notable changes are documented here using [Keep a Changelog](https://keepachange
 
 ### Changed
 
+- The documentation site is now built with [ProperDocs](https://properdocs.org/), the MkDocs 1.x continuation, instead of MkDocs itself. The configuration file is `properdocs.yml`, `make docs` and CI run `properdocs build --strict`, and the Material theme and every plugin are unchanged, so the site looks and behaves the same.
 - `install.sh` now refuses to install when neither `sha256sum` nor `shasum` is available, instead of warning and continuing unverified. The new `--skip-verify` flag restores the old behaviour for systems with no checksum tool; it never bypasses a checksum mismatch. ([#30](https://github.com/adammatthewsteinberger/clippy-pet/issues/30))
 
 ### Fixed

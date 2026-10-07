@@ -14,7 +14,7 @@ description: "Maintainer runbook for Clippy Pet releases: what CI builds, secret
 | `validate.yml` | PR, push | `scripts/validate.py` result; old-name guard (`clipster` may not reappear outside an allow-list) |
 | `packaging-ci.yml` | PR, push to `develop`/`main` | shellcheck, `desktop-file-validate`, `appstreamcli validate`; tarballs; `.deb` `.rpm` `.apk` `.pkg.tar.zst`; install/status/uninstall smoke in `debian:stable`, `fedora:latest`, `alpine:latest`, `archlinux`; AppImages (x86_64, aarch64) with install/status/refusal/uninstall smoke on native runners of each architecture; `nix flake check` + `nix build` on x86_64 and aarch64 Linux and macOS; macOS `.app`/`.pkg`/`.dmg` build + bundled-CLI smoke |
 | `release.yml` | tag `v*` | guard (tag on `main`; `VERSION` = `CHANGELOG` top = `CITATION.cff` = tag; validator) → Linux build (tarballs, nfpm packages, AppImages) → macOS build (signed + notarized when Apple secrets exist) → `SHA256SUMS`, cosign keyless bundle, GitHub artifact attestation → GitHub Release with every asset, including `spritesheet-v1.webp` |
-| `docs.yml` | PR (build only), push to `main`, manual | `mkdocs build --strict`; deploy to `gh-pages` preserving reserved paths |
+| `docs.yml` | PR (build only), push to `main`, manual | `properdocs build --strict`; deploy to `gh-pages` preserving reserved paths |
 
 Local equivalents: `make validate`, `make lint`, `make dist`, `make v1`, `./packaging/linux/build.sh` (needs nfpm), `./packaging/appimage/build.sh` (Linux x86_64 or aarch64; downloads the pinned toolchain), `nix flake check` (needs Nix with flakes), `./packaging/macos/build.sh` (macOS), `make docs` / `make docs-serve`.
 
@@ -78,12 +78,12 @@ Accounts still to create, in order of value: Apple Developer ID → AUR → Laun
 
 `gh-pages` hosts both this site and non-site paths. `docs.yml`:
 
-1. `pip install -r docs/requirements.txt && mkdocs build --strict`
+1. `pip install -r docs/requirements.txt && properdocs build --strict`
 2. copies `scripts/install.sh` → `site/install.sh` and `packaging/keys/*` → `site/keys/`, adds `site/.nojekyll`
 3. checks out `gh-pages` and `rsync -a --delete` the site into it **excluding** `apt/ rpm/ alpine/ conda/ flatpak/` (the package repos, owned by the release pipeline)
 4. asserts those directories still exist if they existed before, then commits and pushes; `concurrency: gh-pages` serialises it against any repo publisher
 
-`mkdocs gh-deploy` is deliberately not used because it force-replaces the branch.
+`properdocs gh-deploy` is deliberately not used because it force-replaces the branch.
 
 ## Naming
 

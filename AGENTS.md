@@ -22,7 +22,7 @@ It is not affiliated with or endorsed by Microsoft or OpenAI — see [NOTICE.md]
 | `packaging/linux/`, `packaging/macos/`, `packaging/dist/` | `nfpm`-based `.deb`/`.rpm`/`.apk`/Arch builds, macOS `.app`/`.pkg`/`.dmg` builds, reproducible tarballs. |
 | `tests/` | `install-sh.sh` (installer checksum and abuse cases; Linux, run in CI under dash/bash/sh) and `home-manager-doc-example.sh` (builds the Home Manager snippet straight out of `docs/packages/linux.md`). Run `make test` after touching `scripts/install.sh`. |
 | `qa/` | Validator output, blind direction QA, semantic review, continuity/chroma reports, preview GIFs — the evidence backing README claims. Don't hand-edit; regenerate via the relevant script. |
-| `docs/`, `mkdocs.yml`, `overrides/` | MkDocs Material documentation site, deployed to `gh-pages` by `.github/workflows/docs.yml`. |
+| `docs/`, `properdocs.yml`, `overrides/` | ProperDocs (Material theme) documentation site, deployed to `gh-pages` by `.github/workflows/docs.yml`. |
 | `.github/workflows/` | `validate.yml` (PR checks), `packaging-ci.yml` (build smoke tests), `release.yml` (tag-triggered release), `docs.yml`. |
 | `VERSION`, `CHANGELOG.md`, `CITATION.cff` | Must always agree on the current version string — see Release process. |
 
@@ -37,7 +37,7 @@ python3 -m pip install -r requirements-dev.txt
 - `make lint` — `shellcheck` over the installer and packaging shell scripts. Run after touching any `.sh` file.
 - `make dist` — builds reproducible tarballs via `packaging/dist/make-tarballs.sh` (runs `validate` first).
 - `make v1` — builds `dist/spritesheet-v1.webp` for the web uploader.
-- `make docs` — `mkdocs build --strict`; this is what CI runs, and broken internal links fail the build. Requires `pip install -r docs/requirements.txt`. Run after touching `docs/` or `mkdocs.yml`.
+- `make docs` — `properdocs build --strict`; this is what CI runs, and broken internal links fail the build. Requires `pip install -r docs/requirements.txt`. Run after touching `docs/` or `properdocs.yml`.
 - `make docs-serve` — live preview at `http://127.0.0.1:8000/clippy-pet/`.
 - `make checksums` — regenerates the root `SHA256SUMS` for `pet.json` + `spritesheet.webp` (not the release artifact checksums, which CI generates separately for `dist/`).
 
@@ -64,7 +64,7 @@ Before opening or updating a PR (mirrors `CONTRIBUTING.md`):
 1. Branch from and target `develop` (unless doing the documented release/hotfix flow).
 2. For any visual change: preserve v2 geometry and transparency, include before/after media (100% and ~64px, plus a GIF if motion changed).
 3. Add an entry to the `## [Unreleased]` section of `CHANGELOG.md` for any user-visible change.
-4. Run `make validate` (always) and `make docs` (if `docs/` or `mkdocs.yml` changed); report the result in the PR.
+4. Run `make validate` (always) and `make docs` (if `docs/` or `properdocs.yml` changed); report the result in the PR.
 5. If shell scripts changed, run `make lint`.
 6. Do not add personal data, credentials, local absolute paths, cache IDs, or unlicensed assets.
 

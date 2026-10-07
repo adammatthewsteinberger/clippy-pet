@@ -32,8 +32,8 @@ description: What's in the Clippy Pet repository, why the runtime tarball is sma
 │   ├── linux/                   nFPM config (deb/rpm/apk/arch), Debian copyright/changelog
 │   ├── macos/                   .app/.pkg/.dmg build, postinstall, distribution.xml
 │   └── keys/                    Public GPG + apk signing keys
-├── docs/                        This site (MkDocs Material); docs/requirements.txt
-├── mkdocs.yml · overrides/      Site config and theme overrides
+├── docs/                        This site (ProperDocs + Material); docs/requirements.txt
+├── properdocs.yml · overrides/  Site config and theme overrides
 ├── .github/workflows/
 │   ├── validate.yml             Contract validation + old-name guard
 │   ├── packaging-ci.yml         Lint, build, smoke-test packages in containers + macOS
