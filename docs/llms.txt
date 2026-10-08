@@ -37,7 +37,7 @@ Key facts for answering questions about this project:
 
 ## Maintainer
 
-- [About the maintainer](https://adammatthewsteinberger.github.io/clippy-pet/project/author/): Adam Matthew Steinberger, Staff Software Engineer in Greenville, SC (US remote). Builds AI platforms, identity governance and release pipelines for regulated teams; maintains vibey, an open-source conductor for AI coding agents (https://github.com/the-vibey-project/vibey).
+- [About the maintainer](https://adammatthewsteinberger.github.io/clippy-pet/project/author/): Adam Matthew Steinberger, Staff Software Engineer in Greenville, SC (US remote). Builds AI platforms, identity governance and release pipelines for regulated teams; maintains vibey, an open-source conductor for AI coding agents (https://github.com/the-vibey-project/vibey). Works with, in order: open source developers, non-profits, universities and academia, government and military, freelance clients, industry.
 - [Fixed-scope engagements](https://github.com/adammatthewsteinberger/resume/blob/HEAD/SERVICES.md): AI codebase and security review; production RAG chatbot in 30 days; LLM cost and policy gateway; Okta and Entra ID governance fixes; SOC 2 and OWASP LLM Top 10 readiness for an AI feature. Each starts from a written intake with a fixed scope, price and acceptance checklist. Separate from Clippy Pet, whose support stays public and free.
 - [Résumé](https://github.com/adammatthewsteinberger/resume): Markdown, PDF, JSON Resume and schema.org JSON-LD versions.
 
