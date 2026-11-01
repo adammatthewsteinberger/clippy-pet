@@ -143,7 +143,7 @@ jobs:
     runs-on: ${{ matrix.runner }}
     steps:
       - uses: actions/checkout@v7
-      - uses: cachix/install-nix-action@v31.11.1
+      - uses: cachix/install-nix-action@v31.11.3
       - run: nix flake check -L
       - run: nix build .#clippy-pet -L
       - run: nix run . -- version
