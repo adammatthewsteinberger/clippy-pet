@@ -27,6 +27,19 @@ If you want to know how he works, this repository is a fair sample, and every it
 - **Evidence includes the misses.** The [QA page](../how-it-works/qa.md) publishes blind-test results that failed alongside the ones that passed, with a noise floor.
 - **Changes are tested where they'll run.** On every pull request, CI installs and uninstalls the packages in Debian, Fedora, Alpine and Arch containers, runs the AppImages on native runners of each architecture, runs `nix flake check` on Linux and macOS, tests the installer's refusal to install a tampered download, and builds the Home Manager example straight out of the docs.
 
+## Who he works with
+
+In this order, because the open-source work comes first and the habits below are built there.
+
+1. **Open source developers.** The default. Clippy Pet and vibey are both open source, and contributors get written reviews, labelled first tasks and decisions recorded in the repository. Start with the [contributing guide](../community/contributing.md).
+2. **Non-profits.** Small teams that handle other people's data and have no spare engineer. The intake is written, so you can answer it between other duties. Scope and price are fixed up front, so they can go into a budget or a grant. Every engagement ends with documentation a volunteer or part-time administrator can run. If budget is a constraint, say so in the intake and the reply says in writing what fits.
+3. **Universities and academia.** Research groups, labs and campus IT. The project shows its working: a [citation file](citation.md), reproducible tarballs, and [QA results](../how-it-works/qa.md) that include the misses and a noise floor. The same care goes into reviews of research software, question-answering over a document collection, and access governance for shared systems.
+4. **Government and military.** Buyers who need to see what they are getting before they sign. Scope, price and an acceptance checklist are agreed in writing first, risks are reported in writing as they are found, and findings map to SOC 2, the OWASP LLM Top 10 and the NIST AI RMF. Any clearance, certification or contracting-vehicle requirement belongs in the intake, and the answer comes back in writing.
+5. **Freelance clients.** Individuals and small businesses who want one person accountable for an outcome. Two or three clients at a time, set reply windows each weekday in US Eastern time, and a handoff at the end. The [engagements below](#fixed-scope-engagements) are the menu.
+6. **Industry.** Product and platform teams, mostly in regulated work such as insurance, lending, healthcare and security. This is where the 13 years of production experience sit: AI platforms, identity governance kept in Git, and release pipelines that hold up to review. The [résumé](https://github.com/adammatthewsteinberger/resume) has the detail.
+
+Whichever you are, the process is the same: written first, fixed scope, and AI use disclosed.
+
 ## Fixed-scope engagements
 
 Clippy Pet is free and stays free. Separately, Adam takes a small number of fixed-scope contract engagements, each one an outcome he has already delivered in production:
